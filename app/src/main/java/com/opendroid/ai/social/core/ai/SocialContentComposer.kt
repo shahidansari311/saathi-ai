@@ -132,10 +132,10 @@ class SocialContentComposer @Inject constructor(
 
     suspend fun addCta(content: String, ctaType: String, platform: SocialPlatform): String {
         val cta = when (ctaType.lowercase()) {
-            "download" -> "\n\n👉 Try Saathi AI today: https://github.com/shahidansari311/saathi-ai"
+            "download" -> "\n\n👉 Try Saathi AI today: https://github.com/JMAN730/opendroid"
             "feedback" -> "\n\n💬 Drop your thoughts and suggestions below!"
             "star" -> "\n\n⭐ Star our GitHub repo to support open-source AI!"
-            else -> "\n\n🚀 Learn more at https://github.com/shahidansari311/saathi-ai"
+            else -> "\n\n🚀 Learn more at https://github.com/JMAN730/opendroid"
         }
         return if (content.contains(cta.trim())) content else content + cta
     }
@@ -187,7 +187,7 @@ class SocialContentComposer @Inject constructor(
             SocialPlatform.X -> "🚀 $topic\n\nSaathi AI brings autonomous AI companion features to Android with accessible care cards & local privacy.\n\n#SaathiAI #AndroidDev #AI"
             SocialPlatform.INSTAGRAM -> "✨ $topic\n\nExcited to announce our latest development with Saathi AI! Your device, your AI companion, completely privacy-first.\n\n👇 Tap link in bio to learn more!\n\n#SaathiAI #Android #ArtificialIntelligence #TechUpdate #OpenSource"
             SocialPlatform.LINKEDIN -> "We are excited to announce: $topic.\n\nSaathi AI delivers autonomous on-device mobile AI workflows with zero compromise on user privacy and security.\n\nWhat are your thoughts on agentic workflows on mobile?\n\n#AI #Android #MobileEngineering #OpenSource"
-            SocialPlatform.TELEGRAM -> "📣 *$topic*\n\nHey Saathi AI community! We've rolled out major enhancements including unified care cards and accessible themes.\n\n👉 Check out the full repository: https://github.com/shahidansari311/saathi-ai"
+            SocialPlatform.TELEGRAM -> "📣 *$topic*\n\nHey Saathi AI community! We've rolled out major enhancements including unified care cards and accessible themes.\n\n👉 Check out the full repository: https://github.com/JMAN730/opendroid"
             SocialPlatform.DISCORD -> "📢 **$topic**\n\nHey @everyone! The latest Saathi AI build is live with major autonomous improvements.\n• Privacy-first architecture\n• Elderly-friendly care cards\n\nDrop your feedback in #feedback!"
             SocialPlatform.FACEBOOK -> "Exciting news! $topic.\n\nSaathi AI continues to evolve as your personal autonomous Android companion. Have you tried it yet?"
             SocialPlatform.YOUTUBE -> "In this update: $topic.\n\nWatch how Saathi AI automates tasks and assists elders directly from your phone. Subscribe for weekly updates!"

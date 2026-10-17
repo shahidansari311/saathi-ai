@@ -130,7 +130,7 @@ These are visible in the source today. They are **not** discoveries of this test
 
 | Ref | Defect | Evidence | Covered by |
 |-----|--------|----------|------------|
-| D-2 ([#54](https://github.com/shahidansari311/saathi-ai/issues/54)) | No guard against exceeding the engine's `maxNumTokens`. `LiteRTLMProvider` passes `maxNumTokens = spec.contextWindow`, and `PromptBudget`'s own doc comment states that overshooting it kills the process natively — an out-of-JVM crash that `Saathi AICrashHandler` cannot record. Fix: a hard budget check in `PromptBudget` or at the inference call site that raises a handled error before the native call. | `PromptBudget.kt:7`, `LiteRTLMProvider.kt:390-398` | B10 |
+| D-2 ([#54](https://github.com/yashab-cyber/opendroid/issues/54)) | No guard against exceeding the engine's `maxNumTokens`. `LiteRTLMProvider` passes `maxNumTokens = spec.contextWindow`, and `PromptBudget`'s own doc comment states that overshooting it kills the process natively — an out-of-JVM crash that `Saathi AICrashHandler` cannot record. Fix: a hard budget check in `PromptBudget` or at the inference call site that raises a handled error before the native call. | `PromptBudget.kt:7`, `LiteRTLMProvider.kt:390-398` | B10 |
 
 Section 3's E6 (`adb push` ownership) is an environment/test-harness item, not in this table — the open question there is whether the app should surface a readable "model file unreadable" error at all.
 

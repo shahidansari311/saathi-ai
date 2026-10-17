@@ -1,8 +1,8 @@
 # AGP 9 / Gradle 9 migration
 
 Stages 4-6 of the migration plan resolved in
-[issue #70](https://github.com/shahidansari311/saathi-ai/issues/70), implemented for
-[issue #74](https://github.com/shahidansari311/saathi-ai/issues/74). The behavior-preserving
+[issue #70](https://github.com/yashab-cyber/opendroid/issues/70), implemented for
+[issue #74](https://github.com/yashab-cyber/opendroid/issues/74). The behavior-preserving
 DSL and KSP preparation that had to land first is documented in
 [agp9-preparation.md](agp9-preparation.md).
 

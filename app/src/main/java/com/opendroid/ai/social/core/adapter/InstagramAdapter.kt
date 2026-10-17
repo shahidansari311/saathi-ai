@@ -70,7 +70,7 @@ class InstagramAdapter @Inject constructor(
         }
 
         val igUserId = credentials.accountId
-        val mediaUrl = post.mediaUrls.firstOrNull() ?: "https://saathi.ai/assets/logo.png"
+        val mediaUrl = post.mediaUrls.firstOrNull() ?: "https://opendroid.ai/assets/logo.png"
 
         // 1. Create Media Container
         val containerPayload = JSONObject().apply {

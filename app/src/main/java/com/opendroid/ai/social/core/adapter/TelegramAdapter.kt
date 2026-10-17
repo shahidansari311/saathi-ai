@@ -70,7 +70,7 @@ class TelegramAdapter @Inject constructor(
                 PublishPostResult(
                     success = true,
                     platformPostId = "tg_msg_${System.currentTimeMillis()}",
-                    url = "https://t.me/saathiai_community/${System.currentTimeMillis()}"
+                    url = "https://t.me/opendroid_community/${System.currentTimeMillis()}"
                 )
             )
         }

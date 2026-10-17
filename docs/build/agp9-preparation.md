@@ -1,8 +1,8 @@
 # AGP 9 preparation: modern DSL and KSP
 
 Behavior-preserving stage 2 and 3 of the migration plan resolved in
-[issue #70](https://github.com/shahidansari311/saathi-ai/issues/70), implemented for
-[issue #73](https://github.com/shahidansari311/saathi-ai/issues/73).
+[issue #70](https://github.com/yashab-cyber/opendroid/issues/70), implemented for
+[issue #73](https://github.com/yashab-cyber/opendroid/issues/73).
 
 **Gradle, AGP, and the JDK are deliberately unchanged.** This change only removes
 the DSL and annotation-processing blockers so that the toolchain bump (stages 4-6)
@@ -140,7 +140,7 @@ Stages 4-6 of the plan: Gradle 9.x / AGP 9.x wrapper and plugin bump, AGP built-
 Kotlin, and removal of the `com.android.tools:r8:9.1.31` override once the embedded
 R8 passes release-equivalence checks.
 
-Those landed for [issue #74](https://github.com/shahidansari311/saathi-ai/issues/74) — see
+Those landed for [issue #74](https://github.com/yashab-cyber/opendroid/issues/74) — see
 [agp9-migration.md](agp9-migration.md). Everything above describes the state of the
 build *before* that migration; the `kotlin-metadata-jvm` pin in particular is gone
 again, because Dagger 2.60.1 no longer needs it.

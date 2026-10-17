@@ -67,7 +67,7 @@ class XAdapter @Inject constructor(
                 PublishPostResult(
                     success = true,
                     platformPostId = tweetId,
-                    url = "https://x.com/SaathiAI/status/$tweetId"
+                    url = "https://x.com/OpenDroidAI/status/$tweetId"
                 )
             )
         }

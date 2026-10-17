@@ -35,7 +35,7 @@ For international donations, crypto, or other payment methods, reach out via ema
 
 Not able to donate? You can still support Saathi AI:
 
-- ⭐ **Star the repo** on [GitHub](https://github.com/shahidansari311/saathi-ai)
+- ⭐ **Star the repo** on [GitHub](https://github.com/yashab-cyber/opendroid)
 - 🐛 **Report bugs** and help improve stability
 - 💡 **Suggest features** by opening an issue
 - 📢 **Spread the word** — tell your friends about Saathi AI

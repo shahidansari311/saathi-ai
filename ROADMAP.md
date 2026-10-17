@@ -1,6 +1,6 @@
 # Saathi AI Roadmap
 
-Living document. Reflects the state of `shahidansari311/saathi-ai` as of **2026-09-04**, shipping
+Living document. Reflects the state of `JMAN730/opendroid` as of **2026-09-04**, shipping
 version **1.0.7** (`versionCode 8`).
 
 ---
