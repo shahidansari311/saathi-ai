@@ -25,6 +25,7 @@ import android.provider.ContactsContract
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import java.net.URLEncoder
+import com.opendroid.ai.data.models.LLMConfig
 import com.opendroid.ai.data.repository.SettingsRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -221,8 +222,9 @@ I need emergency help! Mujhe turant madad ki zaroorat hai!
             """.trimIndent()
 
             // 3. Resolve target contacts (Multiple emergency contacts / address book / 112)
-            val savedEmergencyPhones = try {
-                settingsRepository?.llmConfig?.first()?.allEmergencyPhones()?.filter { it.isNotBlank() } ?: emptyList()
+            val savedEmergencyPhones: List<String> = try {
+                val cfg = settingsRepository?.llmConfig?.first()
+                cfg?.allEmergencyPhones()?.filter { it.isNotBlank() } ?: emptyList()
             } catch (e: Exception) { emptyList() }
             val savedEmergencyName = try {
                 settingsRepository?.llmConfig?.first()?.emergencyContactName?.takeIf { it.isNotBlank() }

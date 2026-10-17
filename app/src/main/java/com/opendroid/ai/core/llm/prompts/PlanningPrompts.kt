@@ -30,7 +30,7 @@ CRITICAL DEPENDENCY RULES:
 
 SHARING CONTACTS (e.g., "send Raj number to Shashank on whatsapp" or "text me Dad's phone number"):
 - Step 1: GET_CONTACT {name: "Raj"}
-- Step 2: SEND_WHATSAPP {contact: "Shashank", message: "Here is the contact number: $$step1", dependsOn: ["step1"]}
+- Step 2: SEND_WHATSAPP {contact: "Shashank", message: "Here is the contact number: ${'$'}${'$'}step1", dependsOn: ["step1"]}
 
 SELF-CONTAINED ACTIONS (do NOT add OPEN_APP before these):
 - SEND_WHATSAPP, SEND_TELEGRAM, MAKE_CALL, SEND_SMS, SEND_EMAIL — these open the app internally. SEND_EMAIL only prepares a draft and requires the user to tap Send.
