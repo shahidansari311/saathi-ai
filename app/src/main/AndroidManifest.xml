@@ -102,6 +102,7 @@
         <service
             android:name=".core.service.OpenDroidService"
             android:foregroundServiceType="microphone|specialUse"
+            android:stopWithTask="false"
             android:exported="false">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
@@ -112,6 +113,7 @@
         <service
             android:name=".accessibility.OpenDroidAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:stopWithTask="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />

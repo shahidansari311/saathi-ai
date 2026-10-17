@@ -40,14 +40,28 @@ class WakeWordDetector(private val context: Context) {
                lower.contains("sathi") ||
                lower.contains("shathi") ||
                lower.contains("shati") ||
+               lower.contains("साथी") ||
+               lower.contains("सथी") ||
+               lower.contains("साथि") ||
                lower.contains("saathi ai") ||
                lower.contains("sathi ai") ||
+               lower.contains("साथी एआई") ||
                lower.contains("hey saathi") ||
                lower.contains("hey sathi") ||
+               lower.contains("हे साथी") ||
                lower.contains("suno saathi") ||
                lower.contains("saathi suno") ||
+               lower.contains("सुनो साथी") ||
+               lower.contains("साथी सुनो") ||
                lower.contains("ok saathi") ||
-               lower.contains("saathiai")
+               lower.contains("okay saathi") ||
+               lower.contains("hello saathi") ||
+               lower.contains("hi saathi") ||
+               lower.contains("namaste saathi") ||
+               lower.contains("नमस्ते साथी") ||
+               lower.contains("saathiai") ||
+               lower.contains("opendroid") ||
+               lower.contains("open droid")
     }
 
     fun startListening(onWakeWordDetected: () -> Unit) {
@@ -123,7 +137,12 @@ class WakeWordDetector(private val context: Context) {
     }
 
     private fun triggerWakeWord() {
-        onWakeWordDetectedCallback?.invoke()
+        val callback = onWakeWordDetectedCallback
+        onWakeWordDetectedCallback = null
+        isListening = false
+        handler.removeCallbacks(restartRunnable)
+        cleanupRecognizer()
+        callback?.invoke()
     }
 
     private fun scheduleRestart() {

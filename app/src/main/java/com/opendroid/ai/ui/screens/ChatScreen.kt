@@ -10,7 +10,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -52,6 +54,7 @@ import com.opendroid.ai.core.agent.ChatErrorUiState
 import com.opendroid.ai.core.agent.guidance
 import com.opendroid.ai.core.agent.primaryAction
 import com.opendroid.ai.core.agent.title
+import com.opendroid.ai.core.service.OpenDroidService
 import com.opendroid.ai.core.voice.SpeechRecognitionEngine
 import com.opendroid.ai.data.models.AutoMode
 import com.opendroid.ai.data.models.ChatMessage
@@ -182,14 +185,18 @@ fun ChatScreen(
             isListening = true
             voiceError = null
             transcriptionText = ""
+            // Temporarily pause background wake-word to give foreground mic exclusive audio access
+            OpenDroidService.pauseWakeWord()
             speechRecognizer.startListening(
                 onResult = { text ->
                     isListening = false
+                    val finalQuery = text.ifBlank { transcriptionText }
                     transcriptionText = ""
-                    if (autoSend && text.isNotBlank()) {
-                        viewModel.sendMessage(text, context)
-                    } else {
-                        mergeDictatedText(text)
+                    OpenDroidService.resumeWakeWord()
+                    if (autoSend && finalQuery.isNotBlank()) {
+                        viewModel.sendMessage(finalQuery, context)
+                    } else if (finalQuery.isNotBlank()) {
+                        mergeDictatedText(finalQuery)
                     }
                 },
                 onPartialResult = { partial ->
@@ -197,15 +204,18 @@ fun ChatScreen(
                 },
                 onError = { err ->
                     isListening = false
-                    if (transcriptionText.isNotBlank()) {
-                        if (autoSend) {
-                            viewModel.sendMessage(transcriptionText, context)
-                        } else {
-                            mergeDictatedText(transcriptionText)
-                        }
-                    }
+                    val fallback = transcriptionText
                     transcriptionText = ""
-                    voiceError = err
+                    OpenDroidService.resumeWakeWord()
+                    if (fallback.isNotBlank()) {
+                        if (autoSend) {
+                            viewModel.sendMessage(fallback, context)
+                        } else {
+                            mergeDictatedText(fallback)
+                        }
+                    } else if (err != "No speech match found" && err != "Speech input timeout") {
+                        voiceError = err
+                    }
                 }
             )
         } else {
@@ -216,24 +226,26 @@ fun ChatScreen(
 
     fun toggleVoiceInteraction(autoSend: Boolean = false) {
         if (isListening) {
-            speechRecognizer.cancel()
-            isListening = false
-            if (transcriptionText.isNotBlank()) {
-                if (autoSend) {
-                    viewModel.sendMessage(transcriptionText, context)
-                } else {
-                    mergeDictatedText(transcriptionText)
-                }
-            }
-            transcriptionText = ""
+            // Signal recognizer to finish and deliver onResults rather than aborting
+            speechRecognizer.stopListening()
         } else {
             startListeningInternal(autoSend)
+        }
+    }
+
+    fun cancelVoiceInteraction() {
+        if (isListening) {
+            speechRecognizer.cancel()
+            isListening = false
+            transcriptionText = ""
+            OpenDroidService.resumeWakeWord()
         }
     }
 
     DisposableEffect(Unit) {
         onDispose {
             speechRecognizer.destroy()
+            OpenDroidService.resumeWakeWord()
         }
     }
 
@@ -542,6 +554,17 @@ fun ChatScreen(
                     quickCallName = llmConfig.quickCallName.ifBlank { "Beta" },
                     onMicClick = {
                         toggleVoiceInteraction(autoSend = true)
+                    },
+                    onMicStart = {
+                        startListeningInternal(true)
+                    },
+                    onMicStop = {
+                        if (isListening) {
+                            speechRecognizer.stopListening()
+                        }
+                    },
+                    onMicCancel = {
+                        cancelVoiceInteraction()
                     },
                     onEmergencySosClick = {
                         val emergencyQuery = if (llmConfig.emergencyContactPhone.isNotBlank()) {
@@ -1225,7 +1248,24 @@ fun FloatingOrb(
                     radius = 120f
                 )
             )
-            .clickable { onClick() }
+            .pointerInput(isListening) {
+                detectTapGestures(
+                    onPress = {
+                        val wasListening = isListening
+                        val startTime = System.currentTimeMillis()
+                        if (!wasListening) {
+                            onClick()
+                        }
+                        val released = tryAwaitRelease()
+                        val duration = System.currentTimeMillis() - startTime
+                        if (released) {
+                            if (wasListening || duration >= 350L) {
+                                onClick()
+                            }
+                        }
+                    }
+                )
+            }
             .padding(6.dp),
         contentAlignment = Alignment.Center
     ) {

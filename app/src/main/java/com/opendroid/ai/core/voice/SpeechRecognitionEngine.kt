@@ -3,6 +3,8 @@ package com.opendroid.ai.core.voice
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -12,6 +14,7 @@ class SpeechRecognitionEngine(private val context: Context) {
 
     private var speechRecognizer: SpeechRecognizer? = null
     private var recognizerIntent: Intent? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     // Identifies the currently active recognition session. Every startListening() call mints a
     // new token and each RecognitionListener callback closure captures the token it was created
@@ -27,17 +30,24 @@ class SpeechRecognitionEngine(private val context: Context) {
     }
 
     private fun initializeRecognizer() {
-        if (SpeechRecognizer.isRecognitionAvailable(context)) {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
-            recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
-                putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-                // Prolong listening limits to avoid early cut-offs
-                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 3000L)
-                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 3000L)
-                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 3000L)
+        mainHandler.post {
+            try {
+                if (SpeechRecognizer.isRecognitionAvailable(context)) {
+                    speechRecognizer?.destroy()
+                    speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
+                    recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                        putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
+                        putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+                        // Prolong listening limits to avoid early cut-offs (10s min, 5s silence)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000L)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 5000L)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 5000L)
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("SpeechEngine", "Error initializing speech recognizer: ${e.localizedMessage}")
             }
         }
     }
@@ -47,10 +57,29 @@ class SpeechRecognitionEngine(private val context: Context) {
         onPartialResult: (String) -> Unit = {},
         onError: (String) -> Unit
     ) {
-        if (speechRecognizer == null) {
-            onError("Speech recognition not available on this device")
-            return
-        }
+        mainHandler.post {
+            try {
+                if (speechRecognizer == null) {
+                    if (SpeechRecognizer.isRecognitionAvailable(context)) {
+                        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
+                    }
+                }
+                if (speechRecognizer == null) {
+                    onError("Speech recognition not available on this device")
+                    return@post
+                }
+
+                if (recognizerIntent == null) {
+                    recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                        putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
+                        putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000L)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 5000L)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 5000L)
+                    }
+                }
 
         // Mint a new session token and let this specific listener closure capture it. Any
         // callback delivered to a listener whose captured token no longer matches
@@ -104,10 +133,18 @@ class SpeechRecognitionEngine(private val context: Context) {
         })
 
         speechRecognizer?.startListening(recognizerIntent)
+            } catch (e: Exception) {
+                onError("Failed to start speech listening: ${e.localizedMessage}")
+            }
+        }
     }
 
     fun stopListening() {
-        speechRecognizer?.stopListening()
+        mainHandler.post {
+            try {
+                speechRecognizer?.stopListening()
+            } catch (_: Exception) {}
+        }
     }
 
     /**
@@ -118,15 +155,20 @@ class SpeechRecognitionEngine(private val context: Context) {
      */
     fun cancel() {
         activeSessionId += 1
-        speechRecognizer?.cancel()
+        mainHandler.post {
+            try {
+                speechRecognizer?.cancel()
+            } catch (_: Exception) {}
+        }
     }
 
     fun destroy() {
-        // Invalidate the active session so a callback that was already in flight cannot fire
-        // (e.g. deliver a result) after this engine - and the Composable that owns it - has
-        // been disposed.
         activeSessionId += 1
-        speechRecognizer?.destroy()
-        speechRecognizer = null
+        mainHandler.post {
+            try {
+                speechRecognizer?.destroy()
+            } catch (_: Exception) {}
+            speechRecognizer = null
+        }
     }
 }

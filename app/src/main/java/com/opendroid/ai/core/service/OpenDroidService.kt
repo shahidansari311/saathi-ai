@@ -49,6 +49,7 @@ class OpenDroidService : Service() {
         const val ACTION_TRIGGER_RECORD = "com.opendroid.ai.action.TRIGGER_RECORD"
         private const val CHANNEL_ID = "opendroid_channel"
         private const val NOTIFICATION_ID = 2024
+        private var instance: OpenDroidService? = null
         
         fun start(context: Context) {
             val intent = Intent(context, OpenDroidService::class.java)
@@ -59,10 +60,19 @@ class OpenDroidService : Service() {
             val intent = Intent(context, OpenDroidService::class.java)
             context.stopService(intent)
         }
+
+        fun pauseWakeWord() {
+            instance?.wakeWordDetector?.stopListening()
+        }
+
+        fun resumeWakeWord() {
+            instance?.startWakeWordDetection()
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         
         // Initialize engines
         wakeWordDetector = WakeWordDetector(this)
@@ -153,8 +163,13 @@ class OpenDroidService : Service() {
     }
 
     private fun startWakeWordDetection() {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.RECORD_AUDIO
+            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         wakeWordDetector.startListening {
-            // Wake word detected! Prompt user with a sound or greeting and start listing for query
             textToSpeechEngine.speak("Saathi AI online.")
             startListeningForQuery()
         }
@@ -167,25 +182,23 @@ class OpenDroidService : Service() {
         // Set agent state to Listening
         agentLoop.setAgentState(AgentState.Listening)
 
-        // Start speech recognizer for query input
-        speechRecognitionEngine.startListening(
-            onResult = { query ->
-                agentLoop.processQuery(query, this)
-                // Resume wake word detection
-                wakeWordDetector.startListening {
-                    textToSpeechEngine.speak("Saathi AI online.")
-                    startListeningForQuery()
+        // Give audio hardware 250ms to cleanly release wake word session before opening query session
+        serviceScope.launch {
+            kotlinx.coroutines.delay(250)
+            speechRecognitionEngine.startListening(
+                onResult = { query ->
+                    agentLoop.processQuery(query, this@OpenDroidService)
+                    // Resume wake word detection
+                    startWakeWordDetection()
+                },
+                onError = { err ->
+                    android.util.Log.w("OpenDroidService", "Speech listening error in service query: $err")
+                    agentLoop.setAgentState(AgentState.Idle)
+                    // Resume wake word detection
+                    startWakeWordDetection()
                 }
-            },
-            onError = { _ ->
-                agentLoop.setAgentState(AgentState.Idle)
-                // Resume wake word detection
-                wakeWordDetector.startListening {
-                    textToSpeechEngine.speak("Saathi AI online.")
-                    startListeningForQuery()
-                }
-            }
-        )
+            )
+        }
     }
 
     /**
@@ -196,26 +209,59 @@ class OpenDroidService : Service() {
      */
     private fun startListeningForApproval() {
         wakeWordDetector.stopListening()
-        speechRecognitionEngine.startListening(
-            onResult = { utterance ->
-                when (VoiceApprovalParser.parse(utterance)) {
-                    VoiceApprovalIntent.APPROVE -> agentLoop.approveProposedPlan(this)
-                    VoiceApprovalIntent.REJECT -> agentLoop.rejectProposedPlan()
-                    VoiceApprovalIntent.NONE -> Unit
+        serviceScope.launch {
+            kotlinx.coroutines.delay(200)
+            speechRecognitionEngine.startListening(
+                onResult = { utterance ->
+                    when (VoiceApprovalParser.parse(utterance)) {
+                        VoiceApprovalIntent.APPROVE -> agentLoop.approveProposedPlan(this@OpenDroidService)
+                        VoiceApprovalIntent.REJECT -> agentLoop.rejectProposedPlan()
+                        VoiceApprovalIntent.NONE -> Unit
+                    }
+                    startWakeWordDetection()
+                },
+                onError = { _ ->
+                    startWakeWordDetection()
                 }
-                startWakeWordDetection()
-            },
-            onError = { _ ->
-                startWakeWordDetection()
-            }
-        )
+            )
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        createNotificationChannel()
+        startForegroundCompat()
         if (intent?.action == ACTION_TRIGGER_RECORD) {
             startListeningForQuery()
         }
         return START_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        // Ensure foreground service stays pinned and active when app is swiped away from recents
+        createNotificationChannel()
+        startForegroundCompat()
+
+        // Set up watchdog resurrection intent via AlarmManager
+        try {
+            val restartIntent = Intent(applicationContext, OpenDroidService::class.java).also {
+                it.setPackage(packageName)
+            }
+            val pendingIntent = android.app.PendingIntent.getService(
+                applicationContext,
+                1,
+                restartIntent,
+                android.app.PendingIntent.FLAG_ONE_SHOT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as? android.app.AlarmManager
+            alarmManager?.set(
+                android.app.AlarmManager.ELAPSED_REALTIME,
+                android.os.SystemClock.elapsedRealtime() + 1000,
+                pendingIntent
+            )
+        } catch (e: Exception) {
+            android.util.Log.e("OpenDroidService", "Failed to schedule restart watchdog", e)
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -224,6 +270,7 @@ class OpenDroidService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        instance = null
         serviceScope.cancel()
         mcpServer.stop()
         wakeWordDetector.destroy()

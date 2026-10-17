@@ -6,6 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +47,9 @@ fun QuickHelpCareCard(
     transcriptionText: String = "",
     quickCallName: String = "Beta",
     onMicClick: () -> Unit,
+    onMicStart: (() -> Unit)? = null,
+    onMicStop: (() -> Unit)? = null,
+    onMicCancel: (() -> Unit)? = null,
     onEmergencySosClick: () -> Unit,
     onCallFamilyClick: () -> Unit,
     onConfigureContacts: (() -> Unit)? = null,
@@ -140,7 +145,30 @@ fun QuickHelpCareCard(
                             )
                         )
                         .border(3.dp, Color.White.copy(alpha = 0.85f), CircleShape)
-                        .clickable { onMicClick() },
+                        .pointerInput(isListening) {
+                            detectTapGestures(
+                                onPress = {
+                                    val wasListening = isListening
+                                    val startTime = System.currentTimeMillis()
+                                    if (!wasListening) {
+                                        if (onMicStart != null) onMicStart() else onMicClick()
+                                    }
+                                    val released = tryAwaitRelease()
+                                    val duration = System.currentTimeMillis() - startTime
+                                    if (!released) {
+                                        // Gesture cancelled / dragged off
+                                        if (onMicCancel != null) onMicCancel() else if (wasListening) onMicClick()
+                                    } else if (wasListening) {
+                                        // Was already listening, so tap or press stops it
+                                        if (onMicStop != null) onMicStop() else onMicClick()
+                                    } else if (duration >= 350L) {
+                                        // Held to talk: release finishes and transcribes
+                                        if (onMicStop != null) onMicStop() else onMicClick()
+                                    }
+                                    // If quick tap (< 350ms) when not listening, keep listening!
+                                }
+                            )
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -156,7 +184,7 @@ fun QuickHelpCareCard(
 
             // Big Voice Invitation Prompt
             Text(
-                text = if (isListening) "Listening... Tap to Stop" else "Tap to Speak (बोलें)",
+                text = if (isListening) "Listening... Tap to Stop" else "Tap or Hold to Speak (बोलें)",
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isListening) Color(0xFFEF4444) else theme.textPrimary,
