@@ -47,7 +47,9 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Run unit tests and build debug APK
-        run: ./gradlew testDebugUnitTest assembleDebug --stacktrace
+        run: |
+          chmod +x gradlew
+          ./gradlew testDebugUnitTest assembleDebug --stacktrace
 
       - name: Upload test reports
         if: always()
@@ -80,7 +82,9 @@ jobs:
       # Pre-existing findings live in app/lint-baseline.xml; only new
       # findings fail this step.
       - name: Run Android Lint
-        run: ./gradlew :app:lintDebug --stacktrace
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:lintDebug --stacktrace
 
       - name: Upload lint report
         if: always()
@@ -137,7 +141,7 @@ jobs:
           arch: x86_64
           target: ${{ matrix.api-level >= 30 && 'google_apis' || 'default' }}
           disable-animations: true
-          script: ./gradlew :app:connectedDebugAndroidTest --stacktrace
+          script: chmod +x gradlew && ./gradlew :app:connectedDebugAndroidTest --stacktrace
 
       - name: Upload instrumented test reports
         if: always()
@@ -171,7 +175,9 @@ jobs:
       # uninstallable APK purely to exercise R8/ProGuard, which debug builds
       # never touch; a plain assembleRelease still refuses to run unsigned.
       - name: Build unsigned release APK
-        run: ./gradlew :app:assembleRelease -PallowUnsignedRelease --stacktrace
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease -PallowUnsignedRelease --stacktrace
 
       # If R8 ever does strip something reflection needs, the minified APK is
       # what gets inspected (apkanalyzer/aapt) to see which class went missing.
