@@ -40,7 +40,7 @@ import com.opendroid.ai.ui.viewmodel.*
  * Kept next to [navigateAfterSplash] and [navigateAfterOnboarding] so the back-stack
  * rules of the entry flow can be exercised without composing the screens themselves.
  */
-object Saathi AIRoutes {
+object OpenDroidRoutes {
     const val SPLASH = "splash"
     const val ONBOARDING = "onboarding"
     const val MAIN = "main"
@@ -63,26 +63,26 @@ object Saathi AIRoutes {
  * back stack so system back from the first real screen exits the app instead of replaying it.
  */
 fun NavHostController.navigateAfterSplash(isOnboardingCompleted: Boolean) {
-    val destination = if (isOnboardingCompleted) Saathi AIRoutes.MAIN else Saathi AIRoutes.ONBOARDING
+    val destination = if (isOnboardingCompleted) OpenDroidRoutes.MAIN else OpenDroidRoutes.ONBOARDING
     navigate(destination) {
-        popUpTo(Saathi AIRoutes.SPLASH) { inclusive = true }
+        popUpTo(OpenDroidRoutes.SPLASH) { inclusive = true }
     }
 }
 
 /** Enters the dashboard after onboarding, so back never returns to the completed flow. */
 fun NavHostController.navigateAfterOnboarding() {
-    navigate(Saathi AIRoutes.MAIN) {
-        popUpTo(Saathi AIRoutes.ONBOARDING) { inclusive = true }
+    navigate(OpenDroidRoutes.MAIN) {
+        popUpTo(OpenDroidRoutes.ONBOARDING) { inclusive = true }
     }
 }
 
 @Composable
-fun Saathi AINavigation(
+fun OpenDroidNavigation(
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
-        startDestination = Saathi AIRoutes.SPLASH,
+        startDestination = OpenDroidRoutes.SPLASH,
         modifier = Modifier.fillMaxSize().background(AppTheme.colors.background),
         enterTransition = {
             fadeIn(animationSpec = tween(300)) + slideIntoContainer(
@@ -111,7 +111,7 @@ fun Saathi AINavigation(
             )
         }
     ) {
-        composable(Saathi AIRoutes.SPLASH) {
+        composable(OpenDroidRoutes.SPLASH) {
             val startupViewModel: StartupViewModel = hiltViewModel()
             val startDestination by startupViewModel.startDestination.collectAsState()
             var splashFinished by remember { mutableStateOf(false) }
@@ -130,51 +130,51 @@ fun Saathi AINavigation(
             }
         }
 
-        composable(Saathi AIRoutes.ONBOARDING) {
+        composable(OpenDroidRoutes.ONBOARDING) {
             OnboardingScreen(
                 onFinished = { navController.navigateAfterOnboarding() }
             )
         }
 
-        composable(Saathi AIRoutes.MAIN) {
+        composable(OpenDroidRoutes.MAIN) {
             MainDashboard(
                 onNavigateToBenchmark = {
-                    navController.navigate(Saathi AIRoutes.BENCHMARK)
+                    navController.navigate(OpenDroidRoutes.BENCHMARK)
                 },
                 onNavigateToPrivacyPolicy = {
-                    navController.navigate(Saathi AIRoutes.PRIVACY_POLICY)
+                    navController.navigate(OpenDroidRoutes.PRIVACY_POLICY)
                 },
                 onNavigateToTermsOfUse = {
-                    navController.navigate(Saathi AIRoutes.TERMS_OF_USE)
+                    navController.navigate(OpenDroidRoutes.TERMS_OF_USE)
                 },
                 onNavigateToHelpCenter = {
-                    navController.navigate(Saathi AIRoutes.HELP_CENTER)
+                    navController.navigate(OpenDroidRoutes.HELP_CENTER)
                 },
                 onNavigateToLicense = {
-                    navController.navigate(Saathi AIRoutes.LICENSE)
+                    navController.navigate(OpenDroidRoutes.LICENSE)
                 },
                 onNavigateToAbout = {
-                    navController.navigate(Saathi AIRoutes.ABOUT)
+                    navController.navigate(OpenDroidRoutes.ABOUT)
                 },
                 onNavigateToAutoReply = {
-                    navController.navigate(Saathi AIRoutes.AUTO_REPLY_SETTINGS)
+                    navController.navigate(OpenDroidRoutes.AUTO_REPLY_SETTINGS)
                 },
                 onNavigateToNotificationHistory = {
-                    navController.navigate(Saathi AIRoutes.NOTIFICATION_HISTORY)
+                    navController.navigate(OpenDroidRoutes.NOTIFICATION_HISTORY)
                 },
                 onNavigateToPermissions = {
-                    navController.navigate(Saathi AIRoutes.PERMISSIONS)
+                    navController.navigate(OpenDroidRoutes.PERMISSIONS)
                 },
                 onNavigateToCrashLog = {
-                    navController.navigate(Saathi AIRoutes.CRASH_LOG)
+                    navController.navigate(OpenDroidRoutes.CRASH_LOG)
                 },
                 onNavigateToRoutines = {
-                    navController.navigate(Saathi AIRoutes.ROUTINES)
+                    navController.navigate(OpenDroidRoutes.ROUTINES)
                 }
             )
         }
 
-        composable(Saathi AIRoutes.BENCHMARK) {
+        composable(OpenDroidRoutes.BENCHMARK) {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             BenchmarkScreen(
                 viewModel = settingsViewModel,
@@ -184,7 +184,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.PRIVACY_POLICY) {
+        composable(OpenDroidRoutes.PRIVACY_POLICY) {
             PrivacyPolicyScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -192,7 +192,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.ABOUT) {
+        composable(OpenDroidRoutes.ABOUT) {
             AboutScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -200,7 +200,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.TERMS_OF_USE) {
+        composable(OpenDroidRoutes.TERMS_OF_USE) {
             TermsOfUseScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -208,7 +208,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.HELP_CENTER) {
+        composable(OpenDroidRoutes.HELP_CENTER) {
             HelpCenterScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -216,7 +216,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.LICENSE) {
+        composable(OpenDroidRoutes.LICENSE) {
             LicenseScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -224,7 +224,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.AUTO_REPLY_SETTINGS) {
+        composable(OpenDroidRoutes.AUTO_REPLY_SETTINGS) {
             val settingsRepo = hiltViewModel<AutoReplyViewModel>().settingsRepository
             AutoReplySettingsScreen(
                 settingsRepository = settingsRepo,
@@ -234,7 +234,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.NOTIFICATION_HISTORY) {
+        composable(OpenDroidRoutes.NOTIFICATION_HISTORY) {
             val notifDao = hiltViewModel<NotificationHistoryViewModel>().notificationDao
             NotificationHistoryScreen(
                 notificationDao = notifDao,
@@ -244,7 +244,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.PERMISSIONS) {
+        composable(OpenDroidRoutes.PERMISSIONS) {
             PermissionsScreen(
                 onNavigateBack = {
                     navController.popBackStack()
@@ -252,7 +252,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.CRASH_LOG) {
+        composable(OpenDroidRoutes.CRASH_LOG) {
             CrashLogScreen(
                 viewModel = hiltViewModel(),
                 onBack = {
@@ -261,7 +261,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.ROUTINES) {
+        composable(OpenDroidRoutes.ROUTINES) {
             val routineViewModel: com.opendroid.ai.ui.viewmodel.RoutineViewModel = hiltViewModel()
             com.opendroid.ai.ui.screens.RoutinesScreen(
                 viewModel = routineViewModel,
@@ -271,7 +271,7 @@ fun Saathi AINavigation(
             )
         }
 
-        composable(Saathi AIRoutes.SOCIAL) {
+        composable(OpenDroidRoutes.SOCIAL) {
             val socialViewModel: SocialViewModel = hiltViewModel()
             SocialScreen(viewModel = socialViewModel)
         }
@@ -316,7 +316,7 @@ fun MainDashboard(
                 val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
                 if (granted && !recordAudioServiceStarted) {
                     recordAudioServiceStarted = true
-                    com.opendroid.ai.core.service.Saathi AIService.start(context)
+                    com.opendroid.ai.core.service.OpenDroidService.start(context)
                 }
             }
         }

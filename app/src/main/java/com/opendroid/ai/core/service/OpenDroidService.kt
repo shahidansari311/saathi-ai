@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class Saathi AIService : Service() {
+class OpenDroidService : Service() {
 
     @Inject
     lateinit var agentLoop: AgentLoop
@@ -51,12 +51,12 @@ class Saathi AIService : Service() {
         private const val NOTIFICATION_ID = 2024
         
         fun start(context: Context) {
-            val intent = Intent(context, Saathi AIService::class.java)
+            val intent = Intent(context, OpenDroidService::class.java)
             context.startForegroundService(intent)
         }
 
         fun stop(context: Context) {
-            val intent = Intent(context, Saathi AIService::class.java)
+            val intent = Intent(context, OpenDroidService::class.java)
             context.stopService(intent)
         }
     }
@@ -162,7 +162,7 @@ class Saathi AIService : Service() {
     private fun startWakeWordDetection() {
         wakeWordDetector.startListening {
             // Wake word detected! Prompt user with a sound or greeting and start listing for query
-            textToSpeechEngine.speak("Saathi AI online.")
+            textToSpeechEngine.speak("OpenDroid online.")
             startListeningForQuery()
         }
     }
@@ -181,7 +181,7 @@ class Saathi AIService : Service() {
                 // Resume wake word detection only if floating button is disabled
                 if (!showFloatingButton) {
                     wakeWordDetector.startListening {
-                        textToSpeechEngine.speak("Saathi AI online.")
+                        textToSpeechEngine.speak("OpenDroid online.")
                         startListeningForQuery()
                     }
                 } else {
@@ -193,7 +193,7 @@ class Saathi AIService : Service() {
                 // Resume wake word detection only if floating button is disabled
                 if (!showFloatingButton) {
                     wakeWordDetector.startListening {
-                        textToSpeechEngine.speak("Saathi AI online.")
+                        textToSpeechEngine.speak("OpenDroid online.")
                         startListeningForQuery()
                     }
                 }
@@ -247,10 +247,10 @@ class Saathi AIService : Service() {
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "Saathi AI Agent Service",
+            "OpenDroid Agent Service",
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "Keeps Saathi AI background companion active"
+            description = "Keeps OpenDroid background agent alive"
         }
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)
@@ -258,8 +258,8 @@ class Saathi AIService : Service() {
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Saathi AI Active")
-            .setContentText("Listening for voice commands")
+            .setContentTitle("OpenDroid Active")
+            .setContentText("Listening for wake word 'OpenDroid'")
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
             .setOngoing(true)
             .setCategory(Notification.CATEGORY_SERVICE)

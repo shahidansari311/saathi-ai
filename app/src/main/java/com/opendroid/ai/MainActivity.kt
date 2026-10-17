@@ -11,12 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
-import com.opendroid.ai.core.service.Saathi AIService
+import com.opendroid.ai.core.service.OpenDroidService
 import com.opendroid.ai.data.repository.SettingsRepository
-import com.opendroid.ai.ui.Saathi AINavigation
+import com.opendroid.ai.ui.OpenDroidNavigation
 import com.opendroid.ai.ui.theme.AppTheme
-import com.opendroid.ai.ui.theme.Saathi AITheme
-import com.opendroid.ai.ui.theme.enableSaathi AIEdgeToEdge
+import com.opendroid.ai.ui.theme.OpenDroidTheme
+import com.opendroid.ai.ui.theme.enableOpenDroidEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -26,12 +26,12 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var settingsRepository: SettingsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableSaathi AIEdgeToEdge(isDarkTheme = true)
+        enableOpenDroidEdgeToEdge(isDarkTheme = true)
         super.onCreate(savedInstanceState)
 
         // Start foreground assistant service only if RECORD_AUDIO permission is granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            Saathi AIService.start(this)
+            OpenDroidService.start(this)
         }
 
         setContent {
@@ -39,12 +39,12 @@ class MainActivity : ComponentActivity() {
                 initial = com.opendroid.ai.data.models.LLMConfig()
             )
 
-            Saathi AITheme(isDarkTheme = config.isDarkMode) {
+            OpenDroidTheme(isDarkTheme = config.isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = AppTheme.colors.background
                 ) {
-                    Saathi AINavigation()
+                    OpenDroidNavigation()
                 }
             }
         }

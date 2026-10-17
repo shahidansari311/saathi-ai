@@ -18,10 +18,10 @@ import androidx.core.view.WindowCompat
  * Applies edge-to-edge using the app's selected theme rather than the device's system theme.
  *
  * AndroidX uses the system UI mode to select the API 26-28 navigation-bar scrim by default.
- * Saathi AI supports an in-app theme toggle, so use the selected palette instead. On API 29+
+ * OpenDroid supports an in-app theme toggle, so use the selected palette instead. On API 29+
  * [SystemBarStyle.auto] keeps both bars transparent, preserving edge-to-edge behavior.
  */
-internal fun ComponentActivity.enableSaathi AIEdgeToEdge(isDarkTheme: Boolean) {
+internal fun ComponentActivity.enableOpenDroidEdgeToEdge(isDarkTheme: Boolean) {
     enableEdgeToEdge(
         statusBarStyle = SystemBarStyle.auto(
             lightScrim = Color.TRANSPARENT,
@@ -63,7 +63,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun Saathi AITheme(
+fun OpenDroidTheme(
     isDarkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -74,7 +74,7 @@ fun Saathi AITheme(
     val activity = view.context as? ComponentActivity
     if (!view.isInEditMode && activity != null) {
         SideEffect {
-            activity.enableSaathi AIEdgeToEdge(isDarkTheme)
+            activity.enableOpenDroidEdgeToEdge(isDarkTheme)
             val window = activity.window
             val insetsController = WindowCompat.getInsetsController(window, view)
             // Light status bar icons for dark theme, dark icons for light theme
@@ -83,7 +83,7 @@ fun Saathi AITheme(
         }
     }
 
-    CompositionLocalProvider(LocalSaathi AIColors provides palette) {
+    CompositionLocalProvider(LocalOpenDroidColors provides palette) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,

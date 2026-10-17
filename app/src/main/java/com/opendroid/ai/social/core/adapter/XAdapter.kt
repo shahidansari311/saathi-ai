@@ -32,8 +32,8 @@ class XAdapter @Inject constructor(
             return Result.success(
                 SocialAccountInfo(
                     id = "x_${credentials.accountId.ifBlank { "opendroid_ai" }}",
-                    username = "SaathiAI",
-                    displayName = "Saathi AI",
+                    username = "OpenDroidAI",
+                    displayName = "OpenDroid AI",
                     avatarUrl = null,
                     grantedPermissions = supportedPermissions
                 )
@@ -67,7 +67,7 @@ class XAdapter @Inject constructor(
                 PublishPostResult(
                     success = true,
                     platformPostId = tweetId,
-                    url = "https://x.com/SaathiAI/status/$tweetId"
+                    url = "https://x.com/OpenDroidAI/status/$tweetId"
                 )
             )
         }
@@ -108,7 +108,7 @@ class XAdapter @Inject constructor(
                         type = InteractionType.MENTION,
                         category = InteractionCategory.POSITIVE_FEEDBACK,
                         priority = InteractionPriority.NORMAL,
-                        content = "Tested @SaathiAI on my Pixel phone and the voice assistant latency is incredible 🔥",
+                        content = "Tested @OpenDroidAI on my Pixel phone and the voice assistant latency is incredible 🔥",
                         timestamp = System.currentTimeMillis() - 5400_000,
                         status = "UNREAD",
                         suggestedAction = "Thank user and retweet/quote"

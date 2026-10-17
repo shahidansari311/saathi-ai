@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * Not delegating would leave the app in a zombie state - a live process with a
  * dead main thread - which is worse than the crash it is logging.
  */
-class Saathi AICrashHandler(
+class OpenDroidCrashHandler(
     private val recorder: CrashRecorder,
     private val delegate: Thread.UncaughtExceptionHandler?
 ) : Thread.UncaughtExceptionHandler {
@@ -49,8 +49,8 @@ class Saathi AICrashHandler(
          */
         fun install(recorder: CrashRecorder) {
             val current = Thread.getDefaultUncaughtExceptionHandler()
-            if (current is Saathi AICrashHandler) return
-            Thread.setDefaultUncaughtExceptionHandler(Saathi AICrashHandler(recorder, current))
+            if (current is OpenDroidCrashHandler) return
+            Thread.setDefaultUncaughtExceptionHandler(OpenDroidCrashHandler(recorder, current))
         }
     }
 }

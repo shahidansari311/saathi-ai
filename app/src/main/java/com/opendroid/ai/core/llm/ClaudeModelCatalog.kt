@@ -1,7 +1,7 @@
 package com.opendroid.ai.core.llm
 
 /**
- * Describes a single Anthropic Claude model Saathi AI supports.
+ * Describes a single Anthropic Claude model OpenDroid supports.
  */
 data class ClaudeModelSpec(
     /** Stable Anthropic model ID, sent verbatim in the request body. */
@@ -23,7 +23,7 @@ data class ClaudeModelSpec(
 )
 
 /**
- * What Saathi AI knows *about* Anthropic Claude models: display names, badges,
+ * What OpenDroid knows *about* Anthropic Claude models: display names, badges,
  * which models accept sampling parameters, and how retired IDs migrate.
  *
  * This is not the list of models the picker shows, and it is not the sole allow
@@ -43,7 +43,7 @@ data class ClaudeModelSpec(
  */
 object ClaudeModelCatalog {
 
-    /** The Claude models Anthropic currently serves and Saathi AI supports. */
+    /** The Claude models Anthropic currently serves and OpenDroid supports. */
     val models: List<ClaudeModelSpec> = listOf(
         ClaudeModelSpec(
             id = "claude-fable-5",
@@ -154,7 +154,7 @@ object ClaudeModelCatalog {
         return null
     }
 
-    /** The catalog entry for [id], or `null` if Saathi AI does not know the model. */
+    /** The catalog entry for [id], or `null` if OpenDroid does not know the model. */
     fun specFor(id: String): ClaudeModelSpec? = byId[id.trim()]
 
     /**

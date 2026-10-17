@@ -24,7 +24,7 @@ import androidx.core.graphics.toColorInt
 import com.opendroid.ai.R
 import com.opendroid.ai.core.agent.AgentLoop
 import com.opendroid.ai.core.agent.AgentState
-import com.opendroid.ai.core.service.Saathi AIService
+import com.opendroid.ai.core.service.OpenDroidService
 import com.opendroid.ai.data.repository.SettingsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +43,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @AndroidEntryPoint
-class Saathi AIAccessibilityService : AccessibilityService() {
+class OpenDroidAccessibilityService : AccessibilityService() {
 
     @Inject
     lateinit var agentLoop: AgentLoop
@@ -320,8 +320,8 @@ class Saathi AIAccessibilityService : AccessibilityService() {
     }
 
     private fun triggerMicrophoneAction() {
-        val intent = Intent(this, Saathi AIService::class.java).apply {
-            action = Saathi AIService.ACTION_TRIGGER_RECORD
+        val intent = Intent(this, OpenDroidService::class.java).apply {
+            action = OpenDroidService.ACTION_TRIGGER_RECORD
         }
         try {
             startForegroundService(intent)
@@ -669,8 +669,8 @@ class Saathi AIAccessibilityService : AccessibilityService() {
 
     companion object {
         @Volatile
-        private var instance: Saathi AIAccessibilityService? = null
+        private var instance: OpenDroidAccessibilityService? = null
 
-        fun getInstance(): Saathi AIAccessibilityService? = instance
+        fun getInstance(): OpenDroidAccessibilityService? = instance
     }
 }

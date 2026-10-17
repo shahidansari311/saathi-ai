@@ -92,7 +92,7 @@ class SocialInboxClassifier @Inject constructor(
         }
 
         val action = when (category) {
-            InteractionCategory.QUESTION -> "Answer question about Saathi AI"
+            InteractionCategory.QUESTION -> "Answer question about OpenDroid"
             InteractionCategory.BUG_REPORT -> "Investigate potential bug report"
             InteractionCategory.COLLABORATION -> "Review business collaboration opportunity"
             InteractionCategory.SUPPORT_REQUEST -> "Provide technical support assistance"

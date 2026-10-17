@@ -6,7 +6,7 @@ import kotlinx.coroutines.delay
 object SmsAutomator {
 
     suspend fun automateSend(): Boolean {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return false
+        val service = OpenDroidAccessibilityService.getInstance() ?: return false
         
         // Wait for screen transition
         delay(1500)

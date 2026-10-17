@@ -5,7 +5,7 @@ import android.content.Context
 import android.media.MediaMetadata
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
-import com.opendroid.ai.core.service.Saathi AINotificationListener
+import com.opendroid.ai.core.service.OpenDroidNotificationListener
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,7 +35,7 @@ class AndroidMediaPlaybackVerifier @Inject constructor() : MediaPlaybackVerifier
     ): Boolean {
         val sessionManager = context.getSystemService(MediaSessionManager::class.java)
             ?: return false
-        val listenerComponent = ComponentName(context, Saathi AINotificationListener::class.java)
+        val listenerComponent = ComponentName(context, OpenDroidNotificationListener::class.java)
         val deadline = System.currentTimeMillis() + VERIFICATION_TIMEOUT_MS
 
         do {

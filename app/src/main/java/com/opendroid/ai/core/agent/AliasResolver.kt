@@ -7,7 +7,7 @@ import com.opendroid.ai.core.util.DurationParser
  * directly to action hints. When a match is found, the AgentLoop
  * can bypass the LLM entirely and execute the action directly.
  *
- * This gives Saathi AI "common sense" vocabulary — the user says
+ * This gives OpenDroid "common sense" vocabulary — the user says
  * "flash", "torch", or "light" and the flashlight toggles immediately.
  */
 object AliasResolver {

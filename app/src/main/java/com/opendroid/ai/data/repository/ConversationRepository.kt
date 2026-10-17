@@ -1,7 +1,7 @@
 package com.opendroid.ai.data.repository
 
 import androidx.room.withTransaction
-import com.opendroid.ai.data.db.Saathi AIDatabase
+import com.opendroid.ai.data.db.OpenDroidDatabase
 import com.opendroid.ai.data.db.dao.ChatSessionDao
 import com.opendroid.ai.data.db.dao.ConversationDao
 import com.opendroid.ai.data.db.entities.ChatSessionEntity
@@ -31,7 +31,7 @@ data class ChatSession(
 
 @Singleton
 class ConversationRepository @Inject constructor(
-    private val database: Saathi AIDatabase,
+    private val database: OpenDroidDatabase,
     private val conversationDao: ConversationDao,
     private val chatSessionDao: ChatSessionDao
 ) {

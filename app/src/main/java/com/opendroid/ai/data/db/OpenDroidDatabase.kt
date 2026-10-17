@@ -73,7 +73,7 @@ import androidx.room.TypeConverters
     exportSchema = true
 )
 @TypeConverters(Converters::class)
-abstract class Saathi AIDatabase : RoomDatabase() {
+abstract class OpenDroidDatabase : RoomDatabase() {
     abstract fun conversationDao(): ConversationDao
     abstract fun chatSessionDao(): ChatSessionDao
     abstract fun planDao(): PlanDao

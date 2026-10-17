@@ -26,19 +26,19 @@ object GenericAppAutomator {
     }
 
     suspend fun clickText(text: String): Boolean = retryUntilTimeout {
-        Saathi AIAccessibilityService.getInstance()?.findAndClick(text) == true
+        OpenDroidAccessibilityService.getInstance()?.findAndClick(text) == true
     }
 
     suspend fun clickId(viewId: String): Boolean = retryUntilTimeout {
-        Saathi AIAccessibilityService.getInstance()?.findAndClickById(viewId) == true
+        OpenDroidAccessibilityService.getInstance()?.findAndClickById(viewId) == true
     }
 
     suspend fun typeText(searchText: String, content: String): Boolean = retryUntilTimeout {
-        Saathi AIAccessibilityService.getInstance()?.findAndType(searchText, content) == true
+        OpenDroidAccessibilityService.getInstance()?.findAndType(searchText, content) == true
     }
 
     suspend fun typeId(viewId: String, content: String): Boolean = retryUntilTimeout {
-        Saathi AIAccessibilityService.getInstance()?.findAndTypeById(viewId, content) == true
+        OpenDroidAccessibilityService.getInstance()?.findAndTypeById(viewId, content) == true
     }
 
     /**
@@ -48,32 +48,32 @@ object GenericAppAutomator {
      * already known to exist.
      */
     fun pressEnter(): Boolean {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return false
+        val service = OpenDroidAccessibilityService.getInstance() ?: return false
         return service.performImeEnter()
     }
 
     fun scrapeScreen(): String {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return ""
+        val service = OpenDroidAccessibilityService.getInstance() ?: return ""
         return service.getScreenText()
     }
 
     fun pressBack(): Boolean {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return false
+        val service = OpenDroidAccessibilityService.getInstance() ?: return false
         return service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
     }
 
     fun pressHome(): Boolean {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return false
+        val service = OpenDroidAccessibilityService.getInstance() ?: return false
         return service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME)
     }
 
     fun scroll(forward: Boolean): Boolean {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return false
+        val service = OpenDroidAccessibilityService.getInstance() ?: return false
         return service.performScroll(forward)
     }
 
     fun clickCoordinates(x: Float, y: Float): Boolean {
-        val service = Saathi AIAccessibilityService.getInstance() ?: return false
+        val service = OpenDroidAccessibilityService.getInstance() ?: return false
         return service.clickCoordinates(x, y)
     }
 }

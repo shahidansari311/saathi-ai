@@ -32,7 +32,7 @@ class FacebookAdapter @Inject constructor(
                 SocialAccountInfo(
                     id = "fb_${credentials.accountId.ifBlank { "opendroid.page" }}",
                     username = "opendroid.official",
-                    displayName = "Saathi AI Companion Page",
+                    displayName = "OpenDroid Autonomous AI Page",
                     avatarUrl = null,
                     grantedPermissions = supportedPermissions
                 )
@@ -104,7 +104,7 @@ class FacebookAdapter @Inject constructor(
                         type = InteractionType.COMMENT,
                         category = InteractionCategory.QUESTION,
                         priority = InteractionPriority.NORMAL,
-                        content = "Does Saathi AI have a desktop companion or is it strictly mobile on-device?",
+                        content = "Does OpenDroid have a desktop companion or is it strictly mobile on-device?",
                         timestamp = System.currentTimeMillis() - 10800_000,
                         status = "UNREAD",
                         suggestedAction = "Draft response explaining autonomous Android-first design"
