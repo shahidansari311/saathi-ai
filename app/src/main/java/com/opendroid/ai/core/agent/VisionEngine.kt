@@ -1,7 +1,7 @@
 package com.opendroid.ai.core.agent
 
 import android.util.Log
-import com.opendroid.ai.accessibility.OpenDroidAccessibilityService
+import com.opendroid.ai.accessibility.Saathi AIAccessibilityService
 import com.opendroid.ai.core.llm.LLMProviderFactory
 import com.opendroid.ai.core.llm.LLMRequest
 import com.opendroid.ai.core.llm.ResponseFormat
@@ -28,7 +28,7 @@ class VisionEngine @Inject constructor(
      * Uses the AccessibilityService's existing screenshot capability.
      */
     suspend fun captureScreenBase64(): String? {
-        val service = OpenDroidAccessibilityService.getInstance()
+        val service = Saathi AIAccessibilityService.getInstance()
         if (service == null) {
             Log.w(TAG, "Accessibility service instance is null")
             return null
@@ -47,7 +47,7 @@ class VisionEngine @Inject constructor(
      * This works even when screenshot capture fails.
      */
     fun getScreenText(): String? {
-        val service = OpenDroidAccessibilityService.getInstance()
+        val service = Saathi AIAccessibilityService.getInstance()
         if (service == null) {
             Log.w(TAG, "Accessibility service not available for text extraction")
             return null
@@ -81,7 +81,7 @@ class VisionEngine @Inject constructor(
             return analyzeWithText(screenText, userQuestion)
         }
 
-        return "Could not capture or read the screen. The Accessibility Service may need to be re-enabled in Settings > Accessibility > OpenDroid."
+        return "Could not capture or read the screen. The Accessibility Service may need to be re-enabled in Settings > Accessibility > Saathi AI."
     }
 
     private suspend fun analyzeWithImage(
@@ -182,7 +182,7 @@ class VisionEngine @Inject constructor(
             return extractWithText(screenText, topic)
         }
 
-        return "Could not capture or read the screen. Please ensure the Accessibility Service is enabled in Settings > Accessibility > OpenDroid."
+        return "Could not capture or read the screen. Please ensure the Accessibility Service is enabled in Settings > Accessibility > Saathi AI."
     }
 
     private suspend fun extractWithImage(

@@ -198,7 +198,7 @@ fun ChatScreen(
                 title = {
                     Column {
                         Text(
-                            text = "OPENDROID",
+                            text = "SAATHI AI",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             color = TextPrimary,

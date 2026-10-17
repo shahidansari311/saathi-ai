@@ -6,7 +6,7 @@ import kotlinx.coroutines.delay
 object WhatsAppAutomator {
 
     suspend fun automateSend(message: String): Boolean {
-        val service = OpenDroidAccessibilityService.getInstance() ?: return false
+        val service = Saathi AIAccessibilityService.getInstance() ?: return false
         
         // Wait for WhatsApp chat screen to fully load
         // WhatsApp can be slow to render especially on first launch or when opening via deep link

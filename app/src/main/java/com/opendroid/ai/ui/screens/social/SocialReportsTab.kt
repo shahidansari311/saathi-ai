@@ -223,7 +223,7 @@ fun SocialReportsTab(
                     Text("Grounded Insights Verification", color = theme.textPrimary, fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "OpenDroid strictly distinguishes between Observed Metrics, Calculated Insights, and Strategic Suggestions to eliminate hallucinations.",
+                        "Saathi AI strictly distinguishes between Observed Metrics, Calculated Insights, and Strategic Suggestions to eliminate hallucinations.",
                         color = theme.textSecondary,
                         fontSize = 11.sp,
                         lineHeight = 15.sp

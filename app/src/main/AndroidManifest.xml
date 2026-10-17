@@ -61,7 +61,7 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 
     <application
-        android:name=".OpenDroidApp"
+        android:name=".Saathi AIApp"
         android:allowBackup="true"
         android:largeHeap="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -100,7 +100,7 @@
 
         <!-- Foreground Service for Wake-word and Speech processing -->
         <service
-            android:name=".core.service.OpenDroidService"
+            android:name=".core.service.Saathi AIService"
             android:foregroundServiceType="microphone|specialUse"
             android:exported="false">
             <property
@@ -110,7 +110,7 @@
 
         <!-- Accessibility Service for System Automation -->
         <service
-            android:name=".accessibility.OpenDroidAccessibilityService"
+            android:name=".accessibility.Saathi AIAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="true">
             <intent-filter>
@@ -132,7 +132,7 @@
 
         <!-- Notification Listener Service for Reading & Auto-Reply -->
         <service
-            android:name=".core.service.OpenDroidNotificationListener"
+            android:name=".core.service.Saathi AINotificationListener"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:exported="true">
             <intent-filter>

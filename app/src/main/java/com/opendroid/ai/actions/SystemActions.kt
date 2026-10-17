@@ -18,7 +18,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.net.toUri
-import com.opendroid.ai.accessibility.OpenDroidAccessibilityService
+import com.opendroid.ai.accessibility.Saathi AIAccessibilityService
 import com.opendroid.ai.actions.base.Action
 import com.opendroid.ai.actions.base.ActionResult
 import com.opendroid.ai.core.agent.AgentLoop
@@ -375,7 +375,7 @@ class SystemActions @Inject constructor(
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                     context.startActivity(intent)
-                    ActionResult(false, "I need your permission to change system settings. I've opened the settings page — just flip the switch to allow OpenDroid, then try again!", null, true)
+                    ActionResult(false, "I need your permission to change system settings. I've opened the settings page — just flip the switch to allow Saathi AI, then try again!", null, true)
                 }
             } catch (e: Exception) {
                 Log.e("SetBrightness", "Brightness failed: ${e.localizedMessage}")
@@ -437,7 +437,7 @@ class SystemActions @Inject constructor(
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) {
                 return ActionResult(false, null, "Locking the screen requires Android 9 or newer.")
             }
-            val service = OpenDroidAccessibilityService.getInstance()
+            val service = Saathi AIAccessibilityService.getInstance()
             return if (service != null) {
                 val success = service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
                 ActionResult(success, if (success) "Device locked" else "Failed to lock", null)
@@ -450,7 +450,7 @@ class SystemActions @Inject constructor(
     private class RestartDeviceAction : Action {
         override val name: String = "RESTART_DEVICE"
         override suspend fun execute(params: Map<String, String>, context: Context): ActionResult {
-            val service = OpenDroidAccessibilityService.getInstance()
+            val service = Saathi AIAccessibilityService.getInstance()
             return if (service != null) {
                 val success = service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)
                 ActionResult(success, if (success) "Power dialog opened. Action pending user touch." else "Failed to open dialog", null)
@@ -509,7 +509,7 @@ class SystemActions @Inject constructor(
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) {
                 return ActionResult(false, null, "Taking a screenshot requires Android 9 or newer.")
             }
-            val service = OpenDroidAccessibilityService.getInstance()
+            val service = Saathi AIAccessibilityService.getInstance()
             return if (service != null) {
                 val success = service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
                 ActionResult(success, if (success) "Screenshot taken!" else "Couldn't capture screenshot.", null)
@@ -1118,7 +1118,7 @@ class SystemActions @Inject constructor(
             val text = params["text"] ?: return ActionResult(false, null, "No text provided to copy")
             return try {
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                val clip = android.content.ClipData.newPlainText("OpenDroid", text)
+                val clip = android.content.ClipData.newPlainText("Saathi AI", text)
                 clipboard.setPrimaryClip(clip)
                 ActionResult(true, "Copied to clipboard: \"${text.take(50)}${if (text.length > 50) "..." else ""}\"", null)
             } catch (e: Exception) {

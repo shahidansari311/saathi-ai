@@ -214,7 +214,7 @@ class AgentLoop @Inject constructor(
      * the caller was looking at when the user hit send), if the caller can determine it.
      * Used to decide whether this message answers a pending awaitUserResponse() prompt -
      * see below - and, for a genuinely new query, which session it's stored in. Callers
-     * that cannot determine this (e.g. voice input via OpenDroidService, which has no
+     * that cannot determine this (e.g. voice input via Saathi AIService, which has no
      * notion of "which chat" a spoken query belongs to) pass null, which preserves the
      * pre-multi-session behavior: a null session is always assumed to answer whatever
      * prompt is currently pending, and otherwise falls back to resolving "current".
@@ -275,7 +275,7 @@ class AgentLoop @Inject constructor(
                 // Attaching a screenshot to every request would silently send
                 // whatever is on screen (messages, banking apps, ...) to the LLM.
                 val screenshotBase64 = if (needsScreenContext(query)) {
-                    com.opendroid.ai.accessibility.OpenDroidAccessibilityService.getInstance()?.takeScreenshotAndEncode()
+                    com.opendroid.ai.accessibility.Saathi AIAccessibilityService.getInstance()?.takeScreenshotAndEncode()
                 } else {
                     null
                 }
@@ -501,7 +501,7 @@ class AgentLoop @Inject constructor(
             val autoModeLabel = settingsRepository.llmConfig.first().approvalSettings().mode.name
 
             val systemPrompt = """
-                You are OpenDroid, a friendly and helpful Android AI assistant.
+                You are Saathi AI, a friendly and helpful voice-first Android companion designed to assist users with daily tasks and phone navigation.
                 Talk like a real person — warm, casual, and natural. Avoid sounding robotic.
                 Keep your answers short and to the point, but feel free to be friendly.
                 

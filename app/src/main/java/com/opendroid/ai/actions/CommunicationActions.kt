@@ -8,7 +8,7 @@ import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.opendroid.ai.accessibility.OpenDroidAccessibilityService
+import com.opendroid.ai.accessibility.Saathi AIAccessibilityService
 import com.opendroid.ai.accessibility.WhatsAppAutomator
 import com.opendroid.ai.accessibility.TelegramAutomator
 import com.opendroid.ai.accessibility.SmsAutomator
@@ -302,7 +302,7 @@ class CommunicationActions @Inject constructor(
             }
             context.startActivity(intent)
 
-            val service = OpenDroidAccessibilityService.getInstance()
+            val service = Saathi AIAccessibilityService.getInstance()
             if (service != null) {
                 val autoSent = WhatsAppAutomator.automateSend(message)
                 if (autoSent) {
@@ -343,7 +343,7 @@ class CommunicationActions @Inject constructor(
      *   false = verified NOT sent (input field still has message text)
      *   null  = inconclusive (couldn't find input field to check)
      */
-    private fun verifySendCompleted(service: OpenDroidAccessibilityService): Boolean? {
+    private fun verifySendCompleted(service: Saathi AIAccessibilityService): Boolean? {
         try {
             val rootNode = service.rootInActiveWindow ?: return null // inconclusive
             val inputIds = listOf("com.whatsapp:id/entry", "com.whatsapp:id/text_entry")
@@ -414,7 +414,7 @@ class CommunicationActions @Inject constructor(
                 context.startActivity(webIntent)
             }
 
-            val service = OpenDroidAccessibilityService.getInstance()
+            val service = Saathi AIAccessibilityService.getInstance()
             if (service != null) {
                 val autoSent = TelegramAutomator.automateSend(message)
                 if (autoSent) {
@@ -455,7 +455,7 @@ class CommunicationActions @Inject constructor(
             }
             context.startActivity(intent)
 
-            val service = OpenDroidAccessibilityService.getInstance()
+            val service = Saathi AIAccessibilityService.getInstance()
             if (service != null) {
                 val autoSent = SmsAutomator.automateSend()
                 if (autoSent) {
@@ -474,7 +474,7 @@ class CommunicationActions @Inject constructor(
                 }
                 context.startActivity(fallbackIntent)
 
-                val service = OpenDroidAccessibilityService.getInstance()
+                val service = Saathi AIAccessibilityService.getInstance()
                 if (service != null) {
                     val autoSent = SmsAutomator.automateSend()
                     if (autoSent) {

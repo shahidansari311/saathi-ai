@@ -22,7 +22,7 @@ import javax.inject.Inject
  * triggers pattern analysis, and schedules auto-replies for messages.
  */
 @AndroidEntryPoint
-class OpenDroidNotificationListener : NotificationListenerService() {
+class Saathi AINotificationListener : NotificationListenerService() {
 
     @Inject lateinit var notificationDao: NotificationDao
     @Inject lateinit var autoReplyEngine: AutoReplyEngine
@@ -50,9 +50,9 @@ class OpenDroidNotificationListener : NotificationListenerService() {
         )
 
         @Volatile
-        private var instance: OpenDroidNotificationListener? = null
+        private var instance: Saathi AINotificationListener? = null
 
-        fun getInstance(): OpenDroidNotificationListener? = instance
+        fun getInstance(): Saathi AINotificationListener? = instance
     }
 
     override fun onListenerConnected() {

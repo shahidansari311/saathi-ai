@@ -8,10 +8,10 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 
 /**
- * OpenDroid color palette — resolved via CompositionLocal so all screens
+ * Saathi AI color palette — resolved via CompositionLocal so all screens
  * automatically adapt to the active theme (light / dark).
  */
-data class OpenDroidColors(
+data class Saathi AIColors(
     val background: Color,
     val surface: Color,
     val cardBackground: Color,
@@ -29,7 +29,7 @@ data class OpenDroidColors(
 )
 
 // ── Dark palette: Classic Pure Black (#000000) ───────────────
-val DarkPalette = OpenDroidColors(
+val DarkPalette = Saathi AIColors(
     background = Color(0xFF000000),      // Classic pure OLED black
     surface = Color(0xFF0A0A0A),         // Deep charcoal surface
     cardBackground = Color(0xFF141416),  // Elevated card surface
@@ -46,7 +46,7 @@ val DarkPalette = OpenDroidColors(
 )
 
 // ── Light palette: Classic Pure White (#FFFFFF) ─────────────
-val LightPalette = OpenDroidColors(
+val LightPalette = Saathi AIColors(
     background = Color(0xFFFFFFFF),      // Classic pure white
     surface = Color(0xFFF8F9FA),         // Crisp light surface
     cardBackground = Color(0xFFFFFFFF),  // Pure white card
@@ -62,14 +62,14 @@ val LightPalette = OpenDroidColors(
     isDark = false
 )
 
-val LocalOpenDroidColors = compositionLocalOf { DarkPalette }
+val LocalSaathi AIColors = compositionLocalOf { DarkPalette }
 
 /** Access the active palette from any @Composable */
 object AppTheme {
-    val colors: OpenDroidColors
+    val colors: Saathi AIColors
         @Composable
         @ReadOnlyComposable
-        get() = LocalOpenDroidColors.current
+        get() = LocalSaathi AIColors.current
 }
 
 // ── Dynamic Composable top-level aliases ────────────────────

@@ -4,7 +4,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import javax.inject.Inject
 
 /**
- * Pure node-tree traversal/matching logic used by [OpenDroidAccessibilityService],
+ * Pure node-tree traversal/matching logic used by [Saathi AIAccessibilityService],
  * extracted so it can be exercised in tests without a bound accessibility service.
  *
  * Every function here takes the root [AccessibilityNodeInfo] as a parameter instead

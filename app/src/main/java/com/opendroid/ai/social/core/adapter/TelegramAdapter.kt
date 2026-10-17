@@ -32,8 +32,8 @@ class TelegramAdapter @Inject constructor(
             return Result.success(
                 SocialAccountInfo(
                     id = "tg_${credentials.accountId.ifBlank { "opendroid_bot" }}",
-                    username = "OpenDroidBot",
-                    displayName = "OpenDroid Assistant",
+                    username = "SaathiAIBot",
+                    displayName = "Saathi AI Assistant",
                     avatarUrl = null,
                     grantedPermissions = supportedPermissions
                 )
@@ -63,7 +63,7 @@ class TelegramAdapter @Inject constructor(
 
     override suspend fun publishPost(credentials: SocialCredentials, post: SocialPost): Result<PublishPostResult> {
         val token = credentials.botToken ?: credentials.accessToken
-        val chatId = credentials.channelOrTargetId ?: "@opendroid_community"
+        val chatId = credentials.channelOrTargetId ?: "@saathiai_community"
 
         if (isSandboxToken(token)) {
             return Result.success(
@@ -115,7 +115,7 @@ class TelegramAdapter @Inject constructor(
                         type = InteractionType.DIRECT_MESSAGE,
                         category = InteractionCategory.QUESTION,
                         priority = InteractionPriority.NORMAL,
-                        content = "Does OpenDroid v1.1 support offline local models?",
+                        content = "Does Saathi AI v1.0 support offline local models?",
                         timestamp = System.currentTimeMillis() - 3600_000,
                         status = "UNREAD",
                         suggestedAction = "Draft response confirming LiteRT on-device support"
@@ -173,7 +173,7 @@ class TelegramAdapter @Inject constructor(
                         platform = SocialPlatform.TELEGRAM,
                         authorName = "DevDan",
                         authorAvatarUrl = null,
-                        content = "When is the official rollout for OpenDroid?",
+                        content = "When is the official rollout for Saathi AI?",
                         timestamp = System.currentTimeMillis() - 1800_000,
                         sentiment = Sentiment.POSITIVE,
                         category = InteractionCategory.QUESTION,
@@ -187,7 +187,7 @@ class TelegramAdapter @Inject constructor(
 
     override suspend fun replyToComment(credentials: SocialCredentials, commentId: String, text: String): Result<ReplyCommentResult> {
         val token = credentials.botToken ?: credentials.accessToken
-        val chatId = credentials.channelOrTargetId ?: "@opendroid_community"
+        val chatId = credentials.channelOrTargetId ?: "@saathiai_community"
 
         if (isSandboxToken(token)) {
             return Result.success(

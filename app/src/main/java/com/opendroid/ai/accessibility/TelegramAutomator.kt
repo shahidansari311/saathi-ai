@@ -8,7 +8,7 @@ object TelegramAutomator {
     private const val TAG = "TelegramAutomator"
 
     suspend fun automateSend(message: String): Boolean {
-        val service = OpenDroidAccessibilityService.getInstance() ?: return false
+        val service = Saathi AIAccessibilityService.getInstance() ?: return false
 
         // Wait for Telegram chat screen to render
         delay(2500)

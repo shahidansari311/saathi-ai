@@ -2,7 +2,7 @@ package com.opendroid.ai.di
 
 import android.content.Context
 import androidx.room.Room
-import com.opendroid.ai.data.db.OpenDroidDatabase
+import com.opendroid.ai.data.db.Saathi AIDatabase
 import com.opendroid.ai.data.db.dao.ChatSessionDao
 import com.opendroid.ai.data.db.dao.ConversationDao
 import com.opendroid.ai.data.db.dao.MacroDao
@@ -30,68 +30,68 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): OpenDroidDatabase {
+    fun provideDatabase(@ApplicationContext context: Context): Saathi AIDatabase {
         return Room.databaseBuilder(
             context,
-            OpenDroidDatabase::class.java,
+            Saathi AIDatabase::class.java,
             "opendroid_database"
         )
         .addMigrations(
-            OpenDroidDatabase.MIGRATION_1_2,
-            OpenDroidDatabase.MIGRATION_2_3,
-            OpenDroidDatabase.MIGRATION_3_4,
-            OpenDroidDatabase.MIGRATION_4_5,
-            OpenDroidDatabase.MIGRATION_5_6,
-            OpenDroidDatabase.MIGRATION_6_7,
-            OpenDroidDatabase.MIGRATION_7_8,
-            OpenDroidDatabase.MIGRATION_8_9
+            Saathi AIDatabase.MIGRATION_1_2,
+            Saathi AIDatabase.MIGRATION_2_3,
+            Saathi AIDatabase.MIGRATION_3_4,
+            Saathi AIDatabase.MIGRATION_4_5,
+            Saathi AIDatabase.MIGRATION_5_6,
+            Saathi AIDatabase.MIGRATION_6_7,
+            Saathi AIDatabase.MIGRATION_7_8,
+            Saathi AIDatabase.MIGRATION_8_9
         )
         .build()
     }
 
     @Provides
     @Singleton
-    fun provideConversationDao(db: OpenDroidDatabase): ConversationDao = db.conversationDao()
+    fun provideConversationDao(db: Saathi AIDatabase): ConversationDao = db.conversationDao()
 
     @Provides
     @Singleton
-    fun provideChatSessionDao(db: OpenDroidDatabase): ChatSessionDao = db.chatSessionDao()
+    fun provideChatSessionDao(db: Saathi AIDatabase): ChatSessionDao = db.chatSessionDao()
 
     @Provides
     @Singleton
-    fun providePlanDao(db: OpenDroidDatabase): PlanDao = db.planDao()
+    fun providePlanDao(db: Saathi AIDatabase): PlanDao = db.planDao()
 
     @Provides
     @Singleton
-    fun provideMemoryDao(db: OpenDroidDatabase): MemoryDao = db.memoryDao()
+    fun provideMemoryDao(db: Saathi AIDatabase): MemoryDao = db.memoryDao()
 
     @Provides
     @Singleton
-    fun provideTaskHistoryDao(db: OpenDroidDatabase): TaskHistoryDao = db.taskHistoryDao()
+    fun provideTaskHistoryDao(db: Saathi AIDatabase): TaskHistoryDao = db.taskHistoryDao()
 
     @Provides
     @Singleton
-    fun provideMacroDao(db: OpenDroidDatabase): MacroDao = db.macroDao()
+    fun provideMacroDao(db: Saathi AIDatabase): MacroDao = db.macroDao()
 
     @Provides
     @Singleton
-    fun provideUnknownActionDao(db: OpenDroidDatabase): UnknownActionDao = db.unknownActionDao()
+    fun provideUnknownActionDao(db: Saathi AIDatabase): UnknownActionDao = db.unknownActionDao()
 
     @Provides
     @Singleton
-    fun provideNotificationDao(db: OpenDroidDatabase): NotificationDao = db.notificationDao()
+    fun provideNotificationDao(db: Saathi AIDatabase): NotificationDao = db.notificationDao()
 
     @Provides
     @Singleton
-    fun provideModelDao(db: OpenDroidDatabase): ModelDao = db.modelDao()
+    fun provideModelDao(db: Saathi AIDatabase): ModelDao = db.modelDao()
 
     @Provides
     @Singleton
-    fun provideCrashLogDao(db: OpenDroidDatabase): CrashLogDao = db.crashLogDao()
+    fun provideCrashLogDao(db: Saathi AIDatabase): CrashLogDao = db.crashLogDao()
 
     @Provides
     @Singleton
-    fun provideHabitDao(db: OpenDroidDatabase): HabitDao = db.habitDao()
+    fun provideHabitDao(db: Saathi AIDatabase): HabitDao = db.habitDao()
 
     @Provides
     @Singleton
@@ -100,41 +100,41 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideSocialAccountDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialAccountDao =
+    fun provideSocialAccountDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialAccountDao =
         db.socialAccountDao()
 
     @Provides
     @Singleton
-    fun provideSocialPostDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialPostDao =
+    fun provideSocialPostDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialPostDao =
         db.socialPostDao()
 
     @Provides
     @Singleton
-    fun provideSocialCommentDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialCommentDao =
+    fun provideSocialCommentDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialCommentDao =
         db.socialCommentDao()
 
     @Provides
     @Singleton
-    fun provideSocialInteractionDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialInteractionDao =
+    fun provideSocialInteractionDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialInteractionDao =
         db.socialInteractionDao()
 
     @Provides
     @Singleton
-    fun provideSocialAnalyticsDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialAnalyticsDao =
+    fun provideSocialAnalyticsDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialAnalyticsDao =
         db.socialAnalyticsDao()
 
     @Provides
     @Singleton
-    fun provideSocialCampaignDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialCampaignDao =
+    fun provideSocialCampaignDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialCampaignDao =
         db.socialCampaignDao()
 
     @Provides
     @Singleton
-    fun provideSocialAutomationRuleDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialAutomationRuleDao =
+    fun provideSocialAutomationRuleDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialAutomationRuleDao =
         db.socialAutomationRuleDao()
 
     @Provides
     @Singleton
-    fun provideSocialAuditLogDao(db: OpenDroidDatabase): com.opendroid.ai.data.db.dao.SocialAuditLogDao =
+    fun provideSocialAuditLogDao(db: Saathi AIDatabase): com.opendroid.ai.data.db.dao.SocialAuditLogDao =
         db.socialAuditLogDao()
 }

@@ -275,7 +275,7 @@ class AutoReplyEngine @Inject constructor(
             notification.packageName.contains("whatsapp", ignoreCase = true) -> {
                 // Fetch a fresh SBN from the NotificationListenerService — the original
                 // one captured at schedule time may have a stale PendingIntent after the delay
-                val listener = com.opendroid.ai.core.service.OpenDroidNotificationListener.getInstance()
+                val listener = com.opendroid.ai.core.service.Saathi AINotificationListener.getInstance()
                 val freshSbn = listener?.getActiveNotification(
                     notification.packageName,
                     notification.contactName
@@ -296,7 +296,7 @@ class AutoReplyEngine @Inject constructor(
             // SMS
             notification.category == "MESSAGE" -> {
                 // Try fresh SBN for inline reply first
-                val listener = com.opendroid.ai.core.service.OpenDroidNotificationListener.getInstance()
+                val listener = com.opendroid.ai.core.service.Saathi AINotificationListener.getInstance()
                 val freshSbn = listener?.getActiveNotification(
                     notification.packageName,
                     notification.contactName
@@ -320,7 +320,7 @@ class AutoReplyEngine @Inject constructor(
             notification.category == "EMAIL" -> {
                 val senderEmail = notification.senderEmail ?: ""
                 // Try fresh SBN for inline reply first
-                val listener = com.opendroid.ai.core.service.OpenDroidNotificationListener.getInstance()
+                val listener = com.opendroid.ai.core.service.Saathi AINotificationListener.getInstance()
                 val freshSbn = listener?.getActiveNotification(
                     notification.packageName,
                     notification.contactName
