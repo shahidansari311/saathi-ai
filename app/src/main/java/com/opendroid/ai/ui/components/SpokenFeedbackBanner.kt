@@ -35,7 +35,7 @@ fun SpokenFeedbackBanner(
     isListening: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val theme = OpenDroidTheme.colors
+    val theme = AppTheme.colors
 
     val infiniteTransition = rememberInfiniteTransition(label = "pulseTransition")
     val pulseAlpha by infiniteTransition.animateFloat(

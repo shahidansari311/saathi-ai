@@ -55,6 +55,19 @@ object AliasResolver {
         "disable torch"     to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
         "close flash"       to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
         "close torch"       to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
+        // Hindi / Hinglish flashlight aliases
+        "batti"             to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "toggle")),
+        "batti jalao"       to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "batti jala do"     to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "torch jala do"     to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "torch chalu karo"  to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "light jalao"       to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "light jala do"     to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "light on karo"     to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "on")),
+        "batti bujhao"      to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
+        "batti band karo"   to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
+        "torch band karo"   to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
+        "light band karo"   to ActionHint("TOGGLE_FLASHLIGHT", mapOf("state" to "off")),
 
         // ── SCREENSHOT ──────────────────────────────────
         "screenshot"            to ActionHint("TAKE_SCREENSHOT", emptyMap()),
@@ -239,7 +252,55 @@ object AliasResolver {
         "weather today"             to ActionHint("GET_WEATHER", emptyMap()),
         "what's the weather"        to ActionHint("GET_WEATHER", emptyMap()),
         "whats the weather"         to ActionHint("GET_WEATHER", emptyMap()),
-        "what is the weather"       to ActionHint("GET_WEATHER", emptyMap())
+        "what is the weather"       to ActionHint("GET_WEATHER", emptyMap()),
+
+        // ── EMERGENCY SOS (Hindi / Hinglish / English) ──
+        "bachao"                    to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "bachao bachao"             to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "emergency madad"           to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "madad karo"                to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "meri madad karo"           to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "khatre me hu"              to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "khatra hai"                to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "sos"                       to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "emergency"                 to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "emergency sos"             to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "send sos"                  to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "send emergency sos"        to ActionHint("EMERGENCY_SOS", emptyMap()),
+        "police bulao"              to ActionHint("EMERGENCY_SOS", mapOf("contact" to "112", "makeCall" to "yes")),
+        "call police"               to ActionHint("EMERGENCY_SOS", mapOf("contact" to "112", "makeCall" to "yes")),
+        "ambulance bulao"           to ActionHint("EMERGENCY_SOS", mapOf("contact" to "102", "makeCall" to "yes")),
+        "call ambulance"            to ActionHint("EMERGENCY_SOS", mapOf("contact" to "102", "makeCall" to "yes")),
+
+        // ── FAMILY / QUICK CALLS (Hindi / Hinglish / English) ──
+        "ghar phone lagao"          to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "ghar call karo"            to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "ghar call lagao"           to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "ghar pe phone lagao"       to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "ghar par phone lagao"      to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "ghar pe call karo"         to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "call ghar"                 to ActionHint("MAKE_CALL", mapOf("contact" to "Ghar")),
+        "beta ko call karo"         to ActionHint("MAKE_CALL", mapOf("contact" to "Beta")),
+        "beta ko call"              to ActionHint("MAKE_CALL", mapOf("contact" to "Beta")),
+        "beta ko call lagao"        to ActionHint("MAKE_CALL", mapOf("contact" to "Beta")),
+        "beta ko phone lagao"       to ActionHint("MAKE_CALL", mapOf("contact" to "Beta")),
+        "beta ko phone karo"        to ActionHint("MAKE_CALL", mapOf("contact" to "Beta")),
+        "call beta"                 to ActionHint("MAKE_CALL", mapOf("contact" to "Beta")),
+        "beti ko call karo"         to ActionHint("MAKE_CALL", mapOf("contact" to "Beti")),
+        "beti ko call"              to ActionHint("MAKE_CALL", mapOf("contact" to "Beti")),
+        "beti ko call lagao"        to ActionHint("MAKE_CALL", mapOf("contact" to "Beti")),
+        "beti ko phone lagao"       to ActionHint("MAKE_CALL", mapOf("contact" to "Beti")),
+        "beti ko phone karo"        to ActionHint("MAKE_CALL", mapOf("contact" to "Beti")),
+        "call beti"                 to ActionHint("MAKE_CALL", mapOf("contact" to "Beti")),
+        "family ko call karo"       to ActionHint("MAKE_CALL", mapOf("contact" to "Family")),
+        "call family"               to ActionHint("MAKE_CALL", mapOf("contact" to "Family")),
+
+        // ── MEDICINE / ALARM SHORTCUTS ───────────────────
+        "dawai ka reminder"         to ActionHint("SET_ALARM", mapOf("time" to "08:00", "label" to "Dawai Reminder")),
+        "medicine alarm"            to ActionHint("SET_ALARM", mapOf("time" to "08:00", "label" to "Medicine Alarm")),
+        "dawai reminder"            to ActionHint("SET_ALARM", mapOf("time" to "08:00", "label" to "Dawai Reminder")),
+        "goli ka reminder"          to ActionHint("SET_ALARM", mapOf("time" to "08:00", "label" to "Medicine Reminder")),
+        "dawai khane ka time"       to ActionHint("SET_ALARM", mapOf("time" to "08:00", "label" to "Dawai Reminder"))
     )
 
     private val contextualOffPhrases = listOf(
@@ -275,7 +336,7 @@ object AliasResolver {
     private fun cleanInput(input: String): String {
         return input.lowercase()
             .replace(Regex("""[.,\/#!$%\^&\*;:{}=\-_`~()?+!]"""), " ") // replace punctuation with spaces
-            .replace(Regex("""\b(the|a|an|please|could\s+you|please\s+turn|turn\s+the|open\s+the|close\s+the|enable\s+the|disable\s+the|switch\s+on\s+the|switch\s+off\s+the)\b"""), "") // remove stop/filler words
+            .replace(Regex("""\b(the|a|an|please|could\s+you|please\s+turn|turn\s+the|open\s+the|close\s+the|enable\s+the|disable\s+the|switch\s+on\s+the|switch\s+off\s+the|kripya|zara)\b"""), "") // remove stop/filler words
             .replace(Regex("""\s+"""), " ") // collapse multiple spaces
             .trim()
     }
@@ -374,7 +435,9 @@ object AliasResolver {
         "alarm at", "alarm for", "alarm to",
         "wake me up at", "wake me at", "wake me up", "wake me",
         "wakeup alarm", "wakeup at", "morning alarm",
-        "put alarm", "remind me to wake"
+        "put alarm", "remind me to wake",
+        "dawai ka reminder", "medicine alarm", "dawai khane ka time",
+        "goli ka reminder", "dawai reminder", "medicine reminder", "dawai alarm"
     )
 
     /**
@@ -404,6 +467,7 @@ object AliasResolver {
             .replace("for tomorrow", "")
             .replace("tomorrow", "")
             .replace("today", "")
+            .replace("baje", "")
             .replace("for", "")
             .replace("at", "")
             .replace("to", "")

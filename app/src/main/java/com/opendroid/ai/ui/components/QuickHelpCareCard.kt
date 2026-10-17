@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.opendroid.ai.ui.theme.OpenDroidTheme
+import com.opendroid.ai.ui.theme.AppTheme
 
 /**
  * Quick-Help Care Card for elderly and non-tech-savvy users.
@@ -47,7 +47,7 @@ fun QuickHelpCareCard(
     onCallFamilyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val theme = OpenDroidTheme.colors
+    val theme = AppTheme.colors
 
     // Pulse animation for the big voice mic orb when active
     val infiniteTransition = rememberInfiniteTransition(label = "micOrbTransition")
@@ -81,7 +81,7 @@ fun QuickHelpCareCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterCenter
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // ── Section 1: Big Voice Mic Orb ────────────────────────────────
             Box(

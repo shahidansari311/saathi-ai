@@ -163,7 +163,17 @@ fun ChatScreen(
     val speechRecognizer = remember { SpeechRecognitionEngine(context) }
     var pendingAutoSendVoice by remember { mutableStateOf(false) }
 
-    fun startListeningInternal(autoSend: Boolean) {
+    var startListeningInternal: (Boolean) -> Unit = {}
+
+    val recordAudioPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startListeningInternal(pendingAutoSendVoice)
+        }
+    }
+
+    startListeningInternal = { autoSend ->
         val audioPerm = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.RECORD_AUDIO
@@ -218,14 +228,6 @@ fun ChatScreen(
             transcriptionText = ""
         } else {
             startListeningInternal(autoSend)
-        }
-    }
-
-    val recordAudioPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            startListeningInternal(pendingAutoSendVoice)
         }
     }
 

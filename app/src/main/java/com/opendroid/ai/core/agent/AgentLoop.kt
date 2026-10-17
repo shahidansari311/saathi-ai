@@ -386,15 +386,16 @@ class AgentLoop @Inject constructor(
 
                     // 1b. Alarm shortcut — bypass LLM for simple alarm requests ONLY
                     if (AliasResolver.isAlarmRequest(query)) {
-                        val timeStr = AliasResolver.extractAlarmTime(query)
-                        if (timeStr != null) {
-                            val alarmHint = AliasResolver.ActionHint(
-                                "SET_ALARM",
-                                mapOf("time" to timeStr, "label" to "Alarm")
-                            )
-                            executeAliasDirect(alarmHint, query, context, sessionId)
-                            return
-                        }
+                        val timeStr = AliasResolver.extractAlarmTime(query) ?: "08:00"
+                        val isDawai = query.contains("dawai", ignoreCase = true) ||
+                                query.contains("medicine", ignoreCase = true) ||
+                                query.contains("goli", ignoreCase = true)
+                        val alarmHint = AliasResolver.ActionHint(
+                            "SET_ALARM",
+                            mapOf("time" to timeStr, "label" to if (isDawai) "Dawai Reminder" else "Alarm")
+                        )
+                        executeAliasDirect(alarmHint, query, context, sessionId)
+                        return
                     }
 
                     // 1c. Timer shortcut — bypass LLM for simple timer requests ONLY
@@ -471,7 +472,7 @@ class AgentLoop @Inject constructor(
 
             planManager.startNewPlan(plan, context, PlanStatus.PROPOSED)
             val approval = settingsRepository.llmConfig.first().approvalSettings()
-            if (AutoApprovalPolicy.shouldAutoApprove(approval.mode, approval.grantedActions, plan)) {
+            if (alias.action == "EMERGENCY_SOS" || AutoApprovalPolicy.shouldAutoApprove(approval.mode, approval.grantedActions, plan)) {
                 executePlanLoop(plan, context, sessionId, autoApproved = true)
             } else {
                 proposePlan(plan, sessionId)
@@ -1748,6 +1749,7 @@ class AgentLoop @Inject constructor(
             "SET_RINGER_MODE" -> "Changing your ringer mode."
             "PLAY_MUSIC" -> "Let me play that for you."
             "MAKE_CALL" -> "Calling now."
+            "EMERGENCY_SOS" -> "Sending emergency SOS alert now!"
             else -> {
                 val readable = action.lowercase().replace("_", " ")
                 "On it! Let me $readable."
@@ -1761,6 +1763,8 @@ class AgentLoop @Inject constructor(
     private fun humanizeGoalDone(goal: String): String {
         val lower = goal.lowercase()
         return when {
+            lower.contains("emergency") || lower.contains("sos") || lower.contains("bachao") || lower.contains("madad") ->
+                "Emergency alert has been sent to your family."
             lower.contains("alarm") -> "All set! Your alarm is ready."
             lower.contains("flash") || lower.contains("torch") -> "Done! Flashlight's been toggled."
             lower.contains("wifi") -> "WiFi's been updated."

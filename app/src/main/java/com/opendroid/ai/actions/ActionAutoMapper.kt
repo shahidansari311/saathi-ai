@@ -128,6 +128,16 @@ class ActionAutoMapper @Inject constructor() {
         "OPEN_DIALER"             to "MAKE_CALL",
         "OPEN_PHONE"              to "MAKE_CALL",
 
+        // ── Emergency SOS variants ───────────────────────────────────
+        "SOS"                     to "EMERGENCY_SOS",
+        "SEND_SOS"                to "EMERGENCY_SOS",
+        "EMERGENCY"               to "EMERGENCY_SOS",
+        "EMERGENCY_CALL"          to "EMERGENCY_SOS",
+        "PANIC_BUTTON"            to "EMERGENCY_SOS",
+        "DISTRESS_ALERT"          to "EMERGENCY_SOS",
+        "DISTRESS_CALL"           to "EMERGENCY_SOS",
+        "TRIGGER_SOS"             to "EMERGENCY_SOS",
+
         // ── WhatsApp variants ───────────────────────────────────────
         "OPEN_WHATSAPP"           to "SEND_WHATSAPP",
         "OPEN_WHATSAPP_CHAT"      to "SEND_WHATSAPP",

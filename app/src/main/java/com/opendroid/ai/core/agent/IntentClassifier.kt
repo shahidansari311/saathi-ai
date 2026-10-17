@@ -39,9 +39,10 @@ class IntentClassifier @Inject constructor(
             "open", "launch",
             "navigate", "directions", "take me to",
             "play", "music", "youtube",
-            "set alarm", "set timer", "set reminder",
-            "screenshot", "flashlight", "torch", "flash",
+            "set alarm", "set timer", "set reminder", "dawai", "medicine alarm",
+            "screenshot", "flashlight", "torch", "flash", "batti",
             "wifi", "bluetooth", "brightness", "volume", "dnd", "hotspot",
+            "emergency", "sos", "bachao", "madad",
             "news", "translate", "convert", "calculate",
             "book uber", "book ola",
             "read screen", "remember this", "save this", "save to notes", "read notes", "my notes",
@@ -101,8 +102,11 @@ class IntentClassifier @Inject constructor(
             return QueryComplexity.SIMPLE
         }
 
-        // ── Fast-path: Read & Remember screen and Recall memory queries
-        if (AliasResolver.isReadAndRememberRequest(lowercaseQuery) || AliasResolver.isRecallMemoryRequest(lowercaseQuery)) {
+        // ── Fast-path: Read & Remember screen, Recall memory, Alias, and Alarm queries
+        if (AliasResolver.isReadAndRememberRequest(lowercaseQuery) ||
+            AliasResolver.isRecallMemoryRequest(lowercaseQuery) ||
+            AliasResolver.isAlarmRequest(lowercaseQuery) ||
+            AliasResolver.resolve(lowercaseQuery) != null) {
             return QueryComplexity.SIMPLE
         }
 

@@ -316,6 +316,22 @@ object ActionSchema {
         // ── COMMUNICATION ───────────────────────────────
 
         ActionDefinition(
+            name = "EMERGENCY_SOS",
+            description = "Dispatches an urgent emergency SOS distress alert with current GPS coordinates and battery percentage to emergency contacts, and optionally initiates an emergency phone call.",
+            params = listOf(
+                ParamDefinition("contact", ParamType.STRING, false, "Emergency contact name, relation, or phone number", defaultValue = "emergency"),
+                ParamDefinition("message", ParamType.STRING, false, "Emergency alert text", defaultValue = "EMERGENCY: I need help!"),
+                ParamDefinition("makeCall", ParamType.ENUM, false, "Whether to also place an emergency call (yes/no)", listOf("yes", "no"), "no")
+            ),
+            examples = listOf(
+                "emergency", "sos", "bachao", "emergency madad", "help me", "send emergency sos", "meri madad karo", "khatre me hu"
+            ),
+            category = ActionCategory.COMMUNICATION,
+            isSimple = true,
+            neverAutoApprove = false,
+            risk = ActionRisk.SENSITIVE
+        ),
+        ActionDefinition(
             name = "MAKE_CALL",
             description = "Makes a phone call to a contact or number",
             params = listOf(ParamDefinition("contact", ParamType.STRING, true, "Contact name or phone number")),

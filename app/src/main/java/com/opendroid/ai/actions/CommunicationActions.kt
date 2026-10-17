@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
+import android.os.BatteryManager
 import android.telephony.SmsManager
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -66,6 +69,7 @@ class CommunicationActions @Inject constructor(
     private val json = Json { ignoreUnknownKeys = true }
 
     fun getActions(): List<Action> = listOf(
+        EmergencySosAction(),
         MakeCallAction(),
         SendWhatsAppAction(),
         SendTelegramAction(),
@@ -124,6 +128,156 @@ class CommunicationActions @Inject constructor(
                 "matches" to matchesJson
             ) + extraMeta
         )
+    }
+
+    // ── Safe Sensor & Battery Helpers for SOS ────────────────
+
+    private fun getBatteryPercentage(context: Context): Int {
+        return try {
+            val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
+            batteryManager?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: -1
+        } catch (_: Exception) {
+            -1
+        }
+    }
+
+    private fun getLocationCoordinates(context: Context): Pair<Double, Double>? {
+        return try {
+            val hasFine = ContextCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            val hasCoarse = ContextCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasFine && !hasCoarse) return null
+
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+                ?: return null
+
+            val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+            if (!isGpsEnabled && !isNetworkEnabled) return null
+
+            val gpsLoc = if (hasFine && isGpsEnabled) {
+                try { locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) } catch (_: SecurityException) { null }
+            } else null
+
+            val networkLoc = if (isNetworkEnabled) {
+                try { locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) } catch (_: SecurityException) { null }
+            } else null
+
+            val bestLoc = when {
+                gpsLoc != null && networkLoc != null -> if (gpsLoc.time > networkLoc.time) gpsLoc else networkLoc
+                gpsLoc != null -> gpsLoc
+                else -> networkLoc
+            }
+
+            bestLoc?.let { Pair(it.latitude, it.longitude) }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    // ── EMERGENCY_SOS ────────────────────────────────────────
+
+    private inner class EmergencySosAction : Action {
+        override val name: String = "EMERGENCY_SOS"
+
+        override suspend fun execute(params: Map<String, String>, context: Context): ActionResult {
+            val contactQuery = params["contact"] ?: params["to"] ?: "emergency"
+            val shouldCall = params["makeCall"]?.lowercase() in listOf("yes", "true", "1")
+
+            // 1. Grab current location coordinates and battery level
+            val coords = getLocationCoordinates(context)
+            val locationUrl = if (coords != null) {
+                String.format(
+                    java.util.Locale.US,
+                    "https://maps.google.com/?q=%.5f,%.5f",
+                    coords.first,
+                    coords.second
+                )
+            } else {
+                "Location unavailable"
+            }
+
+            val batteryLevel = getBatteryPercentage(context)
+            val batteryText = if (batteryLevel >= 0) "$batteryLevel" else "Unknown"
+
+            // 2. Compose urgent distress alert exactly as specified
+            val alertMessage = "EMERGENCY: I need help! My current location is $locationUrl (Battery: $batteryText%)"
+
+            // 3. Resolve target contact (Beta / family / emergency contact)
+            var targetPhone: String? = null
+            var contactLabel = contactQuery
+
+            if (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true)) {
+                // Search for designated emergency/family contacts in address book
+                val familyAliases = listOf("beta", "family", "emergency", "ice", "sos", "ghar", "doctor", "police")
+                for (alias in familyAliases) {
+                    when (val res = contactResolver.resolveWithDisambiguation(alias)) {
+                        is ContactResolution.Found -> {
+                            targetPhone = res.contact.phoneNumber
+                            contactLabel = res.contact.name
+                            break
+                        }
+                        is ContactResolution.Ambiguous -> {
+                            val top = res.matches.first()
+                            targetPhone = top.phoneNumber
+                            contactLabel = top.name
+                            break
+                        }
+                        is ContactResolution.NotFound -> {}
+                    }
+                }
+                if (targetPhone == null) {
+                    targetPhone = "112"
+                    contactLabel = "Emergency Services (112)"
+                }
+            } else {
+                when (val resolved = contactResolver.resolveWithDisambiguation(contactQuery)) {
+                    is ContactResolution.Found -> {
+                        targetPhone = resolved.contact.phoneNumber
+                        contactLabel = resolved.contact.name
+                    }
+                    is ContactResolution.Ambiguous -> {
+                        val top = resolved.matches.first()
+                        targetPhone = top.phoneNumber
+                        contactLabel = top.name
+                    }
+                    is ContactResolution.NotFound -> {
+                        val numeric = contactQuery.filter { it.isDigit() || it == '+' }
+                        if (numeric.length >= 3) {
+                            targetPhone = numeric
+                        } else {
+                            targetPhone = "112"
+                            contactLabel = "Emergency Services (112)"
+                        }
+                    }
+                }
+            }
+
+            // 4. Broadcast via SMS or WhatsApp automatically
+            if (targetPhone != null) {
+                val smsResult = executeSms(targetPhone, contactLabel, alertMessage, context)
+                if (!smsResult.success) {
+                    // Try WhatsApp as backup if SMS couldn't auto-send
+                    executeWhatsApp(targetPhone, contactLabel, alertMessage, context)
+                }
+
+                // 5. If requested, initiate direct phone call
+                if (shouldCall) {
+                    executeCall(targetPhone, context)
+                }
+            }
+
+            return ActionResult(
+                true,
+                "Emergency alert has been sent to your family.",
+                null
+            )
+        }
     }
 
     // ── MAKE_CALL with disambiguation ────────────────────────
