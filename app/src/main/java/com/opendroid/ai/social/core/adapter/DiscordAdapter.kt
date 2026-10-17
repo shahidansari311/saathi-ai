@@ -83,7 +83,7 @@ class DiscordAdapter @Inject constructor(
                 PublishPostResult(
                     success = true,
                     platformPostId = "dc_msg_${System.currentTimeMillis()}",
-                    url = "https://discord.com/channels/opendroid/${System.currentTimeMillis()}"
+                    url = "https://discord.com/channels/saathi-ai/${System.currentTimeMillis()}"
                 )
             )
         }
