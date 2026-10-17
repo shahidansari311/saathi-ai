@@ -464,10 +464,10 @@ private fun isNotificationServiceEnabled(context: Context): Boolean {
 }
 
 private fun isAccessibilityServiceEnabled(context: Context): Boolean {
-    if (com.opendroid.ai.accessibility.Saathi AIAccessibilityService.getInstance() != null) {
+    if (com.opendroid.ai.accessibility.OpenDroidAccessibilityService.getInstance() != null) {
         return true
     }
-    val expectedComponentName = android.content.ComponentName(context, com.opendroid.ai.accessibility.Saathi AIAccessibilityService::class.java).flattenToString()
+    val expectedComponentName = android.content.ComponentName(context, com.opendroid.ai.accessibility.OpenDroidAccessibilityService::class.java).flattenToString()
     val enabledServicesSetting = Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: ""
     return enabledServicesSetting.contains(expectedComponentName)
 }
