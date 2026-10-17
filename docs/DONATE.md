@@ -1,6 +1,6 @@
-# 💚 Support OpenDroid
+# 💚 Support Saathi AI
 
-OpenDroid is a free, open-source AI assistant for Android — built and maintained by a community of contributors. If OpenDroid has made your life easier, consider supporting the project to keep it alive and growing.
+Saathi AI is a free, open-source AI assistant for Android — built and maintained by a community of contributors. If Saathi AI has made your life easier, consider supporting the project to keep it alive and growing.
 
 ---
 
@@ -11,7 +11,7 @@ OpenDroid is a free, open-source AI assistant for Android — built and maintain
 - 🌍 **Community** — Keeping the project open-source and free for everyone
 - 📱 **Device Testing** — Ensuring compatibility across hundreds of Android devices
 
-Every contribution, no matter how small, helps keep OpenDroid running and improving.
+Every contribution, no matter how small, helps keep Saathi AI running and improving.
 
 ---
 
@@ -33,20 +33,20 @@ For international donations, crypto, or other payment methods, reach out via ema
 
 ## Other Ways to Help
 
-Not able to donate? You can still support OpenDroid:
+Not able to donate? You can still support Saathi AI:
 
-- ⭐ **Star the repo** on [GitHub](https://github.com/yashab-cyber/opendroid)
+- ⭐ **Star the repo** on [GitHub](https://github.com/shahidansari311/saathi-ai)
 - 🐛 **Report bugs** and help improve stability
 - 💡 **Suggest features** by opening an issue
-- 📢 **Spread the word** — tell your friends about OpenDroid
+- 📢 **Spread the word** — tell your friends about Saathi AI
 - 🛠️ **Contribute code** — PRs are always welcome!
 
 ---
 
 ## Thank You 🙏
 
-Your support means the world. Every donation directly fuels the future of OpenDroid.
+Your support means the world. Every donation directly fuels the future of Saathi AI.
 
 > *"Built by many, powered by many."*
 
-— **Yashab Alam**, Creator of OpenDroid, and the OpenDroid contributors
+— **Yashab Alam**, Creator of Saathi AI, and the Saathi AI contributors

@@ -1,12 +1,12 @@
-# Developer Development Guide - OpenDroid
+# Developer Development Guide - Saathi AI
 
-Welcome to the OpenDroid development guide. This document serves as the technical onboarding guide for developers, contributors, and maintainers looking to extend and modify the OpenDroid agent.
+Welcome to the Saathi AI development guide. This document serves as the technical onboarding guide for developers, contributors, and maintainers looking to extend and modify the Saathi AI agent.
 
 ---
 
 ## 1. Prerequisites & Environment Setup
 
-To build and compile OpenDroid, ensure your workstation meets the following requirements:
+To build and compile Saathi AI, ensure your workstation meets the following requirements:
 * **JDK:** Version 21 exactly (Java SE Development Kit) — the build targets Java 21
   (`jvmToolchain(21)`), so a newer JDK is not a substitute. The daemon is
   pinned to 21 via `gradle/gradle-daemon-jvm.properties`, so `./gradlew` picks an
@@ -26,7 +26,7 @@ To build and compile OpenDroid, ensure your workstation meets the following requ
 
 ## 2. Extending Actions (How-to Guide)
 
-OpenDroid routes agent instructions to specific executable action classes. If you need to expose a new device capability to the agent (e.g. "Take screenshot", "Toggle NFC"), you must implement a new action class.
+Saathi AI routes agent instructions to specific executable action classes. If you need to expose a new device capability to the agent (e.g. "Take screenshot", "Toggle NFC"), you must implement a new action class.
 
 ### Step 1: Define the Action type in the enum
 First, add your new action identifier to the unified action listing (e.g., `ActionType.kt` or `Actions.kt` depending on where the list resides).
@@ -86,11 +86,11 @@ If you wish to integrate a new LLM provider (e.g., Anthropic, Groq, or a custom 
 ## 4. Debugging & Testing
 
 ### Read Developer Logs
-OpenDroid records detailed agent operation and plan step processing logs directly to logcat under the tags `OpenDroidAgent` or `PlanManager`:
+Saathi AI records detailed agent operation and plan step processing logs directly to logcat under the tags `Saathi AIAgent` or `PlanManager`:
 
 ```bash
 # Filter for agent execution logs
-adb logcat -s OpenDroidAgent:D PlanManager:D ActionDispatcher:D
+adb logcat -s Saathi AIAgent:D PlanManager:D ActionDispatcher:D
 ```
 
 ### Automated UI / Unit Testing

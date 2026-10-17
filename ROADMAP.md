@@ -1,6 +1,6 @@
-# OpenDroid Roadmap
+# Saathi AI Roadmap
 
-Living document. Reflects the state of `JMAN730/opendroid` as of **2026-09-04**, shipping
+Living document. Reflects the state of `shahidansari311/saathi-ai` as of **2026-09-04**, shipping
 version **1.0.7** (`versionCode 8`).
 
 ---
@@ -13,7 +13,7 @@ version **1.0.7** (`versionCode 8`).
 | **SDK** | `minSdk 26`, `compileSdk`/`targetSdk 36` |
 | **Toolchain** | Gradle 9.7.0, AGP 9.3.1, Kotlin 2.4.0 (AGP built-in Kotlin), JDK 21 (pinned) |
 | **Database** | Room DB v9 with explicit sequential migrations (`MIGRATION_1_2` through `MIGRATION_8_9`) |
-| **Tests** | Comprehensive JVM unit-test suite (`SocialRuleEngineTest`, `SocialPlatformTest`, `OpenDroidDatabaseMigrationTest`, `HabitRoutineEngineTest`, etc.) and `androidTest` accessibility/keystore test harness |
+| **Tests** | Comprehensive JVM unit-test suite (`SocialRuleEngineTest`, `SocialPlatformTest`, `Saathi AIDatabaseMigrationTest`, `HabitRoutineEngineTest`, etc.) and `androidTest` accessibility/keystore test harness |
 | **CI** | 4 jobs — unit tests + `assembleDebug`, `lintDebug`, `connectedDebugAndroidTest` on an API 26/36 emulator matrix, unsigned `assembleRelease` (R8) |
 | **Distribution** | GitHub Releases (APK / AAB), FOSS packaging |
 

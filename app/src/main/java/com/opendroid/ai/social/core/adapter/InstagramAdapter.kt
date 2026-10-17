@@ -30,9 +30,9 @@ class InstagramAdapter @Inject constructor(
         if (isSandboxToken(token)) {
             return Result.success(
                 SocialAccountInfo(
-                    id = "ig_${credentials.accountId.ifBlank { "opendroid.app" }}",
-                    username = "opendroid.app",
-                    displayName = "OpenDroid AI Assistant",
+                    id = "ig_${credentials.accountId.ifBlank { "saathiai.app" }}",
+                    username = "saathiai.app",
+                    displayName = "Saathi AI Assistant",
                     avatarUrl = null,
                     grantedPermissions = supportedPermissions
                 )
@@ -70,7 +70,7 @@ class InstagramAdapter @Inject constructor(
         }
 
         val igUserId = credentials.accountId
-        val mediaUrl = post.mediaUrls.firstOrNull() ?: "https://opendroid.ai/assets/logo.png"
+        val mediaUrl = post.mediaUrls.firstOrNull() ?: "https://saathi.ai/assets/logo.png"
 
         // 1. Create Media Container
         val containerPayload = JSONObject().apply {

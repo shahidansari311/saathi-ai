@@ -1,6 +1,6 @@
-# OpenDroid AI Agent — User & System Guide
+# Saathi AI AI Agent — User & System Guide
 
-OpenDroid is a robust, local-first Android AI Agent designed to execute complex user tasks via structured plans, natural language command processing, and advanced system automation tools.
+Saathi AI is a robust, local-first Android AI Agent designed to execute complex user tasks via structured plans, natural language command processing, and advanced system automation tools.
 
 ---
 
@@ -20,7 +20,7 @@ OpenDroid is a robust, local-first Android AI Agent designed to execute complex 
 
 ## 1. Core Features
 
-OpenDroid leverages a hybrid execution flow to run tasks reliably:
+Saathi AI leverages a hybrid execution flow to run tasks reliably:
 * **Direct Command Aliasing**: Common phrases (e.g., "toggle flashlight", "settings", "detect routines") are intercepted and resolved locally without needing an LLM call.
 * **Structured Planning**: Complex queries (e.g., "take a screenshot and message it to Dad on Telegram") are planned by an LLM into sequential steps.
 * **Self-Contained Actions**: Critical intents (Calls, WhatsApp, Telegram, SMS) do not require opening their apps first. The agent handles deep links or fallback intents natively.
@@ -30,7 +30,7 @@ OpenDroid leverages a hybrid execution flow to run tasks reliably:
 
 ## 2. Communication Commands
 
-OpenDroid features robust, multi-channel communication controls:
+Saathi AI features robust, multi-channel communication controls:
 
 | Action Name | Parameters | Examples & Behavior |
 | :--- | :--- | :--- |
@@ -47,11 +47,11 @@ OpenDroid features robust, multi-channel communication controls:
 
 ## 3. Habit & Routine Detection
 
-OpenDroid automatically detects repeated usage patterns and offers one-click routine automations.
+Saathi AI automatically detects repeated usage patterns and offers one-click routine automations.
 
 ### How Habit Mining Works:
-* **Background Observation**: As you use your device normally, OpenDroid records app switches and times of day.
-* **Pattern Detection**: When a sequence of actions repeats (e.g. every weekday at 9:00 AM you open *Gmail $\to$ Calendar $\to$ Slack $\to$ Chrome*), OpenDroid generates a suggested routine.
+* **Background Observation**: As you use your device normally, Saathi AI records app switches and times of day.
+* **Pattern Detection**: When a sequence of actions repeats (e.g. every weekday at 9:00 AM you open *Gmail $\to$ Calendar $\to$ Slack $\to$ Chrome*), Saathi AI generates a suggested routine.
 * **Proactive Card**: *"I noticed you usually do these tasks every weekday morning. Would you like me to automate them?"*
 
 ### Routine Commands:
@@ -76,7 +76,7 @@ Extract and remember important information directly from your screen:
 
 ## 5. Personal Growth Memory & Knowledge Graph
 
-OpenDroid builds a 4-tier Personal Knowledge Graph of your preferences and habits:
+Saathi AI builds a 4-tier Personal Knowledge Graph of your preferences and habits:
 1. **⚡ Level 1 (Temporary)**: Current task plan and active session variables.
 2. **🧠 Level 2 (Long-Term)**: Explicit facts (*"My wife is Sarah"*).
 3. **📈 Level 3 (Learned Patterns)**: Inferred behaviors with dynamic confidence scoring (50% $\to$ 85% $\to$ 95%).

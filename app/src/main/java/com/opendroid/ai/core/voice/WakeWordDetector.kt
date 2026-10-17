@@ -40,9 +40,7 @@ class WakeWordDetector(private val context: Context) {
                lower.contains("sathi") ||
                lower.contains("saathi ai") ||
                lower.contains("hey saathi") ||
-               lower.contains("saathiai") ||
-               lower.contains("opendroid") ||
-               lower.contains("open droid")
+               lower.contains("saathiai")
     }
 
     fun startListening(onWakeWordDetected: () -> Unit) {

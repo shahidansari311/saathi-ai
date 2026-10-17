@@ -104,7 +104,7 @@ Send from Chat with the model active. Record wall-clock to first token and to co
 | C3 | Model file deleted underneath | Delete the `.task` while app is running, send a message | `checkModelReady` / `verifyModelFileIntegrity` produce a readable error, not `FileNotFoundException` in the UI |
 | C4 | Zero-byte file | Replace model with a 0-byte file | Rejected by integrity check; status corrected to `Not Downloaded` |
 | C5 | Unsupported backend | Select an AI Core model on a device without AI Core | "Not supported on this device"; no crash; a fallback path is offered |
-| C6 | Crash logging | Trigger a **deliberate uncaught JVM exception** (debug-only crash trigger, or `adb shell am broadcast` into a debug crash receiver), then relaunch the app. Do *not* rely on C1–C5: `OpenDroidCrashHandler` records only uncaught throwables, and those cases produce either handled provider errors or a `mem-pressure-event` process kill that delivers no JVM exception | A crash record is stored and visible after relaunch, and credential material is redacted per `CrashLogRedactor` — API keys, `Bearer` tokens, `?key=` query values. **File paths are deliberately *not* redacted** (`CrashLogRedactorTest` asserts `/data/models/gemma.task` survives verbatim), so do not fail this case on a model path appearing in the record |
+| C6 | Crash logging | Trigger a **deliberate uncaught JVM exception** (debug-only crash trigger, or `adb shell am broadcast` into a debug crash receiver), then relaunch the app. Do *not* rely on C1–C5: `Saathi AICrashHandler` records only uncaught throwables, and those cases produce either handled provider errors or a `mem-pressure-event` process kill that delivers no JVM exception | A crash record is stored and visible after relaunch, and credential material is redacted per `CrashLogRedactor` — API keys, `Bearer` tokens, `?key=` query values. **File paths are deliberately *not* redacted** (`CrashLogRedactorTest` asserts `/data/models/gemma.task` survives verbatim), so do not fail this case on a model path appearing in the record |
 
 ## 8. Switching and persistence
 
@@ -130,7 +130,7 @@ These are visible in the source today. They are **not** discoveries of this test
 
 | Ref | Defect | Evidence | Covered by |
 |-----|--------|----------|------------|
-| D-2 ([#54](https://github.com/JMAN730/opendroid/issues/54)) | No guard against exceeding the engine's `maxNumTokens`. `LiteRTLMProvider` passes `maxNumTokens = spec.contextWindow`, and `PromptBudget`'s own doc comment states that overshooting it kills the process natively — an out-of-JVM crash that `OpenDroidCrashHandler` cannot record. Fix: a hard budget check in `PromptBudget` or at the inference call site that raises a handled error before the native call. | `PromptBudget.kt:7`, `LiteRTLMProvider.kt:390-398` | B10 |
+| D-2 ([#54](https://github.com/shahidansari311/saathi-ai/issues/54)) | No guard against exceeding the engine's `maxNumTokens`. `LiteRTLMProvider` passes `maxNumTokens = spec.contextWindow`, and `PromptBudget`'s own doc comment states that overshooting it kills the process natively — an out-of-JVM crash that `Saathi AICrashHandler` cannot record. Fix: a hard budget check in `PromptBudget` or at the inference call site that raises a handled error before the native call. | `PromptBudget.kt:7`, `LiteRTLMProvider.kt:390-398` | B10 |
 
 Section 3's E6 (`adb push` ownership) is an environment/test-harness item, not in this table — the open question there is whether the app should surface a readable "model file unreadable" error at all.
 

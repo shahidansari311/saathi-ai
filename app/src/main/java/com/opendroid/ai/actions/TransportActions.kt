@@ -62,7 +62,7 @@ class TransportActions @Inject constructor() {
             val destination = params["destination"] ?: return ActionResult(false, null, "destination is missing")
             return try {
                 val encDest = URLEncoder.encode(destination, "UTF-8")
-                val uri = "olacabs://app/launch?lat=&lng=&utm_source=opendroid&drop_desc=$encDest".toUri()
+                val uri = "olacabs://app/launch?lat=&lng=&utm_source=saathiai&drop_desc=$encDest".toUri()
                 val intent = Intent(Intent.ACTION_VIEW, uri).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }

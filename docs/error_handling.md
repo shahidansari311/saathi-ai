@@ -1,12 +1,12 @@
-# Error Handling Architecture & Self-Healing Guide - OpenDroid
+# Error Handling Architecture & Self-Healing Guide - Saathi AI
 
-This document provides an exhaustive reference on how errors, exceptions, network failures, schema hallucinations, and permission denials are handled across all layers of **OpenDroid**.
+This document provides an exhaustive reference on how errors, exceptions, network failures, schema hallucinations, and permission denials are handled across all layers of **Saathi AI**.
 
 ---
 
 ## 1. Error Handling Philosophy & Strategy
 
-OpenDroid operates as an autonomous agentic system executing high-privilege Android device actions. Simple exception crashing or silent error masking is unacceptable. The application adheres to four core error handling principles:
+Saathi AI operates as an autonomous agentic system executing high-privilege Android device actions. Simple exception crashing or silent error masking is unacceptable. The application adheres to four core error handling principles:
 
 1. **No Silent Failure Masking:** Errors are caught, explicitly classified, logged to diagnostic stores, and reported back to the user or agentic feedback loops.
 2. **Pre-Execution Validation & Auto-Fixing:** Syntactic and semantic errors in LLM-generated plans are caught and auto-corrected *before* dispatching actions to the operating system.

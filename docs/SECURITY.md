@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest release version of OpenDroid is actively supported with security updates.
+Only the latest release version of Saathi AI is actively supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,7 +11,7 @@ Only the latest release version of OpenDroid is actively supported with security
 
 ## Reporting a Vulnerability
 
-We take the security of OpenDroid seriously. If you believe you have found a security vulnerability, please report it to us responsibly.
+We take the security of Saathi AI seriously. If you believe you have found a security vulnerability, please report it to us responsibly.
 
 **Please do not open a public GitHub issue for security vulnerabilities.**
 

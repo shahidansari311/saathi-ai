@@ -1,12 +1,12 @@
-# System Architecture & Solution Design - OpenDroid
+# System Architecture & Solution Design - Saathi AI
 
-This document provides a comprehensive architectural breakdown, solution design, infrastructure scaling strategy, technical stack specification, data flows, and API contracts for **OpenDroid** — a production-ready, autonomous, self-planning AI agent for Android devices.
+This document provides a comprehensive architectural breakdown, solution design, infrastructure scaling strategy, technical stack specification, data flows, and API contracts for **Saathi AI** — a production-ready, autonomous, self-planning AI agent for Android devices.
 
 ---
 
 ## 1. Architectural Overview & Design Principles
 
-OpenDroid is engineered following strict **Clean Architecture** principles, maintaining a decoupled, testable, and maintainable codebase. The architecture is organized into three primary layers: **Presentation Layer**, **Domain/Core Layer**, and **Data Layer**, with modular action dispatchers and accessibility services operating at system boundaries.
+Saathi AI is engineered following strict **Clean Architecture** principles, maintaining a decoupled, testable, and maintainable codebase. The architecture is organized into three primary layers: **Presentation Layer**, **Domain/Core Layer**, and **Data Layer**, with modular action dispatchers and accessibility services operating at system boundaries.
 
 ```
                       ┌─────────────────────────────────┐
@@ -29,7 +29,7 @@ OpenDroid is engineered following strict **Clean Architecture** principles, main
                                        ▼
                       ┌─────────────────────────────────┐
                       │   Accessibility & Native Actions│
-                      │(OpenDroidAccessibilityService)  │
+                      │(Saathi AIAccessibilityService)  │
                       └─────────────────────────────────┘
 ```
 
@@ -37,7 +37,7 @@ OpenDroid is engineered following strict **Clean Architecture** principles, main
 1. **Privacy-First & Sandboxed Execution:** Provider credentials (API keys and Hugging Face tokens) use the direct Android Keystore [`ProviderCredentialStore.kt`](file:///workspaces/opendroid/app/src/main/java/com/opendroid/ai/core/security/ProviderCredentialStore.kt), with versioned AES-GCM envelopes outside the plaintext DataStore. System actions and scrapers operate locally on device.
 2. **Autonomous Agentic Loop:** Implements self-evaluation, error detection, and dynamic re-planning using LLM re-evaluators when an execution step fails.
 3. **Hybrid Inference Pipeline:** Seamless support for cloud LLM providers (OpenAI, Anthropic, Gemini, DeepSeek, OpenRouter) and local on-device inference engines (LiteRT-LM, Ollama, ML Kit GenAI).
-4. **Resilient System Interactivity:** Native Android APIs are prioritized; when direct permissions are missing, OpenDroid automatically falls back to UI Intents or Accessibility node tree manipulation.
+4. **Resilient System Interactivity:** Native Android APIs are prioritized; when direct permissions are missing, Saathi AI automatically falls back to UI Intents or Accessibility node tree manipulation.
 
 ---
 
@@ -53,8 +53,8 @@ OpenDroid is engineered following strict **Clean Architecture** principles, main
   * `WhatsAppAutomator`: Automated typing and sending on WhatsApp.
   * `TelegramAutomator`: Automated typing and sending across official Telegram, Telegram Web/FOSS, Plus Messenger, and NekoX.
   * `SmsAutomator`: Automated typing and sending for system SMS apps.
-* **`VisionEngine` & Accessibility Scraper:** `VisionEngine` captures screen state via Android Media Projection (Android 11+) and processes visual frames via multimodal LLMs (including `extractAndStructureScreenInfo` for Read & Remember). The node scraper in `OpenDroidAccessibilityService` recursively parses accessibility window node trees (`AccessibilityNodeInfo`) as text fallback.
-* **`OpenDroidNotificationListener` & `AutoReplyEngine`:** Intercepts incoming device notifications, matches automated trigger rules, and dispatches context-aware AI auto-responses for platforms like WhatsApp or SMS.
+* **`VisionEngine` & Accessibility Scraper:** `VisionEngine` captures screen state via Android Media Projection (Android 11+) and processes visual frames via multimodal LLMs (including `extractAndStructureScreenInfo` for Read & Remember). The node scraper in `Saathi AIAccessibilityService` recursively parses accessibility window node trees (`AccessibilityNodeInfo`) as text fallback.
+* **`Saathi AINotificationListener` & `AutoReplyEngine`:** Intercepts incoming device notifications, matches automated trigger rules, and dispatches context-aware AI auto-responses for platforms like WhatsApp or SMS.
 * **`ProviderCredentialStore`:** Stores provider credentials with direct Android Keystore AES-256-GCM envelopes bound to logical credential IDs.
 * **`KeystoreSecretStorage`:** The single direct-Keystore cipher, envelope format, and record boundary shared by every store that keeps a secret at rest.
 * **`UserProfileStore`:** Direct-Keystore storage for the profile name and date of birth, on its own key alias.
@@ -63,7 +63,7 @@ OpenDroid is engineered following strict **Clean Architecture** principles, main
 ### 2.2. Component Interaction & Scoping
 * **UI to Engine Communication:** ViewModels expose read-only `StateFlow<UiState>` models to Jetpack Compose components. User commands are dispatched as asynchronous coroutines via `viewModelScope`.
 * **Domain to Data Mapping:** Domain services interact solely with Repository interfaces (`NotificationRepository`, `MacroRepository`, etc.), isolating SQLite storage and network serialization details.
-* **Service Scoping:** `OpenDroidAccessibilityService` and `OpenDroidNotificationListener` run as system-bound background services, communicating with the core engine via Kotlin `SharedFlow` and Dagger-Hilt singletons.
+* **Service Scoping:** `Saathi AIAccessibilityService` and `Saathi AINotificationListener` run as system-bound background services, communicating with the core engine via Kotlin `SharedFlow` and Dagger-Hilt singletons.
 
 ---
 
@@ -75,7 +75,7 @@ OpenDroid is engineered following strict **Clean Architecture** principles, main
 * **Battery & Execution Efficiency:** WakeLocks are acquired only during active voice listening or background action execution, ensuring zero battery drain during idle state.
 
 ### 3.2. Background Model Downloader Infrastructure
-For offline LiteRT-LM execution (`.task` / `.litertlm` formats), OpenDroid implements a robust downloading and verification infrastructure:
+For offline LiteRT-LM execution (`.task` / `.litertlm` formats), Saathi AI implements a robust downloading and verification infrastructure:
 * **WorkManager Orchestration:** `ModelDownloadWorker` runs as a long-running `dataSync` foreground worker for user-initiated multi-GB downloads, requires a connected network (with user warning/confirmation on cellular), and remains resilient against app closures or process kills.
 * **HTTP Range Resumption:** Uses OkHttp chunked streaming supporting HTTP `Range` headers to resume interrupted model downloads seamlessly without re-downloading existing chunks.
 * **Hugging Face CDN & Auth Integration:** Authenticates gated models via `ProviderCredentialStore`, querying Hugging Face's `whoami-v2` API before initiating transfers.
@@ -85,7 +85,7 @@ For offline LiteRT-LM execution (`.task` / `.litertlm` formats), OpenDroid imple
   3. LiteRT Engine JNI test instantiation (`NativeEngine.init`) to verify binary runtime compatibility prior to marking status as `ModelStatus.READY`.
 
 ### 3.3. Multi-Tier Memory Storage Infrastructure
-OpenDroid organizes memory across four distinct tiers:
+Saathi AI organizes memory across four distinct tiers:
 1. **Working Memory:** In-memory volatile `StateFlow` managing active step status and context.
 2. **Episodic Memory:** Room SQLite tables (`NotificationEntity`, `TaskHistoryEntity`) recording full action histories.
 3. **Semantic Memory:** Room SQLite table (`SemanticFactEntity`) holding extracted personal facts.
@@ -93,7 +93,7 @@ OpenDroid organizes memory across four distinct tiers:
 
 ### 3.4. External LLM API Reliability & Rate Limiting
 * **Exponential Backoff & Retries:** Cloud network requests implement OkHttp interceptors enforcing maximum 15-second timeouts and exponential backoff retry algorithms for `HTTP 429` (Rate Limited) and `5xx` server errors.
-* **Provider Fallback:** In multi-provider configurations, if a primary cloud endpoint fails, OpenDroid seamlessly routes the prompt to secondary cloud providers or local LiteRT engines.
+* **Provider Fallback:** In multi-provider configurations, if a primary cloud endpoint fails, Saathi AI seamlessly routes the prompt to secondary cloud providers or local LiteRT engines.
 
 ---
 
@@ -165,7 +165,7 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant AD as ActionDispatcher
-    participant AS as OpenDroidAccessibilityService
+    participant AS as Saathi AIAccessibilityService
     participant VE as VisionEngine
     participant LLM as Multimodal LLM
     participant SYS as Android OS / Third-Party App
@@ -256,7 +256,7 @@ interface LLMProvider {
   "messages": [
     {
       "role": "system",
-      "content": "You are OpenDroid Agent. Decompose instructions into JSON step plans."
+      "content": "You are Saathi AI Agent. Decompose instructions into JSON step plans."
     },
     {
       "role": "user",
@@ -305,12 +305,12 @@ sealed class ActionResult {
 }
 ```
 
-### 6.3. Accessibility Node Interaction Interface (`OpenDroidAccessibilityService`)
+### 6.3. Accessibility Node Interaction Interface (`Saathi AIAccessibilityService`)
 
 Used by the agent loop for interacting with layout hierarchies:
 
 ```kotlin
-class OpenDroidAccessibilityService : AccessibilityService() {
+class Saathi AIAccessibilityService : AccessibilityService() {
     fun findNodeByTextOrId(query: String): AccessibilityNodeInfo?
     fun performClickOnNode(node: AccessibilityNodeInfo): Boolean
     fun injectTextIntoNode(node: AccessibilityNodeInfo, text: String): Boolean

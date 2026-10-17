@@ -1,4 +1,4 @@
-# Technical Requirement Document (TRD) - OpenDroid
+# Technical Requirement Document (TRD) - Saathi AI
 
 ## Document Control
 * **Document Version:** v1.2.0
@@ -10,7 +10,7 @@
 
 ## 1. System Architecture
 
-OpenDroid is structured according to **Clean Architecture** principles. The codebase is decoupled into three primary layers: Presentation, Domain (Core), and Data. Dependency injection is managed globally via Dagger-Hilt.
+Saathi AI is structured according to **Clean Architecture** principles. The codebase is decoupled into three primary layers: Presentation, Domain (Core), and Data. Dependency injection is managed globally via Dagger-Hilt.
 
 ```
                   ┌─────────────────────────┐
@@ -39,7 +39,7 @@ OpenDroid is structured according to **Clean Architecture** principles. The code
 * **PlanManager & ReEvaluationEngine:** The central orchestrator of agent actions. It calls LLM providers to decompose high-level commands, tracks DAG step execution status, and executes dynamic replanning on step failures.
 * **HabitRoutineEngine:** Tracks user activity sessions across 30-minute time buckets, mines recurring sequential app patterns (e.g. Gmail $\to$ Calendar $\to$ Slack), proactively suggests automations, and executes multi-step morning briefings.
 * **PersonalGrowthEngine:** Manages a 4-tier Personal Knowledge Graph (Temporary, Long-Term, Learned Patterns with dynamic confidence scoring, and Hardware-Encrypted Sensitive Data).
-* **OpenDroidAccessibilityService:** Captures window state change events for habit tracking, scrapes active window node hierarchies, and executes gestures and clicks.
+* **Saathi AIAccessibilityService:** Captures window state change events for habit tracking, scrapes active window node hierarchies, and executes gestures and clicks.
 * **App Automators:**
   * `WhatsAppAutomator`: Automates typing and sending on WhatsApp.
   * `TelegramAutomator`: Automates typing and sending across official Telegram, Telegram Web/FOSS, Plus Messenger, and NekoX.
@@ -50,7 +50,7 @@ OpenDroid is structured according to **Clean Architecture** principles. The code
 
 ## 2. Database Schema & Models
 
-OpenDroid utilizes a local SQLite database managed via Android's Room DB library (Current Schema Version: `8`).
+Saathi AI utilizes a local SQLite database managed via Android's Room DB library (Current Schema Version: `8`).
 
 ### 2.1. Room Entities
 
@@ -124,7 +124,7 @@ erDiagram
 ## 3. Subsystem Technical Specifications
 
 ### 3.1. Habit & Routine Detection Subsystem
-1. **Activity Interception:** `OpenDroidAccessibilityService.onAccessibilityEvent` receives `TYPE_WINDOW_STATE_CHANGED` events, applies a 1500ms debounce threshold, and resolves friendly package names.
+1. **Activity Interception:** `Saathi AIAccessibilityService.onAccessibilityEvent` receives `TYPE_WINDOW_STATE_CHANGED` events, applies a 1500ms debounce threshold, and resolves friendly package names.
 2. **Session Clustering:** Groups events into calendar days and 30-minute time buckets (`EARLY_MORNING`, `MORNING`, `MIDDAY`, `AFTERNOON`, `EVENING`, `NIGHT`).
 3. **Sequence Mining:** Identifies sequences appearing $\ge 3$ times across a 14-day window.
 4. **Archetype Synthesis:** Synthesizes structured 6-step Morning Routines (`LIST_CALENDAR_TODAY`, `GET_MORNING_BRIEFING`, `READ_NOTIFICATIONS`, `READ_NOTES`).

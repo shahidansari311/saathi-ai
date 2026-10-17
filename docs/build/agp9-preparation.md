@@ -1,8 +1,8 @@
 # AGP 9 preparation: modern DSL and KSP
 
 Behavior-preserving stage 2 and 3 of the migration plan resolved in
-[issue #70](https://github.com/JMAN730/opendroid/issues/70), implemented for
-[issue #73](https://github.com/JMAN730/opendroid/issues/73).
+[issue #70](https://github.com/shahidansari311/saathi-ai/issues/70), implemented for
+[issue #73](https://github.com/shahidansari311/saathi-ai/issues/73).
 
 **Gradle, AGP, and the JDK are deliberately unchanged.** This change only removes
 the DSL and annotation-processing blockers so that the toolchain bump (stages 4-6)
@@ -35,7 +35,7 @@ dynamic dispatch to the project-level `kotlin` extension; it now sits in that
 extension explicitly.
 
 Evidence: the compiled class
-`app/build/tmp/kotlin-classes/debug/com/opendroid/ai/OpenDroidApp.class` carries
+`app/build/tmp/kotlin-classes/debug/com/opendroid/ai/Saathi AIApp.class` carries
 bytecode major version **65** (Java 21), matching the pre-change target.
 
 ### `packagingOptions` → `packaging`
@@ -110,10 +110,10 @@ Each of these was re-verified after the change, not assumed:
 - **Room schema export** — `app/schemas/…/6.json` and `7.json` are byte-identical
   after the KSP switch (`git status app/schemas` is clean). KSP and kapt produce
   the same schema.
-- **Room migration tests** — `OpenDroidDatabaseMigrationTest` passes under
+- **Room migration tests** — `Saathi AIDatabaseMigrationTest` passes under
   Robolectric against those exported schemas.
 - **Hilt bindings** — the full generated graph is present: application injector,
-  `DaggerOpenDroidApp_HiltComponents_SingletonC`, the four Android entry points,
+  `DaggerSaathi AIApp_HiltComponents_SingletonC`, the four Android entry points,
   and all nine `@HiltViewModel` module/factory pairs.
 - **Lint baseline** — `:app:lintDebug` green against the unchanged
   `app/lint-baseline.xml`.
@@ -140,7 +140,7 @@ Stages 4-6 of the plan: Gradle 9.x / AGP 9.x wrapper and plugin bump, AGP built-
 Kotlin, and removal of the `com.android.tools:r8:9.1.31` override once the embedded
 R8 passes release-equivalence checks.
 
-Those landed for [issue #74](https://github.com/JMAN730/opendroid/issues/74) — see
+Those landed for [issue #74](https://github.com/shahidansari311/saathi-ai/issues/74) — see
 [agp9-migration.md](agp9-migration.md). Everything above describes the state of the
 build *before* that migration; the `kotlin-metadata-jvm` pin in particular is gone
 again, because Dagger 2.60.1 no longer needs it.

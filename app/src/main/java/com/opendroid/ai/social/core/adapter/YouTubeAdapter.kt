@@ -30,9 +30,9 @@ class YouTubeAdapter @Inject constructor(
         if (isSandboxToken(token)) {
             return Result.success(
                 SocialAccountInfo(
-                    id = "yt_${credentials.accountId.ifBlank { "opendroid_channel" }}",
-                    username = "OpenDroidDev",
-                    displayName = "OpenDroid Official",
+                    id = "yt_${credentials.accountId.ifBlank { "saathiai_channel" }}",
+                    username = "SaathiAIDev",
+                    displayName = "Saathi AI Official",
                     avatarUrl = null,
                     grantedPermissions = supportedPermissions
                 )
@@ -117,7 +117,7 @@ class YouTubeAdapter @Inject constructor(
                         platform = SocialPlatform.YOUTUBE,
                         authorName = "TechLeadPro",
                         authorAvatarUrl = null,
-                        content = "How does OpenDroid handle accessibility node hierarchies so quickly?",
+                        content = "How does Saathi AI handle accessibility node hierarchies so quickly?",
                         timestamp = System.currentTimeMillis() - 6000_000,
                         sentiment = Sentiment.POSITIVE,
                         category = InteractionCategory.QUESTION,

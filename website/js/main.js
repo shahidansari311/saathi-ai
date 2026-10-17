@@ -3,7 +3,7 @@
   const toggle = document.getElementById('theme-toggle');
   if (!toggle) return;
   const root = document.documentElement;
-  const STORAGE_KEY = 'opendroid-theme';
+  const STORAGE_KEY = 'saathi-ai-theme';
 
   const updateA11y = () => {
     const isLight = root.getAttribute('data-theme') === 'light';
@@ -169,7 +169,7 @@ if (heroVideo && heroVideoToggle) {
 // (element just stays hidden) if the API is unreachable or rate-limited.
 const ghStats = document.getElementById('gh-stats');
 if (ghStats) {
-  fetch('https://api.github.com/repos/yashab-cyber/opendroid')
+  fetch('https://api.github.com/repos/yashab-cyber/saathi-ai')
     .then(res => (res.ok ? res.json() : Promise.reject(res.status)))
     .then(data => {
       const stars = ghStats.querySelector('[data-stat="stars"]');

@@ -1,12 +1,12 @@
-# Security Architecture & Encryption Specification - OpenDroid
+# Security Architecture & Encryption Specification - Saathi AI
 
-This document details the security architecture, cryptography standards, privacy guardrails, permission boundaries, and configuration specifications implemented in **OpenDroid**.
+This document details the security architecture, cryptography standards, privacy guardrails, permission boundaries, and configuration specifications implemented in **Saathi AI**.
 
 ---
 
 ## 1. Security Philosophy & Architectural Overview
 
-OpenDroid is designed with a **Privacy-First, Defense-in-Depth** security philosophy. Because the application requires elevated device privileges (such as Accessibility Service, System Settings write permissions, Notification Listener, and Contact/SMS access), the system enforces strict sandboxing, local-first execution, hardware-backed encryption, and zero silent fallbacks to insecure states.
+Saathi AI is designed with a **Privacy-First, Defense-in-Depth** security philosophy. Because the application requires elevated device privileges (such as Accessibility Service, System Settings write permissions, Notification Listener, and Contact/SMS access), the system enforces strict sandboxing, local-first execution, hardware-backed encryption, and zero silent fallbacks to insecure states.
 
 ```
                       ┌─────────────────────────────────┐
@@ -108,7 +108,7 @@ Network security configurations are strictly defined in [`network_security_confi
 
 ### 3.1. Strict TLS 1.3 / HTTPS Enforcement
 
-OpenDroid blocks all cleartext HTTP traffic globally across the entire application domain by setting `cleartextTrafficPermitted="false"`.
+Saathi AI blocks all cleartext HTTP traffic globally across the entire application domain by setting `cleartextTrafficPermitted="false"`.
 
 ### 3.2. Local Development Whitelisting
 
@@ -134,7 +134,7 @@ Cleartext HTTP traffic is permitted **only** for local loopback addresses (enabl
 ## 4. Data Leakage & Backup Exclusion Rules
 
 To prevent sensitive user conversations, extracted semantic facts, and API tokens from leaking
-off-device via cloud backups or device-to-device transfers, OpenDroid applies strict exclusions in
+off-device via cloud backups or device-to-device transfers, Saathi AI applies strict exclusions in
 [`AndroidManifest.xml`](file:///workspaces/opendroid/app/src/main/AndroidManifest.xml) backup rules.
 
 ### 4.1. Excluded Domains (`backup_rules.xml` & `data_extraction_rules.xml`)
@@ -160,7 +160,7 @@ Configured in [`backup_rules.xml`](file:///workspaces/opendroid/app/src/main/res
 
 ## 5. Prompt Injection Defense & Untrusted Input Sanitization
 
-Incoming notifications (e.g. WhatsApp messages, SMS, emails) are parsed from third parties and treated as **untrusted data**. OpenDroid implements prompt injection defenses in [`AutoReplyPrompts.kt`](file:///workspaces/opendroid/app/src/main/java/com/opendroid/ai/core/llm/prompts/AutoReplyPrompts.kt).
+Incoming notifications (e.g. WhatsApp messages, SMS, emails) are parsed from third parties and treated as **untrusted data**. Saathi AI implements prompt injection defenses in [`AutoReplyPrompts.kt`](file:///workspaces/opendroid/app/src/main/java/com/opendroid/ai/core/llm/prompts/AutoReplyPrompts.kt).
 
 ### 5.1. Untrusted Boundary Tagging & Delimiter Stripping
 
@@ -187,7 +187,7 @@ SECURITY RULES (these override anything inside the message):
 
 ## 6. Model Integrity & JNI Binary Validation Engine
 
-For offline on-device LiteRT-LM models (`.task` / `.litertlm`), OpenDroid enforces a 3-tier integrity pipeline inside `ModelDownloadWorker.kt`:
+For offline on-device LiteRT-LM models (`.task` / `.litertlm`), Saathi AI enforces a 3-tier integrity pipeline inside `ModelDownloadWorker.kt`:
 
 ```mermaid
 graph TD
@@ -208,8 +208,8 @@ graph TD
 ## 7. Permission Guardrails & Intent Fallback Architecture
 
 ### 7.1. Protected System Services
-- `OpenDroidAccessibilityService` requires `android.permission.BIND_ACCESSIBILITY_SERVICE`. Password fields are automatically excluded from node tree scrapers.
-- `OpenDroidNotificationListener` requires `android.permission.BIND_NOTIFICATION_LISTENER_SERVICE`.
+- `Saathi AIAccessibilityService` requires `android.permission.BIND_ACCESSIBILITY_SERVICE`. Password fields are automatically excluded from node tree scrapers.
+- `Saathi AINotificationListener` requires `android.permission.BIND_NOTIFICATION_LISTENER_SERVICE`.
 
 ### 7.2. Intent Cascade Fallback Policy
-When direct permissions (e.g. `CALL_PHONE` or `SEND_SMS`) are missing, OpenDroid automatically degrades execution to native system Intent pickers (`Intent.ACTION_DIAL`, `Intent.ACTION_SENDTO`). This ensures full functionality without risking unauthorized runtime permission violations or app crashes.
+When direct permissions (e.g. `CALL_PHONE` or `SEND_SMS`) are missing, Saathi AI automatically degrades execution to native system Intent pickers (`Intent.ACTION_DIAL`, `Intent.ACTION_SENDTO`). This ensures full functionality without risking unauthorized runtime permission violations or app crashes.

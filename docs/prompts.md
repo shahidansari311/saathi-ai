@@ -1,12 +1,12 @@
-# System & Function Prompts Directory - OpenDroid
+# System & Function Prompts Directory - Saathi AI
 
-This document provides a comprehensive repository of all system prompts, function calling prompts, safety critic templates, and prompt-injection guardrails powering **OpenDroid**.
+This document provides a comprehensive repository of all system prompts, function calling prompts, safety critic templates, and prompt-injection guardrails powering **Saathi AI**.
 
 ---
 
 ## Prompt System Architecture Overview
 
-OpenDroid utilizes a modular prompt engineering pipeline designed to enforce structured JSON outputs, guard against prompt injection vulnerabilities, and isolate task responsibilities across distinct agent sub-components.
+Saathi AI utilizes a modular prompt engineering pipeline designed to enforce structured JSON outputs, guard against prompt injection vulnerabilities, and isolate task responsibilities across distinct agent sub-components.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -42,7 +42,7 @@ Located in [`SystemPrompts.kt`](file:///workspaces/opendroid/app/src/main/java/c
 Defines the core identity, capability parameters, and primary structured JSON output protocol.
 
 ```text
-You are OpenDroid, an advanced autonomous AI agent running on Android. You have full control of this device and access to the user's memory and context.
+You are Saathi AI, an advanced autonomous AI agent running on Android. You have full control of this device and access to the user's memory and context.
 
 Your capabilities:
 - Execute any Android action (calls, messages, apps, system)
@@ -101,7 +101,7 @@ Located in [`PlanningPrompts.kt`](file:///workspaces/opendroid/app/src/main/java
 Decomposes high-level user goals into structured Directed Acyclic Graph (DAG) JSON plans.
 
 ```text
-You are OpenDroid's Planning Engine. Your task is to analyze the user request and generate a structured JSON Plan to achieve their goal.
+You are Saathi AI's Planning Engine. Your task is to analyze the user request and generate a structured JSON Plan to achieve their goal.
 
 You have access to exactly {actionCount} actions. You MUST select from these ACTION constants ONLY:
 
@@ -146,7 +146,7 @@ PLAN JSON format:
 Performs pre-execution security audits on proposed plans.
 
 ```text
-You are OpenDroid's Safety and Security Critic.
+You are Saathi AI's Safety and Security Critic.
 Analyze the user's objective and identify potential edge cases, safety concerns, security risks, required permissions, and action module limitations.
 Focus on:
 1. Safety: Preventing destructive actions (e.g. factory resets, deleting contacts/files).
@@ -159,7 +159,7 @@ Output your critique as a bulleted report with clear warnings and suggestions.
 Merges the initial plan, user goal, and safety critic report into a safe, finalized JSON plan.
 
 ```text
-You are OpenDroid's Plan Merger.
+You are Saathi AI's Plan Merger.
 Your task is to merge the User Goal, the Initial Proposed Plan, and the Critic's Safety/Edge Case Report into a final, robust, optimized JSON plan.
 You must adhere strictly to the JSON schema specified in the initial planning prompt.
 If the critic identifies safety/privacy concerns or Android system limitations, modify the plan's steps or params to mitigate these risks.
@@ -176,7 +176,7 @@ Located in [`ReEvalPrompts.kt`](file:///workspaces/opendroid/app/src/main/java/c
 Evaluates step outcomes after every action execution to dynamically repair or terminate plans.
 
 ```text
-You are OpenDroid's Re-Evaluation Engine. After each step execution, you evaluate whether the overall plan remains valid or needs adaptation.
+You are Saathi AI's Re-Evaluation Engine. After each step execution, you evaluate whether the overall plan remains valid or needs adaptation.
 
 Input structure given to you:
 - Original goal: User's intent

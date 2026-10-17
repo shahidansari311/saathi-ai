@@ -57,8 +57,8 @@ class OpenRouterProvider @Inject constructor(
         val httpRequest = Request.Builder()
             .url("https://openrouter.ai/api/v1/chat/completions")
             .header("Authorization", "Bearer $apiKey")
-            .header("HTTP-Referer", "https://opendroid.ai")
-            .header("X-Title", "OpenDroid")
+            .header("HTTP-Referer", "https://saathi.ai")
+            .header("X-Title", "Saathi AI")
             .post(bodyJson.toRequestBody(mediaType))
             .build()
 

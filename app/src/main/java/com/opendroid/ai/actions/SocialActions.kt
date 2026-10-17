@@ -62,7 +62,7 @@ class SocialActions @Inject constructor(
     inner class CreateSocialPostAction : Action {
         override val name: String = "SOCIAL_CREATE_POST"
         override suspend fun execute(params: Map<String, String>, context: Context): ActionResult {
-            val topic = params["topic"] ?: params["content"] ?: "OpenDroid milestone announcement"
+            val topic = params["topic"] ?: params["content"] ?: "Saathi AI milestone announcement"
             val platformStr = params["platform"] ?: "X"
             val platform = SocialPlatform.fromId(platformStr)
             val toneStr = params["tone"] ?: "PROFESSIONAL"
@@ -189,7 +189,7 @@ class SocialActions @Inject constructor(
             return try {
                 val report = analyticsEngine.generateWeeklyReport()
                 val text = buildString {
-                    appendLine("📋 **OpenDroid Social Report (${report.periodTitle})**")
+                    appendLine("📋 **Saathi AI Social Report (${report.periodTitle})**")
                     appendLine("• Followers Growth: ${report.totalFollowersDelta}")
                     appendLine("• Total Reach: ${report.totalReach}")
                     appendLine("• Avg Engagement: ${String.format("%.1f", report.averageEngagementRate)}%")
@@ -210,7 +210,7 @@ class SocialActions @Inject constructor(
     inner class CreateSocialCampaignAction : Action {
         override val name: String = "SOCIAL_CREATE_CAMPAIGN"
         override suspend fun execute(params: Map<String, String>, context: Context): ActionResult {
-            val name = params["name"] ?: "OpenDroid v1.1 Launch"
+            val name = params["name"] ?: "Saathi AI v1.1 Launch"
             val objective = params["objective"] ?: "Announce rollout, drive developer adoption, and showcase local AI"
             val days = params["days"]?.toIntOrNull() ?: 7
 

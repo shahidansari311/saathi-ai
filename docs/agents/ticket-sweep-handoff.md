@@ -1,15 +1,15 @@
 # Ticket sweep handoff — 2026-07-29
 
-Session goal: close every open ticket on the fork (`JMAN730/opendroid`), one fresh agent
+Session goal: close every open ticket on the fork (`shahidansari311/saathi-ai`), one fresh agent
 session per ticket, grilling tickets self-grilled, PRs opened at the end.
 
 Stopped early: the machine could not carry the parallel agent load. This file records
 exactly where the work stands so it can be resumed on the workstation without re-deriving
 anything.
 
-**Tracker note.** `AGENTS.md` makes the fork the only issue tracker; `yashab-cyber/opendroid`
+**Tracker note.** `AGENTS.md` makes the fork the only issue tracker; `shahidansari311/saathi-ai`
 is off limits. `gh` defaults to upstream when both remotes are present, so every `gh issue`
-and `gh pr` command below passes `--repo JMAN730/opendroid` explicitly, and `gh api` calls
+and `gh pr` command below passes `--repo shahidansari311/saathi-ai` explicitly, and `gh api` calls
 carry the repository in the endpoint path instead. The two upstream bug reports (#13 "API
 Failer", #9 "LOCAL IMPORT NOT WORKING") are the *origin* of this work but are not the
 tracker — upstream #13 is what map #25 exists to fix.
@@ -139,7 +139,7 @@ GitHub's native issue-dependency state.
 ### One open question for you
 
 **#34 is titled "Assemble the API reliability spec and post upstream."** `AGENTS.md`
-forbids writing to `yashab-cyber/opendroid`. Map #25's Destination says the spec is posted
+forbids writing to `shahidansari311/saathi-ai`. Map #25's Destination says the spec is posted
 as a comment on upstream issue 13, and notes you have merge rights upstream — so the map and
 the agent rules disagree. Nothing has been posted upstream. Decide before #34 runs.
 
@@ -149,9 +149,9 @@ Run one agent per ticket, but **serially or two at a time**, not ten — the par
 what killed this session three times. Each agent should:
 
 1. Read `AGENTS.md` and `docs/agents/issue-tracker.md`.
-2. Pass `--repo JMAN730/opendroid` on every `gh issue` and `gh pr` call. Not on `gh api`,
+2. Pass `--repo shahidansari311/saathi-ai` on every `gh issue` and `gh pr` call. Not on `gh api`,
    which has no such flag and exits with an unknown-flag error — put the repository in the
-   endpoint path there instead (`repos/JMAN730/opendroid/...`).
+   endpoint path there instead (`repos/shahidansari311/saathi-ai/...`).
 3. Post its findings comment and close its issue **before** polishing, so an interruption
    cannot lose the result. Commit and push incrementally for code tickets.
 4. **Not edit map bodies.** This overrides the **Resolve** step in

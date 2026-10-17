@@ -134,7 +134,7 @@ Saathi AI operates as an **Autonomous On-Device Agent** bridging user voice inte
 ### Build & Run
 ```bash
 # Clone the repository
-git clone https://github.com/shashank-tomar0/saathi-ai.git
+git clone https://github.com/shahidansari311/saathi-ai.git
 cd saathi-ai
 
 # Compile and build debug APK
@@ -145,7 +145,7 @@ cd saathi-ai
 ```
 
 ### Direct Download
-Grab the latest pre-compiled APK directly from the [GitHub Releases](https://github.com/shashank-tomar0/saathi-ai/releases) page.
+Grab the latest pre-compiled APK directly from the [GitHub Releases](https://github.com/shahidansari311/saathi-ai/releases) page.
 
 ---
 

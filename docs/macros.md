@@ -4,7 +4,7 @@ Saved macros and habit routines run as an ordered list of actions through the sa
 
 ## Habit Routines to Macro Bridge
 
-OpenDroid's `HabitRoutineEngine` continuously observes repeated daily sequences (e.g. Gmail $\to$ Calendar $\to$ Slack $\to$ Chrome on weekday mornings). When a pattern repeats $\ge 3$ times, it generates a suggested routine.
+Saathi AI's `HabitRoutineEngine` continuously observes repeated daily sequences (e.g. Gmail $\to$ Calendar $\to$ Slack $\to$ Chrome on weekday mornings). When a pattern repeats $\ge 3$ times, it generates a suggested routine.
 - **One-Click Approval**: Approving a suggested routine converts it into an active, scheduled macro in `MacroDao` with cron triggers (e.g., `0 9 * * 1-5` for weekdays at 9:00 AM).
 - **Execution**: Scheduled macros execute sequentially via `ActionSequenceExecutor` and can be triggered on demand using `RUN_ROUTINE`.
 

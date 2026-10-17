@@ -1,6 +1,6 @@
-# OpenDroid Releases
+# Saathi AI Releases
 
-This document tracks release updates, changelogs, and binary verification checksums for the OpenDroid project.
+This document tracks release updates, changelogs, and binary verification checksums for the Saathi AI project.
 
 ---
 
@@ -38,7 +38,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 
 #### 🛠️ Version & Build Updates
 *   **Version Bump**: Updated app version to `1.0.7` (`versionCode 8`).
-*   **Comprehensive Test Suite**: Added `SocialPlatformTest`, `OpenDroidDatabaseMigrationTest` (validating schema v8 to v9 migration and data preservation), and `SocialRuleEngineTest` with 100% passing tests.
+*   **Comprehensive Test Suite**: Added `SocialPlatformTest`, `Saathi AIDatabaseMigrationTest` (validating schema v8 to v9 migration and data preservation), and `SocialRuleEngineTest` with 100% passing tests.
 
 ### Release Assets
 *   **`app-debug.apk`** — Debug build APK for developer testing & logging.
@@ -74,7 +74,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 ### Highlights since v1.0.5
 
 #### 🔄 Habit & Routine Detection Engine
-*   **Proactive Pattern Recognition**: OpenDroid tracks app usage habits over time and detects repeated daily/weekly workflows (e.g., every weekday at 9:00 AM: *Gmail $\to$ Calendar $\to$ Slack $\to$ Chrome*).
+*   **Proactive Pattern Recognition**: Saathi AI tracks app usage habits over time and detects repeated daily/weekly workflows (e.g., every weekday at 9:00 AM: *Gmail $\to$ Calendar $\to$ Slack $\to$ Chrome*).
 *   **Proactive Automation Prompts**: Surfaces smart suggestions with confidence metrics: *"I noticed you usually do these tasks every weekday morning. Would you like me to automate them?"*
 *   **Multi-Step Morning Routine Automation**: Automatically synthesizes structured morning briefings:
     1. Read today's calendar (`LIST_CALENDAR_TODAY`)
@@ -88,7 +88,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 *   **Room Database Migration `MIGRATION_7_8`**: Added `habit_events` and `habit_routines` tables, upgrading schema to version 8.
 
 #### ✈️ Telegram Control & Automation
-*   **Full Telegram Automation**: OpenDroid now supports end-to-end messaging and chat control on Telegram alongside WhatsApp and SMS.
+*   **Full Telegram Automation**: Saathi AI now supports end-to-end messaging and chat control on Telegram alongside WhatsApp and SMS.
 *   **`SEND_TELEGRAM` & `OPEN_TELEGRAM` Actions**: Direct handling of `@username` handles, contact address book lookups, international phone numbers, and chat links (`tg://resolve`, `https://t.me/`).
 *   **`TelegramAutomator`**: Automatic accessibility typing and sending across official Telegram, Telegram Web/FOSS, Plus Messenger, and NekoX.
 *   **Habit Engine Integration**: Package recognition tracks Telegram workflows in routine mining.
@@ -301,7 +301,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 Developer-facing pre-release for sideload testing. Not a Play Store production upload.
 
 ### Highlights since v1.0.1 (Contributor Contributions #22, #23, #24, #25, #26)
-*   **Android 14/15 Foreground Service Fix (PR #22 by @JMAN730)**: Resolved `SecurityException` crashes on fresh installs by introducing `specialUse` fallback FGS service type and runtime permission handling in `OpenDroidService` (PR #22).
+*   **Android 14/15 Foreground Service Fix (PR #22 by @JMAN730)**: Resolved `SecurityException` crashes on fresh installs by introducing `specialUse` fallback FGS service type and runtime permission handling in `Saathi AIService` (PR #22).
 *   **Auto Mode & Safety Controls (PR #23 by @JMAN730)**: Introduced `AutoMode` (`NEVER`, `SAFE_ONLY`, `ALWAYS`), `AutoApprovalPolicy` plan filtering, `isNeverAutoApprovable` safeguards on sensitive actions, and `VoiceApprovalParser` for spoken plan approvals (PR #23).
 *   **Website Redesign & Theme Accessibility (PR #24 by @sudomarc)**: Full visual redesign of the website, light/dark theme toggle, navigation accessibility fix, mobile responsive fixes, and maintenance (PR #24).
 *   **LLM Reliability, Crash Logging & CI Hardening (PR #25 by @JMAN730)**: Added LLM provider error handling, Claude model catalog updates, on-device crash logging (`CrashLogRecorder`, `CrashLogRedactor`, `RoomCrashLogSink`, `CrashLogScreen`), permissions onboarding screen (`PermissionsScreen`), and CI hardening with GitHub Actions workflow (`android-ci.yml`), lint baseline, and Room schemas (PR #25).
@@ -392,7 +392,7 @@ Developer-facing pre-release for sideload testing. Not a Play Store production u
 *   **New Actions**: `READ_NOTIFICATIONS` and `AUTO_REPLY_TOGGLE` added to ActionSchema, accessible via natural language ("read my notifications", "turn on auto reply").
 
 ### 🎨 Light & Dark Theme
-*   **Dynamic Theme System**: Added `OpenDroidColors` palette with `CompositionLocal` provider for runtime theme switching.
+*   **Dynamic Theme System**: Added `Saathi AIColors` palette with `CompositionLocal` provider for runtime theme switching.
 *   **Light Mode**: Clean, GitHub-inspired light palette with proper contrast and readability.
 *   **Dark Mode**: Existing dark theme preserved as default.
 *   **Live Toggle**: Settings → Planning & Automation → Dark/Light Mode switch. Changes apply instantly without restart.
@@ -406,7 +406,7 @@ Developer-facing pre-release for sideload testing. Not a Play Store production u
 ### 🛠️ Technical Changes
 *   **Database**: Room migration v2→v3 adding `notifications` table.
 *   **DI**: `NotificationDao`, `AutoReplyEngine`, `NotificationIntelligence`, `NotificationActions` registered in Hilt.
-*   **Manifest**: Registered `OpenDroidNotificationListener` service with `BIND_NOTIFICATION_LISTENER_SERVICE` permission.
+*   **Manifest**: Registered `Saathi AINotificationListener` service with `BIND_NOTIFICATION_LISTENER_SERVICE` permission.
 *   **MemoryManager**: Now includes notification context and learned communication patterns in LLM context window.
 *   **ActionDispatcher**: Registered `NotificationActions` (READ_NOTIFICATIONS, AUTO_REPLY_TOGGLE).
 
@@ -426,7 +426,7 @@ Developer-facing pre-release for sideload testing. Not a Play Store production u
 
 ## v1.0.0 — Production Release
 
-First official production release of OpenDroid, targeting Google Play Store, Amazon Appstore, Samsung Galaxy Store, and other Android app marketplaces.
+First official production release of Saathi AI, targeting Google Play Store, Amazon Appstore, Samsung Galaxy Store, and other Android app marketplaces.
 
 ### 🚀 Key Features
 

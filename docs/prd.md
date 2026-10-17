@@ -1,4 +1,4 @@
-# Product Requirement Document (PRD) - OpenDroid
+# Product Requirement Document (PRD) - Saathi AI
 
 ## Document Control
 * **Document Version:** v1.2.0
@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary & Vision
 
-OpenDroid is a production-ready, autonomous, self-planning AI agent for Android devices. Unlike standard chat-based AI assistants (such as Google Assistant or Siri) that rely on static, hardcoded APIs or simple keyword matching, OpenDroid operates as a fully autonomous agentic system. 
+Saathi AI is a production-ready, autonomous, self-planning AI agent for Android devices. Unlike standard chat-based AI assistants (such as Google Assistant or Siri) that rely on static, hardcoded APIs or simple keyword matching, Saathi AI operates as a fully autonomous agentic system. 
 
 It interprets high-level natural language user instructions, breaks them down into sequential sub-tasks (a "Plan"), executes those tasks using native system interfaces and screen-based Accessibility actions, evaluates the outcomes, and dynamically adjusts/replans if a step fails or device conditions change.
 
@@ -58,7 +58,7 @@ graph TD
   * **Telegram Automation:** Direct messaging to `@username` handles, contact address book matches, and international phone numbers via `TelegramAutomator` across official Telegram, Telegram Web/FOSS, Plus Messenger, and NekoX.
 
 ### 3.3. Accessibility & Vision Automation
-* **UI Interaction Service (`OpenDroidAccessibilityService`):** Click buttons, inject text, scroll list containers, and navigate layouts in third-party apps.
+* **UI Interaction Service (`Saathi AIAccessibilityService`):** Click buttons, inject text, scroll list containers, and navigate layouts in third-party apps.
 * **Multimodal Vision Engine:** Capture real-time screenshots using the Accessibility media projections (Android 11+) and feed them to vision-capable models (e.g., Gemini Flash) for layout and step verification.
 * **Text-Scraping Fallback:** On older devices or where screenshot permissions are missing, scrape the active window's node hierarchy tree to reconstruct layout state.
 

@@ -79,10 +79,10 @@ Verification of the resolved graph:
 
 ## Regression tests added
 
-- `app/src/test/.../ui/OpenDroidNavigationBackStackTest.kt` — entry-flow `popUpTo` rules,
+- `app/src/test/.../ui/Saathi AINavigationBackStackTest.kt` — entry-flow `popUpTo` rules,
   secondary-destination stacking, and saved-state restoration against the real Navigation
   runtime (`TestNavHostController`).
-- `app/src/test/.../ui/theme/OpenDroidEdgeToEdgeTest.kt` — system bars keep the in-app theme
+- `app/src/test/.../ui/theme/Saathi AIEdgeToEdgeTest.kt` — system bars keep the in-app theme
   when Activity 1.13 reapplies `enableEdgeToEdge` on a configuration change, an in-app theme
   switch repaints them, and both bars stay transparent on API 29+.
 - `app/src/test/.../core/llm/ModelDownloadSchedulingTest.kt` — download work carries only the

@@ -1,6 +1,6 @@
-# Contributing to OpenDroid
+# Contributing to Saathi AI
 
-Thank you for your interest in contributing to OpenDroid! We welcome community contributions to help improve the agent's performance, stability, and compatibility.
+Thank you for your interest in contributing to Saathi AI! We welcome community contributions to help improve the agent's performance, stability, and compatibility.
 
 > **"Don't just write it. Prove it works."**
 
@@ -23,7 +23,7 @@ If you're contributing code, you're a **VibeCoder** — someone who doesn't ship
 
 ## 🤖 Model Requirement: Opus 4.8+ Level
 
-All contributors to OpenDroid **must** use a **frontier-class AI model** — Claude Opus 4.8 or equivalent tier — when:
+All contributors to Saathi AI **must** use a **frontier-class AI model** — Claude Opus 4.8 or equivalent tier — when:
 
 | Activity | Why Opus 4.8+ |
 |----------|---------------|
@@ -34,7 +34,7 @@ All contributors to OpenDroid **must** use a **frontier-class AI model** — Cla
 | Writing tests & scenarios | Generating realistic, adversarial test scenarios requires deep understanding of real-world phone usage |
 
 > [!IMPORTANT]
-> **Why not a smaller model?** OpenDroid is an *autonomous agent* — a single missed edge case can send the wrong message to the wrong person, delete data, or brick a user's workflow. The cost of frontier reasoning is a rounding error compared to the cost of shipping broken autonomy.
+> **Why not a smaller model?** Saathi AI is an *autonomous agent* — a single missed edge case can send the wrong message to the wrong person, delete data, or brick a user's workflow. The cost of frontier reasoning is a rounding error compared to the cost of shipping broken autonomy.
 
 ---
 
@@ -256,5 +256,5 @@ Fork the repo, pick an issue, fire up Opus 4.8, and build something you'd be pro
 ---
 
 <p align="center">
-  <strong>OpenDroid — Your phone. Your rules. Your AI.</strong>
+  <strong>Saathi AI — Your phone. Your rules. Your AI.</strong>
 </p>

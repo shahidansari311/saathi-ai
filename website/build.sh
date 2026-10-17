@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# build.sh — Simple build script for the OpenDroid website.
+# build.sh — Simple build script for the Saathi AI website.
 # Minifies CSS and JS for production without any external tooling (Node, etc.).
 #
 # Usage:
@@ -18,7 +18,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DIST_DIR="${SCRIPT_DIR}/dist"
 
-echo "🔨 Building OpenDroid website..."
+echo "🔨 Building Saathi AI website..."
 echo "   Source: ${SCRIPT_DIR}"
 echo "   Output: ${DIST_DIR}"
 echo ""

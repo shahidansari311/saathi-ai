@@ -162,7 +162,7 @@ class OpenDroidService : Service() {
     private fun startWakeWordDetection() {
         wakeWordDetector.startListening {
             // Wake word detected! Prompt user with a sound or greeting and start listing for query
-            textToSpeechEngine.speak("OpenDroid online.")
+            textToSpeechEngine.speak("Saathi AI online.")
             startListeningForQuery()
         }
     }
@@ -181,7 +181,7 @@ class OpenDroidService : Service() {
                 // Resume wake word detection only if floating button is disabled
                 if (!showFloatingButton) {
                     wakeWordDetector.startListening {
-                        textToSpeechEngine.speak("OpenDroid online.")
+                        textToSpeechEngine.speak("Saathi AI online.")
                         startListeningForQuery()
                     }
                 } else {
@@ -193,7 +193,7 @@ class OpenDroidService : Service() {
                 // Resume wake word detection only if floating button is disabled
                 if (!showFloatingButton) {
                     wakeWordDetector.startListening {
-                        textToSpeechEngine.speak("OpenDroid online.")
+                        textToSpeechEngine.speak("Saathi AI online.")
                         startListeningForQuery()
                     }
                 }

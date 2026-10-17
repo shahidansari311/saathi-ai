@@ -1,4 +1,4 @@
-# OpenDroid Releases
+# Saathi AI Releases
 
 See the full release documentation and changelogs in [docs/RELEASE.md](docs/RELEASE.md).
 
@@ -36,7 +36,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 
 #### 🛠️ Version & Build Updates
 * **Version Bump**: Updated app version to `1.0.7` (`versionCode 8`).
-* **Comprehensive Test Suite**: Added `SocialPlatformTest`, `OpenDroidDatabaseMigrationTest` (validating schema v8 to v9 migration and data preservation), and `SocialRuleEngineTest` with 100% passing tests.
+* **Comprehensive Test Suite**: Added `SocialPlatformTest`, `Saathi AIDatabaseMigrationTest` (validating schema v8 to v9 migration and data preservation), and `SocialRuleEngineTest` with 100% passing tests.
 
 ### Release Assets
 * **`app-debug.apk`** — Debug build APK for developer testing & logging.
@@ -51,7 +51,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 * **`app-release.aab`**: `03186f5d4410c7f758d0ec215dc49f61aa0945bb61e5ba78c47a804611eab29b`
 
 ### Build Configuration
-* **Package**: `com.opendroid.aiagent`
+* **Package**: `com.saathi-ai.aiagent`
 * **Version Code**: 8
 * **Version Name**: 1.0.7
 * **Min SDK**: 26 (Android 8.0)
@@ -70,7 +70,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 ### Highlights since v1.0.5
 
 #### 🔄 Habit & Routine Detection Engine
-* **Proactive Pattern Recognition**: OpenDroid tracks app usage habits over time and detects repeated daily/weekly workflows (e.g., every weekday at 9:00 AM: *Gmail → Calendar → Slack → Chrome*).
+* **Proactive Pattern Recognition**: Saathi AI tracks app usage habits over time and detects repeated daily/weekly workflows (e.g., every weekday at 9:00 AM: *Gmail → Calendar → Slack → Chrome*).
 * **Proactive Automation Prompts**: Surfaces smart suggestions with confidence metrics: *"I noticed you usually do these tasks every weekday morning. Would you like me to automate them?"*
 * **Multi-Step Morning Routine Automation**: Automatically synthesizes structured morning briefings:
   1. Read today's calendar (`LIST_CALENDAR_TODAY`)
@@ -84,7 +84,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 * **Room Database Migration `MIGRATION_7_8`**: Added `habit_events` and `habit_routines` tables, upgrading schema to version 8.
 
 #### ✈️ Telegram Control & Automation
-* **Full Telegram Automation**: OpenDroid now supports end-to-end messaging and chat control on Telegram alongside WhatsApp and SMS.
+* **Full Telegram Automation**: Saathi AI now supports end-to-end messaging and chat control on Telegram alongside WhatsApp and SMS.
 * **`SEND_TELEGRAM` & `OPEN_TELEGRAM` Actions**: Direct handling of `@username` handles, contact address book lookups, international phone numbers, and chat links (`tg://resolve`, `https://t.me/`).
 * **`TelegramAutomator`**: Automatic accessibility typing and sending across official Telegram, Telegram Web/FOSS, Plus Messenger, and NekoX.
 * **Habit Engine Integration**: Package recognition tracks Telegram workflows in routine mining.
@@ -110,7 +110,7 @@ Current release. Sideload the APK for direct install, or use the AAB for Play St
 * **`app-release.aab`**: `de9bd177e4274cc97ec45913d2ce2e59389291bed45d0eddbd770bbe9e956f23`
 
 ### Build Configuration
-* **Package**: `com.opendroid.aiagent`
+* **Package**: `com.saathi-ai.aiagent`
 * **Version Code**: 7
 * **Version Name**: 1.0.6
 * **Min SDK**: 26 (Android 8.0)
