@@ -59,6 +59,8 @@ import com.opendroid.ai.data.models.effectiveGrantedActions
 import com.opendroid.ai.data.models.resolvedAutoMode
 import com.opendroid.ai.data.repository.ChatSession
 import com.opendroid.ai.ui.components.ContactPickerCard
+import com.opendroid.ai.ui.components.QuickHelpCareCard
+import com.opendroid.ai.ui.components.SpokenFeedbackBanner
 import com.opendroid.ai.ui.theme.*
 import com.opendroid.ai.ui.viewmodel.ChatViewModel
 import kotlinx.coroutines.delay
@@ -159,30 +161,71 @@ fun ChatScreen(
     }
 
     val speechRecognizer = remember { SpeechRecognitionEngine(context) }
-    
-    val recordAudioPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
+    var pendingAutoSendVoice by remember { mutableStateOf(false) }
+
+    fun startListeningInternal(autoSend: Boolean) {
+        val audioPerm = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.RECORD_AUDIO
+        )
+        if (audioPerm == PackageManager.PERMISSION_GRANTED) {
             isListening = true
             voiceError = null
             transcriptionText = ""
             speechRecognizer.startListening(
                 onResult = { text ->
                     isListening = false
-                    mergeDictatedText(text)
                     transcriptionText = ""
+                    if (autoSend && text.isNotBlank()) {
+                        viewModel.sendMessage(text, context)
+                    } else {
+                        mergeDictatedText(text)
+                    }
                 },
                 onPartialResult = { partial ->
                     transcriptionText = partial
                 },
                 onError = { err ->
                     isListening = false
-                    mergeDictatedText(transcriptionText)
+                    if (transcriptionText.isNotBlank()) {
+                        if (autoSend) {
+                            viewModel.sendMessage(transcriptionText, context)
+                        } else {
+                            mergeDictatedText(transcriptionText)
+                        }
+                    }
                     transcriptionText = ""
                     voiceError = err
                 }
             )
+        } else {
+            pendingAutoSendVoice = autoSend
+            recordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        }
+    }
+
+    fun toggleVoiceInteraction(autoSend: Boolean = false) {
+        if (isListening) {
+            speechRecognizer.cancel()
+            isListening = false
+            if (transcriptionText.isNotBlank()) {
+                if (autoSend) {
+                    viewModel.sendMessage(transcriptionText, context)
+                } else {
+                    mergeDictatedText(transcriptionText)
+                }
+            }
+            transcriptionText = ""
+        } else {
+            startListeningInternal(autoSend)
+        }
+    }
+
+    val recordAudioPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startListeningInternal(pendingAutoSendVoice)
         }
     }
 
@@ -359,6 +402,33 @@ fun ChatScreen(
                     .fillMaxSize()
                     .padding(bottom = 80.dp)
             ) {
+                // 1. Spoken Feedback Banner (High-contrast visual status bar)
+                SpokenFeedbackBanner(
+                    agentState = visibleAgentState,
+                    isListening = isListening,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                )
+
+                // 2. Quick-Help Care Card for Elderly Users (Emergency SOS, Call Beta, Big Mic Orb)
+                QuickHelpCareCard(
+                    isListening = isListening,
+                    transcriptionText = transcriptionText,
+                    onMicClick = {
+                        toggleVoiceInteraction(autoSend = true)
+                    },
+                    onEmergencySosClick = {
+                        viewModel.sendMessage("Emergency SOS: Help me, call emergency contact and broadcast distress alert", context)
+                    },
+                    onCallFamilyClick = {
+                        viewModel.sendMessage("Call Beta", context)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+
                 // Messages List
                 LazyColumn(
                     state = listState,
@@ -500,43 +570,7 @@ fun ChatScreen(
                             isListening = isListening,
                             agentState = visibleAgentState,
                             onClick = {
-                                if (isListening) {
-                                    // True cancel: no final result will be delivered for this
-                                    // session, so whatever partial transcript we already have is
-                                    // handed back to the input field instead of being lost.
-                                    speechRecognizer.cancel()
-                                    isListening = false
-                                    mergeDictatedText(transcriptionText)
-                                    transcriptionText = ""
-                                } else {
-                                    val audioPerm = ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.RECORD_AUDIO
-                                    )
-                                    if (audioPerm == PackageManager.PERMISSION_GRANTED) {
-                                        isListening = true
-                                        voiceError = null
-                                        transcriptionText = ""
-                                        speechRecognizer.startListening(
-                                            onResult = { text ->
-                                                isListening = false
-                                                mergeDictatedText(text)
-                                                transcriptionText = ""
-                                            },
-                                            onPartialResult = { partial ->
-                                                transcriptionText = partial
-                                            },
-                                            onError = { err ->
-                                                isListening = false
-                                                mergeDictatedText(transcriptionText)
-                                                transcriptionText = ""
-                                                voiceError = err
-                                            }
-                                        )
-                                    } else {
-                                        recordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                                    }
-                                }
+                                toggleVoiceInteraction(autoSend = false)
                             }
                         )
 
