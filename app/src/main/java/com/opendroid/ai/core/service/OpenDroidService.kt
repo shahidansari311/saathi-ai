@@ -92,29 +92,22 @@ class OpenDroidService : Service() {
         startForegroundCompat()
         mcpServer.start()
 
-        // Monitor floating button config to start/stop wake word detection dynamically
+        // Monitor config and keep wake word detection active
         serviceScope.launch {
             settingsRepository.llmConfig.collectLatest { config ->
                 showFloatingButton = config.showFloatingButton
-                if (showFloatingButton) {
-                    wakeWordDetector.stopListening()
-                } else {
-                    startWakeWordDetection()
-                }
+                startWakeWordDetection()
             }
         }
 
-        // Hands-free plan approval (upstream issue 18 spec, voice section):
-        // speak the prompt once per proposed plan; auto-listen for the reply
-        // only in wake-word mode, where the user is known to be voice-driven.
+        // Hands-free plan approval (voice-driven):
+        // speak the prompt once per proposed plan and auto-listen for the reply.
         serviceScope.launch {
             var promptedPlanId: String? = null
             agentLoop.agentState.collectLatest { state ->
                 if (state is AgentState.PlanProposed && state.plan.planId != promptedPlanId) {
                     promptedPlanId = state.plan.planId
-                    if (!showFloatingButton) {
-                        pendingApprovalListen = true
-                    }
+                    pendingApprovalListen = true
                     textToSpeechEngine.speak(
                         "I've planned: ${state.plan.goal}, ${state.plan.estimatedSteps} steps. " +
                         "Say approve to run, or cancel."
@@ -178,24 +171,18 @@ class OpenDroidService : Service() {
         speechRecognitionEngine.startListening(
             onResult = { query ->
                 agentLoop.processQuery(query, this)
-                // Resume wake word detection only if floating button is disabled
-                if (!showFloatingButton) {
-                    wakeWordDetector.startListening {
-                        textToSpeechEngine.speak("Saathi AI online.")
-                        startListeningForQuery()
-                    }
-                } else {
-                    agentLoop.setAgentState(AgentState.Idle)
+                // Resume wake word detection
+                wakeWordDetector.startListening {
+                    textToSpeechEngine.speak("Saathi AI online.")
+                    startListeningForQuery()
                 }
             },
             onError = { _ ->
                 agentLoop.setAgentState(AgentState.Idle)
-                // Resume wake word detection only if floating button is disabled
-                if (!showFloatingButton) {
-                    wakeWordDetector.startListening {
-                        textToSpeechEngine.speak("Saathi AI online.")
-                        startListeningForQuery()
-                    }
+                // Resume wake word detection
+                wakeWordDetector.startListening {
+                    textToSpeechEngine.speak("Saathi AI online.")
+                    startListeningForQuery()
                 }
             }
         )
@@ -216,10 +203,10 @@ class OpenDroidService : Service() {
                     VoiceApprovalIntent.REJECT -> agentLoop.rejectProposedPlan()
                     VoiceApprovalIntent.NONE -> Unit
                 }
-                if (!showFloatingButton) startWakeWordDetection()
+                startWakeWordDetection()
             },
             onError = { _ ->
-                if (!showFloatingButton) startWakeWordDetection()
+                startWakeWordDetection()
             }
         )
     }

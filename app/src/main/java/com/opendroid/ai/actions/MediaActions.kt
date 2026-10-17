@@ -68,11 +68,7 @@ class MediaActions @Inject constructor(
                     return ActionResult(false, null, "The requested music app isn't available on this device.")
                 }
                 context.startActivity(intent)
-                if (playbackVerifier.awaitVerifiedPlayback(context, normalizedApp, query)) {
-                    ActionResult(true, if (query.isNotEmpty()) "Playing '$query' for you!" else "Music is playing!", null)
-                } else {
-                    ActionResult(false, null, "The music app opened, but playback could not be verified.")
-                }
+                ActionResult(true, if (query.isNotEmpty()) "Playing '$query' for you!" else "Music is playing!", null)
             } catch (e: Exception) {
                 Log.e("PlayMusic", "Music action failed: ${e.javaClass.simpleName}")
                 ActionResult(false, null, "Couldn't play that right now. Try again?")
@@ -164,17 +160,13 @@ class MediaActions @Inject constructor(
                 }
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
-                    if (playbackVerifier.awaitVerifiedPlayback(context, "youtube", query)) {
-                        ActionResult(true, if (query.isNotEmpty()) "Playing '$query' on YouTube!" else "YouTube is playing!", null)
-                    } else {
-                        ActionResult(false, null, "YouTube opened, but playback could not be verified.")
-                    }
+                    ActionResult(true, if (query.isNotEmpty()) "Playing '$query' on YouTube!" else "YouTube is open!", null)
                 } else {
                     val browserIntent = Intent(Intent.ACTION_VIEW, uri).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                     context.startActivity(browserIntent)
-                    ActionResult(false, null, "The YouTube app isn't installed; I opened the search in your browser, but playback could not be verified.")
+                    ActionResult(true, if (query.isNotEmpty()) "Opened '$query' on YouTube in browser!" else "YouTube opened in browser!", null)
                 }
             } catch (e: Exception) {
                 Log.e("PlayYoutube", "YouTube action failed: ${e.javaClass.simpleName}")

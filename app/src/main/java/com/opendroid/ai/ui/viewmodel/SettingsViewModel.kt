@@ -717,6 +717,30 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateEmergencyContacts(
+        emergencyName: String,
+        emergencyPhone: String,
+        quickCallName: String,
+        quickCallPhone: String
+    ) {
+        _llmConfig.value = _llmConfig.value.copy(
+            emergencyContactName = emergencyName,
+            emergencyContactPhone = emergencyPhone,
+            quickCallName = quickCallName,
+            quickCallPhone = quickCallPhone
+        )
+        viewModelScope.launch {
+            settingsRepository.updateConfig { current ->
+                current.copy(
+                    emergencyContactName = emergencyName,
+                    emergencyContactPhone = emergencyPhone,
+                    quickCallName = quickCallName,
+                    quickCallPhone = quickCallPhone
+                )
+            }
+        }
+    }
+
     // ── On-Device Model Lifecycle Management ──
 
     val allModels = modelRepository.allModelsFlow.stateIn(

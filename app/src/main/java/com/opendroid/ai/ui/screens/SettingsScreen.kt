@@ -1945,6 +1945,80 @@ fun SettingsScreen(
                                 )
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                                .background(BorderColor)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "Emergency & Quick Call Contacts",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = AccentCyan
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Configure numbers for 1-Tap Emergency SOS and Quick Family Calling.",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        var editEmergencyPhone by remember(config.emergencyContactPhone) { mutableStateOf(config.emergencyContactPhone) }
+                        var editEmergencyName by remember(config.emergencyContactName) { mutableStateOf(config.emergencyContactName) }
+                        var editQuickName by remember(config.quickCallName) { mutableStateOf(config.quickCallName) }
+                        var editQuickPhone by remember(config.quickCallPhone) { mutableStateOf(config.quickCallPhone) }
+
+                        OutlinedTextField(
+                            value = editEmergencyPhone,
+                            onValueChange = {
+                                editEmergencyPhone = it
+                                viewModel.updateEmergencyContacts(editEmergencyName, it, editQuickName, editQuickPhone)
+                            },
+                            label = { Text("🚨 Emergency SOS Phone Number") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = editEmergencyName,
+                            onValueChange = {
+                                editEmergencyName = it
+                                viewModel.updateEmergencyContacts(it, editEmergencyPhone, editQuickName, editQuickPhone)
+                            },
+                            label = { Text("Emergency Contact Name (Optional)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        OutlinedTextField(
+                            value = editQuickName,
+                            onValueChange = {
+                                editQuickName = it
+                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, it, editQuickPhone)
+                            },
+                            label = { Text("📞 Quick Call Button Label (e.g. Beta, Doctor, Mom)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = editQuickPhone,
+                            onValueChange = {
+                                editQuickPhone = it
+                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, editQuickName, it)
+                            },
+                            label = { Text("Quick Call Phone Number to Dial") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                         }
                         }
                     }

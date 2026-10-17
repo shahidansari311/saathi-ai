@@ -186,18 +186,34 @@ class ChatViewModel @Inject constructor(
         agentLoop.approveProposedPlan(context, grants)
     }
 
-    /** Chip tap: Off <-> Auto only. YOLO is entered solely from Settings behind
-     *  its warning dialog and exits to OFF from here (tapping the red chip is
-     *  an explicit "get me out of YOLO", which is always safe). */
+    fun updateEmergencyContacts(
+        emergencyName: String,
+        emergencyPhone: String,
+        quickCallName: String,
+        quickCallPhone: String
+    ) {
+        viewModelScope.launch {
+            settingsRepository.updateConfig { current ->
+                current.copy(
+                    emergencyContactName = emergencyName,
+                    emergencyContactPhone = emergencyPhone,
+                    quickCallName = quickCallName,
+                    quickCallPhone = quickCallPhone
+                )
+            }
+        }
+    }
+
+    /** Chip tap: Off -> Auto -> YOLO -> Off. */
     fun cycleAutoMode() {
         viewModelScope.launch {
             settingsRepository.updateConfig { current ->
                 val next = when (current.resolvedAutoMode()) {
                     AutoMode.OFF -> AutoMode.AUTO
-                    AutoMode.AUTO -> AutoMode.OFF
+                    AutoMode.AUTO -> AutoMode.YOLO
                     AutoMode.YOLO -> AutoMode.OFF
                 }
-                current.copy(autoMode = next, autoConfirmPlans = next == AutoMode.YOLO)
+                current.copy(autoMode = next, autoConfirmPlans = next != AutoMode.OFF)
             }
         }
     }

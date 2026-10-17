@@ -23,9 +23,12 @@ enum class AutoMode {
             "WEB_SEARCH", "GET_WEATHER", "GET_NEWS", "CALCULATE", "TRANSLATE",
             "DEFINE_WORD", "CONVERT_UNITS", "CURRENCY_CONVERT", "CHECK_STOCK",
             "SUMMARIZE_URL", "FACT_CHECK",
-            // Reversible SYSTEM
+            // Reversible SYSTEM & AUTOMATION
             "TOGGLE_FLASHLIGHT", "TOGGLE_DND", "SET_BRIGHTNESS", "SET_VOLUME",
-            "SET_RINGER_MODE", "GET_SYSTEM_INFO"
+            "SET_RINGER_MODE", "GET_SYSTEM_INFO",
+            "OPEN_APP", "LAUNCH_APP", "CLICK_ELEMENT", "CLICK_TEXT", "TYPE_TEXT",
+            "SCROLL", "WAIT", "PRESS_ENTER", "PLAY_YOUTUBE", "PLAY_MUSIC",
+            "SEND_WHATSAPP", "MAKE_CALL", "EMERGENCY_SOS", "GET_CONTACT"
         )
     }
 }

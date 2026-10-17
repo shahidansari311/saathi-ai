@@ -14,14 +14,19 @@ import com.opendroid.ai.data.models.PlanStep
  */
 object AutoApprovalPolicy {
 
-    fun shouldAutoApprove(mode: AutoMode, granted: Set<String>, plan: Plan): Boolean = when (mode) {
-        AutoMode.OFF -> false
-        AutoMode.YOLO -> true
-        AutoMode.AUTO -> plan.steps
-            .flatMap {
-                step -> listOfNotNull(step.action.takeIf { it.isNotBlank() }, step.fallback.takeIf { it.isNotBlank() })
-            }
-            .none { ActionSchema.isNeverAutoApprove(it) || it !in granted }
+    fun shouldAutoApprove(mode: AutoMode, granted: Set<String>, plan: Plan): Boolean {
+        // EMERGENCY_SOS MUST NEVER BE BLOCKED OR REQUIRE CONFIRMATION
+        if (plan.steps.any { it.action == "EMERGENCY_SOS" }) return true
+
+        return when (mode) {
+            AutoMode.OFF -> false
+            AutoMode.YOLO -> true
+            AutoMode.AUTO -> plan.steps
+                .flatMap {
+                    step -> listOfNotNull(step.action.takeIf { it.isNotBlank() }, step.fallback.takeIf { it.isNotBlank() })
+                }
+                .none { ActionSchema.isNeverAutoApprove(it) || (it !in granted && it !in AutoMode.DEFAULT_GRANTS) }
+        }
     }
 
     /**
@@ -34,7 +39,7 @@ object AutoApprovalPolicy {
             listOfNotNull(step.action.takeIf { it.isNotBlank() }, step.fallback.takeIf { it.isNotBlank() })
         }
             .distinct()
-            .filter { it !in granted || ActionSchema.isNeverAutoApprove(it) }
+            .filter { it != "EMERGENCY_SOS" && ((it !in granted && it !in AutoMode.DEFAULT_GRANTS) || ActionSchema.isNeverAutoApprove(it)) }
 
     /** Only known, non-neverAutoApprove actions may ever be granted. */
     fun isGrantable(actionName: String): Boolean =

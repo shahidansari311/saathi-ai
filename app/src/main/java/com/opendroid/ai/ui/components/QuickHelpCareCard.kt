@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -42,9 +43,11 @@ import com.opendroid.ai.ui.theme.AppTheme
 fun QuickHelpCareCard(
     isListening: Boolean,
     transcriptionText: String = "",
+    quickCallName: String = "Beta",
     onMicClick: () -> Unit,
     onEmergencySosClick: () -> Unit,
     onCallFamilyClick: () -> Unit,
+    onConfigureContacts: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val theme = AppTheme.colors
@@ -83,6 +86,26 @@ fun QuickHelpCareCard(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (onConfigureContacts != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onConfigureContacts,
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Configure Contacts",
+                            tint = theme.textSecondary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+            }
+
             // ── Section 1: Big Voice Mic Orb ────────────────────────────────
             Box(
                 modifier = Modifier
@@ -205,7 +228,7 @@ fun QuickHelpCareCard(
                     }
                 }
 
-                // 📞 Call Family ("Beta") Button
+                // 📞 Call Family Button
                 Button(
                     onClick = onCallFamilyClick,
                     modifier = Modifier
@@ -225,24 +248,28 @@ fun QuickHelpCareCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Call,
-                            contentDescription = "Call Beta",
+                            contentDescription = "Call ${quickCallName.ifBlank { "Family" }}",
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Column(horizontalAlignment = Alignment.Start) {
                             Text(
-                                text = "CALL BETA",
-                                fontSize = 15.sp,
+                                text = "CALL ${quickCallName.ifBlank { "FAMILY" }.uppercase()}",
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = Color.White,
-                                letterSpacing = 0.5.sp
+                                letterSpacing = 0.5.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "Phone (बेटा)",
+                                text = "Phone (${quickCallName.ifBlank { "परिवार" }})",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White.copy(alpha = 0.9f)
+                                color = Color.White.copy(alpha = 0.9f),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }

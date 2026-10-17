@@ -203,7 +203,7 @@ class OpenDroidAccessibilityService : AccessibilityService() {
         val touchTarget = TouchTargetView(this)
         touchTargetView = touchTarget
 
-        val touchInset = dpToPx(8)
+        val touchInset = dpToPx(4)
         val touchParams = WindowManager.LayoutParams(
             dpToPx(64) - 2 * touchInset,
             dpToPx(64) - 2 * touchInset,
@@ -388,7 +388,7 @@ class OpenDroidAccessibilityService : AccessibilityService() {
         init {
             setImageResource(R.drawable.bot)
             scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
-            val padding = dpToPx(8)
+            val padding = dpToPx(3)
             setPadding(padding, padding, padding, padding)
         }
 
@@ -434,7 +434,7 @@ class OpenDroidAccessibilityService : AccessibilityService() {
         override fun onDraw(canvas: Canvas) {
             val cx = width / 2f
             val cy = height / 2f
-            val radius = (width / 2f) - dpToPx(6f)
+            val radius = (width / 2f) - dpToPx(4f)
 
             // 1. Clip canvas to circular bounds so image corners never spill out
             clipPath.reset()
@@ -442,8 +442,8 @@ class OpenDroidAccessibilityService : AccessibilityService() {
             canvas.save()
             canvas.clipPath(clipPath)
 
-            // 2. Draw dark circular base background
-            paint.color = "#0A0A0E".toColorInt()
+            // 2. Draw circular base background
+            paint.color = "#0284C7".toColorInt()
             paint.style = Paint.Style.FILL
             canvas.drawCircle(cx, cy, radius, paint)
 

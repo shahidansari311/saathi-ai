@@ -339,6 +339,14 @@ object ActionSchema {
             category = ActionCategory.COMMUNICATION
         ),
         ActionDefinition(
+            name = "GET_CONTACT",
+            description = "Looks up a contact's phone number and details from the address book",
+            params = listOf(ParamDefinition("name", ParamType.STRING, true, "Contact name to search for")),
+            examples = listOf("get raj number", "find raj number", "raj ka number", "search contact raj", "get mom phone number"),
+            category = ActionCategory.COMMUNICATION,
+            isSimple = true
+        ),
+        ActionDefinition(
             name = "SEND_WHATSAPP",
             description = "Sends WhatsApp message. Opens WhatsApp internally.",
             params = listOf(

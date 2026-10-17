@@ -12,11 +12,11 @@ enum class VoiceApprovalIntent { APPROVE, REJECT, NONE }
 object VoiceApprovalParser {
 
     private val rejectPattern = Regex(
-        """\b(cancel|stop|reject|no)\b|\b(don't|do not)\s+(run|do|execute)\b""",
+        """\b(cancel|stop|reject|no|nahin|nahi|mat karo|roko|band karo)\b|\b(don't|do not)\s+(run|do|execute)\b""",
         RegexOption.IGNORE_CASE
     )
     private val approvePattern = Regex(
-        """\b(approve|yes|run|go ahead|do it|execute)\b""",
+        """\b(approve|yes|run|go ahead|do it|execute|haan|ha|theek hai|thik hai|karo|chalao|sahi hai|bilkul|ok|okay|sure|start|proceed)\b""",
         RegexOption.IGNORE_CASE
     )
 

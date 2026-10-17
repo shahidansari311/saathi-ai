@@ -25,6 +25,8 @@ import android.provider.ContactsContract
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import java.net.URLEncoder
+import com.opendroid.ai.data.repository.SettingsRepository
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,7 +65,8 @@ private class AndroidEmailComposer : EmailComposer {
 @Singleton
 class CommunicationActions @Inject constructor(
     private val contactResolver: ContactResolver,
-    private val callFlowExecutor: CallFlowExecutor
+    private val callFlowExecutor: CallFlowExecutor,
+    private val settingsRepository: SettingsRepository? = null
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -71,6 +74,7 @@ class CommunicationActions @Inject constructor(
     fun getActions(): List<Action> = listOf(
         EmergencySosAction(),
         MakeCallAction(),
+        GetContactAction(),
         SendWhatsAppAction(),
         SendTelegramAction(),
         OpenTelegramAction(),
@@ -212,7 +216,17 @@ class CommunicationActions @Inject constructor(
             var targetPhone: String? = null
             var contactLabel = contactQuery
 
-            if (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true)) {
+            val savedEmergencyPhone = try {
+                settingsRepository?.llmConfig?.first()?.emergencyContactPhone?.takeIf { it.isNotBlank() }
+            } catch (e: Exception) { null }
+            val savedEmergencyName = try {
+                settingsRepository?.llmConfig?.first()?.emergencyContactName?.takeIf { it.isNotBlank() }
+            } catch (e: Exception) { null }
+
+            if (savedEmergencyPhone != null && (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true))) {
+                targetPhone = savedEmergencyPhone
+                contactLabel = savedEmergencyName ?: savedEmergencyPhone
+            } else if (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true)) {
                 // Search for designated emergency/family contacts in address book
                 val familyAliases = listOf("beta", "family", "emergency", "ice", "sos", "ghar", "doctor", "police")
                 for (alias in familyAliases) {
@@ -291,6 +305,13 @@ class CommunicationActions @Inject constructor(
                 ?: params["phoneNumber"]
                 ?: return ActionResult(false, null, "contact or number parameter missing")
 
+            val savedQuickCall = try {
+                settingsRepository?.llmConfig?.first()?.quickCallPhone?.takeIf { it.isNotBlank() }
+            } catch (e: Exception) { null }
+            if (savedQuickCall != null && (contact.equals("beta", ignoreCase = true) || contact.equals("family", ignoreCase = true) || contact.equals("ghar", ignoreCase = true))) {
+                return executeCall(savedQuickCall, context)
+            }
+
             return when (val resolved = contactResolver.resolveWithDisambiguation(contact)) {
                 is ContactResolution.Found -> executeCall(resolved.contact.phoneNumber, context)
                 is ContactResolution.Ambiguous -> buildContactPickerResult(contact, resolved.matches, "MAKE_CALL")
@@ -298,6 +319,28 @@ class CommunicationActions @Inject constructor(
                     question = "I couldn't find '$contact' in your contacts. What's their number?",
                     metadata = mapOf("param" to "contact")
                 )
+            }
+        }
+    }
+
+    // ── GET_CONTACT ──────────────────────────────────────────
+
+    private inner class GetContactAction : Action {
+        override val name: String = "GET_CONTACT"
+        override suspend fun execute(params: Map<String, String>, context: Context): ActionResult {
+            val contactName = params["name"] ?: params["contact"] ?: params["query"]
+                ?: return ActionResult(false, null, "contact name is missing")
+            return when (val resolved = contactResolver.resolveWithDisambiguation(contactName)) {
+                is ContactResolution.Found -> {
+                    ActionResult(true, "${resolved.contact.name}: ${resolved.contact.phoneNumber}", null)
+                }
+                is ContactResolution.Ambiguous -> {
+                    val top = resolved.matches.first()
+                    ActionResult(true, "${top.name}: ${top.phoneNumber}", null)
+                }
+                is ContactResolution.NotFound -> {
+                    ActionResult(false, null, "Could not find contact '$contactName'")
+                }
             }
         }
     }

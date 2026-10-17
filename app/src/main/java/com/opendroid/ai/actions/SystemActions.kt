@@ -394,11 +394,15 @@ class SystemActions @Inject constructor(
             }
             val resolveInfos = pm.queryIntentActivities(mainIntent, 0)
             
+            fun clean(s: String): String = s.lowercase().replace(Regex("[\\s_\\-\\.]"), "")
+            val queryClean = clean(appName)
+
             // 1. Try to find a match among launcher apps first
             var matchedPackage = resolveInfos.find {
-                val label = it.loadLabel(pm).toString()
-                val pkgName = it.activityInfo.packageName
-                label.contains(appName, ignoreCase = true) || pkgName.contains(appName, ignoreCase = true)
+                val labelClean = clean(it.loadLabel(pm).toString())
+                val pkgClean = clean(it.activityInfo.packageName)
+                labelClean.contains(queryClean) || pkgClean.contains(queryClean) ||
+                    queryClean.contains(labelClean) || queryClean.contains(pkgClean)
             }?.activityInfo?.packageName
 
             // 2. If not found in launcher apps, try matching installed applications as a fallback
@@ -406,8 +410,10 @@ class SystemActions @Inject constructor(
                 try {
                     val packages = pm.getInstalledApplications(0)
                     matchedPackage = packages.find {
-                        val label = pm.getApplicationLabel(it).toString()
-                        label.contains(appName, ignoreCase = true) || it.packageName.contains(appName, ignoreCase = true)
+                        val labelClean = clean(pm.getApplicationLabel(it).toString())
+                        val pkgClean = clean(it.packageName)
+                        labelClean.contains(queryClean) || pkgClean.contains(queryClean) ||
+                            queryClean.contains(labelClean) || queryClean.contains(pkgClean)
                     }?.packageName
                 } catch (e: Exception) {
                     // Ignore installed applications check exceptions

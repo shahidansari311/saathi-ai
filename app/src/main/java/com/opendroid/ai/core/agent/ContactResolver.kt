@@ -60,6 +60,23 @@ open class ContactResolver @Inject constructor(
     companion object {
         private const val TAG = "ContactResolver"
 
+        fun stripContactSuffixes(input: String): String {
+            var cleaned = input.trim()
+            val suffixes = listOf(
+                " ka phone number", " ka phone", " ka contact number", " ka contact", " ka number",
+                " ki details", " ki detail", " ki info", " details", " detail", " info",
+                "'s phone number", "'s contact number", "'s phone", "'s contact", "'s number",
+                " phone number", " contact number", " phone", " contact", " number", " no"
+            )
+            for (suffix in suffixes) {
+                if (cleaned.endsWith(suffix, ignoreCase = true) && cleaned.length > suffix.length) {
+                    cleaned = cleaned.substring(0, cleaned.length - suffix.length).trim()
+                    break
+                }
+            }
+            return cleaned
+        }
+
         /**
          * Legacy static resolve for backward compatibility.
          * Used by CommunicationActions.resolveContactToPhoneNumber().
@@ -83,16 +100,21 @@ open class ContactResolver @Inject constructor(
                 return ContactResult.NotFound(cleaned)
             }
 
+            val stripped = stripContactSuffixes(cleaned)
+
             // CASE 2: Exact name match in Android contacts
             val exactMatch = searchContactsLegacy(context, cleaned, exact = true)
+                ?: if (stripped != cleaned) searchContactsLegacy(context, stripped, exact = true) else null
             if (exactMatch != null) return exactMatch
 
             // CASE 3: Partial/LIKE match in Android contacts
             val partialMatch = searchContactsLegacy(context, cleaned, exact = false)
+                ?: if (stripped != cleaned) searchContactsLegacy(context, stripped, exact = false) else null
             if (partialMatch != null) return partialMatch
 
             // CASE 4: Fuzzy relationship matching
             val fuzzyMatch = fuzzyRelationshipSearchLegacy(context, cleaned)
+                ?: if (stripped != cleaned) fuzzyRelationshipSearchLegacy(context, stripped) else null
             if (fuzzyMatch != null) return fuzzyMatch
 
             // CASE 5: Not found
@@ -218,7 +240,10 @@ open class ContactResolver @Inject constructor(
         }
 
         // STEP 3: Get ALL matching contacts
-        val allMatches = findAllMatches(query)
+        val stripped = stripContactSuffixes(query)
+        val allMatches = findAllMatches(query).ifEmpty {
+            if (stripped != query) findAllMatches(stripped) else emptyList()
+        }
 
         Log.d(TAG, "  Found ${allMatches.size} matches:")
         allMatches.forEach { c -> Log.d(TAG, "    - ${c.name} (${c.phoneNumber}) score=${c.matchScore}") }

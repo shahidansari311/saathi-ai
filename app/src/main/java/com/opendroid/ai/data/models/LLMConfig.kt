@@ -50,6 +50,10 @@ data class LLMConfig(
     val multiAgentModeEnabled: Boolean = false,
     val showFloatingButton: Boolean = true,
     val isDarkMode: Boolean = true,
+    val emergencyContactName: String = "",
+    val emergencyContactPhone: String = "",
+    val quickCallName: String = "Beta",
+    val quickCallPhone: String = "",
     val lastModelFetch: Map<String, Long> = emptyMap(), // Provider -> last fetch timestamp
     val modelCache: Map<String, List<AIModel>> = emptyMap() // Provider -> cached AIModels list
 )

@@ -38,8 +38,15 @@ class WakeWordDetector(private val context: Context) {
         val lower = text.lowercase()
         return lower.contains("saathi") ||
                lower.contains("sathi") ||
+               lower.contains("shathi") ||
+               lower.contains("shati") ||
                lower.contains("saathi ai") ||
+               lower.contains("sathi ai") ||
                lower.contains("hey saathi") ||
+               lower.contains("hey sathi") ||
+               lower.contains("suno saathi") ||
+               lower.contains("saathi suno") ||
+               lower.contains("ok saathi") ||
                lower.contains("saathiai")
     }
 

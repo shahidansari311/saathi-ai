@@ -237,6 +237,102 @@ fun ChatScreen(
         }
     }
 
+    var showContactConfigDialog by remember { mutableStateOf(false) }
+
+    if (showContactConfigDialog) {
+        var emergencyName by remember { mutableStateOf(llmConfig.emergencyContactName) }
+        var emergencyPhone by remember { mutableStateOf(llmConfig.emergencyContactPhone) }
+        var quickName by remember { mutableStateOf(llmConfig.quickCallName) }
+        var quickPhone by remember { mutableStateOf(llmConfig.quickCallPhone) }
+
+        AlertDialog(
+            onDismissRequest = { showContactConfigDialog = false },
+            shape = RoundedCornerShape(20.dp),
+            containerColor = DarkSurface,
+            title = {
+                Text(
+                    text = "Emergency & Quick Call Setup",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = TextPrimary
+                )
+            },
+            text = {
+                Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+                    Text(
+                        text = "🚨 EMERGENCY SOS RECIPIENT",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AccentRed
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    OutlinedTextField(
+                        value = emergencyPhone,
+                        onValueChange = { emergencyPhone = it },
+                        label = { Text("Emergency Phone (e.g. +91...)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = emergencyName,
+                        onValueChange = { emergencyName = it },
+                        label = { Text("Emergency Contact Name (Optional)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "📞 QUICK CALL RECIPIENT",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF16A34A)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    OutlinedTextField(
+                        value = quickName,
+                        onValueChange = { quickName = it },
+                        label = { Text("Button Label (e.g. Beta, Doctor, Mom)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = quickPhone,
+                        onValueChange = { quickPhone = it },
+                        label = { Text("Phone Number to Dial (e.g. +91...)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.updateEmergencyContacts(
+                            emergencyName = emergencyName.trim(),
+                            emergencyPhone = emergencyPhone.trim(),
+                            quickCallName = quickName.trim().ifBlank { "Beta" },
+                            quickCallPhone = quickPhone.trim()
+                        )
+                        showContactConfigDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AccentCyan, contentColor = Color.Black),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Save", fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showContactConfigDialog = false }) {
+                    Text("Cancel", color = TextSecondary)
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -413,18 +509,32 @@ fun ChatScreen(
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 )
 
-                // 2. Quick-Help Care Card for Elderly Users (Emergency SOS, Call Beta, Big Mic Orb)
+                // 2. Quick-Help Care Card for Elderly Users (Emergency SOS, Dynamic Quick Call, Big Mic Orb)
                 QuickHelpCareCard(
                     isListening = isListening,
                     transcriptionText = transcriptionText,
+                    quickCallName = llmConfig.quickCallName.ifBlank { "Beta" },
                     onMicClick = {
                         toggleVoiceInteraction(autoSend = true)
                     },
                     onEmergencySosClick = {
-                        viewModel.sendMessage("Emergency SOS: Help me, call emergency contact and broadcast distress alert", context)
+                        val emergencyQuery = if (llmConfig.emergencyContactPhone.isNotBlank()) {
+                            "Emergency SOS: Help me, call emergency contact ${llmConfig.emergencyContactPhone} and broadcast distress alert"
+                        } else {
+                            "Emergency SOS: Help me, call emergency contact and broadcast distress alert"
+                        }
+                        viewModel.sendMessage(emergencyQuery, context)
                     },
                     onCallFamilyClick = {
-                        viewModel.sendMessage("Call Beta", context)
+                        val callTarget = if (llmConfig.quickCallPhone.isNotBlank()) {
+                            llmConfig.quickCallPhone
+                        } else {
+                            llmConfig.quickCallName.ifBlank { "Beta" }
+                        }
+                        viewModel.sendMessage("Call $callTarget", context)
+                    },
+                    onConfigureContacts = {
+                        showContactConfigDialog = true
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -945,21 +1055,12 @@ fun ProposedPlanPrompt(
     onReject: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Keyed on both: `planId` because a new plan must not inherit the previous
-    // plan's ticked grants even when the two happen to block the same actions,
-    // and `blockedActions` because the checkboxes are drawn from that list, so a
-    // change to it would otherwise leave ticks referring to rows that are gone.
     var checkedGrants by remember(planId, blockedActions) { mutableStateOf(setOf<String>()) }
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .padding(bottom = 110.dp)
-            .border(1.5.dp, AccentCyan, RoundedCornerShape(16.dp)),
-        colors = CardDefaults.cardColors(containerColor = DarkSurface),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+    AlertDialog(
+        onDismissRequest = { /* Modal prompt: requires explicit approve or reject */ },
+        shape = RoundedCornerShape(20.dp),
+        containerColor = DarkSurface,
+        title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Warning,
@@ -969,87 +1070,91 @@ fun ProposedPlanPrompt(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "AUTONOMOUS PLAN PROPOSED",
-                    fontSize = 14.sp,
+                    text = "PLAN APPROVAL",
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
                     color = AccentCyan
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "Goal: \"$goal\"",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextPrimary
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = "Saathi AI has formulated a sequence of $stepsCount steps to complete this goal. Review the steps in the PLAN tab or approve below to execute.",
-                fontSize = 12.sp,
-                color = TextSecondary
-            )
-            if (blockedActions.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Text(
-                    text = "BLOCKED AUTO-RUN — these steps aren't in your allowlist:",
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace,
-                    color = AccentRed
+                    text = "Goal: \"$goal\"",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextPrimary
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                blockedActions.forEach { action ->
-                    if (action in grantableActions) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Checkbox(
-                                checked = action in checkedGrants,
-                                onCheckedChange = { checked ->
-                                    checkedGrants = if (checked) checkedGrants + action else checkedGrants - action
-                                },
-                                colors = CheckboxDefaults.colors(checkedColor = AccentCyan)
-                            )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "Saathi AI has formulated a sequence of $stepsCount steps to complete this goal.",
+                    fontSize = 13.sp,
+                    color = TextSecondary
+                )
+                if (blockedActions.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "The following steps require your confirmation:",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = AccentRed
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    blockedActions.forEach { action ->
+                        if (action in grantableActions) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Checkbox(
+                                    checked = action in checkedGrants,
+                                    onCheckedChange = { checked ->
+                                        checkedGrants = if (checked) checkedGrants + action else checkedGrants - action
+                                    },
+                                    colors = CheckboxDefaults.colors(checkedColor = AccentCyan)
+                                )
+                                Text(
+                                    text = "Always allow $action",
+                                    fontSize = 13.sp,
+                                    color = TextPrimary
+                                )
+                            }
+                        } else {
                             Text(
-                                text = "Always allow $action",
+                                text = "• $action",
                                 fontSize = 13.sp,
-                                color = TextPrimary
+                                color = TextSecondary,
+                                modifier = Modifier.padding(start = 12.dp, top = 2.dp)
                             )
                         }
-                    } else {
-                        Text(
-                            text = "• $action (always asks)",
-                            fontSize = 13.sp,
-                            color = TextSecondary,
-                            modifier = Modifier.padding(start = 12.dp, top = 4.dp)
-                        )
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+        },
+        confirmButton = {
+            Button(
+                onClick = { onApprove(checkedGrants) },
+                colors = ButtonDefaults.buttonColors(containerColor = AccentCyan, contentColor = Color.Black),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.height(46.dp)
             ) {
-                OutlinedButton(
-                    onClick = onReject,
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = AccentRed),
-                    border = BorderStroke(1.5.dp, AccentRed),
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.height(48.dp)
-                ) {
-                    Text("Reject", fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Button(
-                    onClick = { onApprove(checkedGrants) },
-                    colors = ButtonDefaults.buttonColors(containerColor = TextPrimary, contentColor = DarkBackground),
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.height(48.dp)
-                ) {
-                    Text("Approve & Run", fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                }
+                Text("Approve & Run", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            }
+        },
+        dismissButton = {
+            OutlinedButton(
+                onClick = onReject,
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = AccentRed),
+                border = BorderStroke(1.5.dp, AccentRed),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.height(46.dp)
+            ) {
+                Text("Reject", fontWeight = FontWeight.Bold, fontSize = 15.sp)
             }
         }
-    }
+    )
 }
 
 @Composable

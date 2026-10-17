@@ -383,7 +383,25 @@ class AgentLoop @Inject constructor(
                     return
                 }
 
-                // 0b. Check if this is a complex, multi-step query
+                // 0b. EMERGENCY SOS ZERO-DELAY SHORTCUT
+                // In ANY emergency (SOS button clicked, or user screams/types bachao/emergency/sos/madad),
+                // we MUST NOT think twice, classify complexity, consult LLM, or ask for approval.
+                // It executes immediately 100% offline with zero latency.
+                val lowerQuery = query.lowercase().trim()
+                val isEmergency = lowerQuery.contains("emergency") ||
+                        lowerQuery.contains("sos") ||
+                        lowerQuery.contains("bachao") ||
+                        lowerQuery.contains("madad karo") ||
+                        lowerQuery.contains("meri madad") ||
+                        lowerQuery.contains("khatre me") ||
+                        lowerQuery.contains("khatra hai")
+                if (isEmergency) {
+                    val emergencyHint = AliasResolver.ActionHint("EMERGENCY_SOS", mapOf("makeCall" to "yes"))
+                    executeAliasDirect(emergencyHint, query, context, sessionId)
+                    return
+                }
+
+                // 0c. Check if this is a complex, multi-step query
                 //    If so, skip ALL shortcuts and let the LLM planner handle it properly
                 val complexity = intentClassifier.classifyComplexity(query)
                 val isMultiStep = complexity != QueryComplexity.SIMPLE
@@ -730,7 +748,7 @@ class AgentLoop @Inject constructor(
             // while planning was in flight; stale pre-LLM config must not auto-run.
             val liveConfig = settingsRepository.llmConfig.first()
             val approval = liveConfig.approvalSettings()
-            if (AutoApprovalPolicy.shouldAutoApprove(approval.mode, approval.grantedActions, plan)) {
+            if (plan.steps.any { it.action == "EMERGENCY_SOS" } || AutoApprovalPolicy.shouldAutoApprove(approval.mode, approval.grantedActions, plan)) {
                 recordAutoApprovedTrace(plan, approval.mode, sessionId)
                 executePlanLoop(plan, context, sessionId, autoApproved = true)
             } else {
@@ -1175,8 +1193,23 @@ class AgentLoop @Inject constructor(
             } else {
                 // Try fallback action
                 if (actionSequenceExecutor.shouldAttemptFallback(actionResult, stepToExecute)) {
+                    val fallbackParams = resolvedParams.toMutableMap()
+                    if (stepToExecute.fallback == "OPEN_APP" && !fallbackParams.containsKey("appName")) {
+                        val inferredApp = when (stepToExecute.action) {
+                            "PLAY_YOUTUBE" -> "YouTube"
+                            "PLAY_MUSIC" -> fallbackParams["app"] ?: "Spotify"
+                            "SEND_WHATSAPP" -> "WhatsApp"
+                            "SEND_TELEGRAM" -> "Telegram"
+                            "BOOK_UBER" -> "Uber"
+                            "BOOK_OLA" -> "Ola"
+                            else -> null
+                        }
+                        if (inferredApp != null) {
+                            fallbackParams["appName"] = inferredApp
+                        }
+                    }
                     val fallbackResult = try {
-                        actionSequenceExecutor.dispatch(stepToExecute.fallback, resolvedParams, context)
+                        actionSequenceExecutor.dispatch(stepToExecute.fallback, fallbackParams, context)
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Exception) {
