@@ -209,86 +209,90 @@ class CommunicationActions @Inject constructor(
             val batteryLevel = getBatteryPercentage(context)
             val batteryText = if (batteryLevel >= 0) "$batteryLevel" else "Unknown"
 
-            // 2. Compose urgent distress alert exactly as specified
-            val alertMessage = "EMERGENCY: I need help! My current location is $locationUrl (Battery: $batteryText%)"
+            // 2. Compose urgent bilingual (Hindi & English) distress alert with live location, battery, and time
+            val currentTime = java.text.SimpleDateFormat("hh:mm a, dd MMM", java.util.Locale.getDefault()).format(java.util.Date())
+            val alertMessage = """
+🚨 EMERGENCY / आपातकालीन सहायता:
+I need emergency help! Mujhe turant madad ki zaroorat hai!
+📍 Live Location / स्थान: $locationUrl
+🔋 Battery / बैटरी: $batteryText%
+⏰ Time / समय: $currentTime
+(Sent automatically via Saathi AI Emergency SOS)
+            """.trimIndent()
 
-            // 3. Resolve target contact (Beta / family / emergency contact)
-            var targetPhone: String? = null
-            var contactLabel = contactQuery
-
-            val savedEmergencyPhone = try {
-                settingsRepository?.llmConfig?.first()?.emergencyContactPhone?.takeIf { it.isNotBlank() }
-            } catch (e: Exception) { null }
+            // 3. Resolve target contacts (Multiple emergency contacts / address book / 112)
+            val savedEmergencyPhones = try {
+                settingsRepository?.llmConfig?.first()?.allEmergencyPhones()?.filter { it.isNotBlank() } ?: emptyList()
+            } catch (e: Exception) { emptyList() }
             val savedEmergencyName = try {
                 settingsRepository?.llmConfig?.first()?.emergencyContactName?.takeIf { it.isNotBlank() }
             } catch (e: Exception) { null }
 
-            if (savedEmergencyPhone != null && (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true))) {
-                targetPhone = savedEmergencyPhone
-                contactLabel = savedEmergencyName ?: savedEmergencyPhone
+            val targetPhones = mutableListOf<Pair<String, String>>() // (phone, label)
+
+            if (savedEmergencyPhones.isNotEmpty() && (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true))) {
+                savedEmergencyPhones.forEachIndexed { index, phone ->
+                    val label = if (index == 0 && savedEmergencyName != null) savedEmergencyName else "Emergency Contact ${index + 1}"
+                    targetPhones.add(Pair(phone, label))
+                }
             } else if (contactQuery.equals("emergency", ignoreCase = true) || contactQuery.equals("sos", ignoreCase = true)) {
                 // Search for designated emergency/family contacts in address book
                 val familyAliases = listOf("beta", "family", "emergency", "ice", "sos", "ghar", "doctor", "police")
                 for (alias in familyAliases) {
                     when (val res = contactResolver.resolveWithDisambiguation(alias)) {
                         is ContactResolution.Found -> {
-                            targetPhone = res.contact.phoneNumber
-                            contactLabel = res.contact.name
+                            targetPhones.add(Pair(res.contact.phoneNumber, res.contact.name))
                             break
                         }
                         is ContactResolution.Ambiguous -> {
                             val top = res.matches.first()
-                            targetPhone = top.phoneNumber
-                            contactLabel = top.name
+                            targetPhones.add(Pair(top.phoneNumber, top.name))
                             break
                         }
                         is ContactResolution.NotFound -> {}
                     }
                 }
-                if (targetPhone == null) {
-                    targetPhone = "112"
-                    contactLabel = "Emergency Services (112)"
+                if (targetPhones.isEmpty()) {
+                    targetPhones.add(Pair("112", "Emergency Services (112)"))
                 }
             } else {
                 when (val resolved = contactResolver.resolveWithDisambiguation(contactQuery)) {
                     is ContactResolution.Found -> {
-                        targetPhone = resolved.contact.phoneNumber
-                        contactLabel = resolved.contact.name
+                        targetPhones.add(Pair(resolved.contact.phoneNumber, resolved.contact.name))
                     }
                     is ContactResolution.Ambiguous -> {
                         val top = resolved.matches.first()
-                        targetPhone = top.phoneNumber
-                        contactLabel = top.name
+                        targetPhones.add(Pair(top.phoneNumber, top.name))
                     }
                     is ContactResolution.NotFound -> {
                         val numeric = contactQuery.filter { it.isDigit() || it == '+' }
                         if (numeric.length >= 3) {
-                            targetPhone = numeric
+                            targetPhones.add(Pair(numeric, contactQuery))
                         } else {
-                            targetPhone = "112"
-                            contactLabel = "Emergency Services (112)"
+                            targetPhones.add(Pair("112", "Emergency Services (112)"))
                         }
                     }
                 }
             }
 
-            // 4. Broadcast via SMS or WhatsApp automatically
-            if (targetPhone != null) {
-                val smsResult = executeSms(targetPhone, contactLabel, alertMessage, context)
+            // 4. Broadcast distress SMS or WhatsApp to ALL target emergency contacts
+            for ((phone, label) in targetPhones) {
+                val smsResult = executeSms(phone, label, alertMessage, context)
                 if (!smsResult.success) {
                     // Try WhatsApp as backup if SMS couldn't auto-send
-                    executeWhatsApp(targetPhone, contactLabel, alertMessage, context)
+                    executeWhatsApp(phone, label, alertMessage, context)
                 }
+            }
 
-                // 5. If requested, initiate direct phone call
-                if (shouldCall) {
-                    executeCall(targetPhone, context)
-                }
+            // 5. If requested, initiate direct phone call to primary emergency contact
+            if (shouldCall && targetPhones.isNotEmpty()) {
+                val primaryPhone = targetPhones.first().first
+                executeCall(primaryPhone, context)
             }
 
             return ActionResult(
                 true,
-                "Emergency alert has been sent to your family.",
+                "Emergency distress alert sent to ${targetPhones.size} contact(s).",
                 null
             )
         }
@@ -308,7 +312,16 @@ class CommunicationActions @Inject constructor(
             val savedQuickCall = try {
                 settingsRepository?.llmConfig?.first()?.quickCallPhone?.takeIf { it.isNotBlank() }
             } catch (e: Exception) { null }
-            if (savedQuickCall != null && (contact.equals("beta", ignoreCase = true) || contact.equals("family", ignoreCase = true) || contact.equals("ghar", ignoreCase = true))) {
+            val savedQuickCallName = try {
+                settingsRepository?.llmConfig?.first()?.quickCallName?.takeIf { it.isNotBlank() }
+            } catch (e: Exception) { null }
+
+            if (savedQuickCall != null && (
+                contact.equals("beta", ignoreCase = true) ||
+                contact.equals("family", ignoreCase = true) ||
+                contact.equals("ghar", ignoreCase = true) ||
+                (savedQuickCallName != null && contact.equals(savedQuickCallName, ignoreCase = true))
+            )) {
                 return executeCall(savedQuickCall, context)
             }
 
@@ -633,7 +646,12 @@ class CommunicationActions @Inject constructor(
                 try {
                     val smsManager = context.getSystemService(SmsManager::class.java)
                     if (smsManager != null) {
-                        smsManager.sendTextMessage(phone, null, message, null, null)
+                        val parts = smsManager.divideMessage(message)
+                        if (parts.size > 1) {
+                            smsManager.sendMultipartTextMessage(phone, null, parts, null, null)
+                        } else {
+                            smsManager.sendTextMessage(phone, null, message, null, null)
+                        }
                         return ActionResult(true, "Text sent to $contactLabel!", null)
                     }
                 } catch (_: Exception) {

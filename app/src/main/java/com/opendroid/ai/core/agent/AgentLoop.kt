@@ -391,10 +391,11 @@ class AgentLoop @Inject constructor(
                 val isEmergency = lowerQuery.contains("emergency") ||
                         lowerQuery.contains("sos") ||
                         lowerQuery.contains("bachao") ||
-                        lowerQuery.contains("madad karo") ||
-                        lowerQuery.contains("meri madad") ||
-                        lowerQuery.contains("khatre me") ||
-                        lowerQuery.contains("khatra hai")
+                        lowerQuery.contains("madad") ||
+                        lowerQuery.contains("khatre") ||
+                        lowerQuery.contains("khatra") ||
+                        lowerQuery.contains("distress") ||
+                        lowerQuery.contains("save me")
                 if (isEmergency) {
                     val emergencyHint = AliasResolver.ActionHint("EMERGENCY_SOS", mapOf("makeCall" to "yes"))
                     executeAliasDirect(emergencyHint, query, context, sessionId)

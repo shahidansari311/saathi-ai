@@ -1971,6 +1971,8 @@ fun SettingsScreen(
 
                         var editEmergencyPhone by remember(config.emergencyContactPhone) { mutableStateOf(config.emergencyContactPhone) }
                         var editEmergencyName by remember(config.emergencyContactName) { mutableStateOf(config.emergencyContactName) }
+                        var editEmergencyPhone2 by remember(config.emergencyContactPhone2) { mutableStateOf(config.emergencyContactPhone2) }
+                        var editEmergencyPhone3 by remember(config.emergencyContactPhone3) { mutableStateOf(config.emergencyContactPhone3) }
                         var editQuickName by remember(config.quickCallName) { mutableStateOf(config.quickCallName) }
                         var editQuickPhone by remember(config.quickCallPhone) { mutableStateOf(config.quickCallPhone) }
 
@@ -1978,9 +1980,9 @@ fun SettingsScreen(
                             value = editEmergencyPhone,
                             onValueChange = {
                                 editEmergencyPhone = it
-                                viewModel.updateEmergencyContacts(editEmergencyName, it, editQuickName, editQuickPhone)
+                                viewModel.updateEmergencyContacts(editEmergencyName, it, editQuickName, editQuickPhone, editEmergencyPhone2, editEmergencyPhone3)
                             },
-                            label = { Text("🚨 Emergency SOS Phone Number") },
+                            label = { Text("🚨 Emergency Number 1 (Primary - Calls & SMS)") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -1989,20 +1991,42 @@ fun SettingsScreen(
                             value = editEmergencyName,
                             onValueChange = {
                                 editEmergencyName = it
-                                viewModel.updateEmergencyContacts(it, editEmergencyPhone, editQuickName, editQuickPhone)
+                                viewModel.updateEmergencyContacts(it, editEmergencyPhone, editQuickName, editQuickPhone, editEmergencyPhone2, editEmergencyPhone3)
                             },
-                            label = { Text("Emergency Contact Name (Optional)") },
+                            label = { Text("Primary Contact Name (Optional)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = editEmergencyPhone2,
+                            onValueChange = {
+                                editEmergencyPhone2 = it
+                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, editQuickName, editQuickPhone, it, editEmergencyPhone3)
+                            },
+                            label = { Text("🚨 Emergency Number 2 (Optional - SMS Alert)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = editEmergencyPhone3,
+                            onValueChange = {
+                                editEmergencyPhone3 = it
+                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, editQuickName, editQuickPhone, editEmergencyPhone2, it)
+                            },
+                            label = { Text("🚨 Emergency Number 3 (Optional - SMS Alert)") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(14.dp))
 
                         OutlinedTextField(
                             value = editQuickName,
                             onValueChange = {
                                 editQuickName = it
-                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, it, editQuickPhone)
+                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, it, editQuickPhone, editEmergencyPhone2, editEmergencyPhone3)
                             },
                             label = { Text("📞 Quick Call Button Label (e.g. Beta, Doctor, Mom)") },
                             singleLine = true,
@@ -2013,7 +2037,7 @@ fun SettingsScreen(
                             value = editQuickPhone,
                             onValueChange = {
                                 editQuickPhone = it
-                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, editQuickName, it)
+                                viewModel.updateEmergencyContacts(editEmergencyName, editEmergencyPhone, editQuickName, it, editEmergencyPhone2, editEmergencyPhone3)
                             },
                             label = { Text("Quick Call Phone Number to Dial") },
                             singleLine = true,

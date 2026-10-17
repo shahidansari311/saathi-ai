@@ -52,11 +52,28 @@ data class LLMConfig(
     val isDarkMode: Boolean = true,
     val emergencyContactName: String = "",
     val emergencyContactPhone: String = "",
+    val emergencyContactPhone2: String = "",
+    val emergencyContactPhone3: String = "",
     val quickCallName: String = "Beta",
     val quickCallPhone: String = "",
     val lastModelFetch: Map<String, Long> = emptyMap(), // Provider -> last fetch timestamp
     val modelCache: Map<String, List<AIModel>> = emptyMap() // Provider -> cached AIModels list
 )
+
+fun LLMConfig.allEmergencyPhones(): List<String> {
+    val list = mutableListOf<String>()
+    emergencyContactPhone.split(',', '\n', ';').forEach {
+        val trimmed = it.trim()
+        if (trimmed.isNotBlank() && !list.contains(trimmed)) list.add(trimmed)
+    }
+    if (emergencyContactPhone2.isNotBlank() && !list.contains(emergencyContactPhone2.trim())) {
+        list.add(emergencyContactPhone2.trim())
+    }
+    if (emergencyContactPhone3.isNotBlank() && !list.contains(emergencyContactPhone3.trim())) {
+        list.add(emergencyContactPhone3.trim())
+    }
+    return list
+}
 
 fun LLMConfig.resolvedAutoMode(): AutoMode =
     autoMode ?: AutoMode.YOLO

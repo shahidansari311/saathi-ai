@@ -242,6 +242,8 @@ fun ChatScreen(
     if (showContactConfigDialog) {
         var emergencyName by remember { mutableStateOf(llmConfig.emergencyContactName) }
         var emergencyPhone by remember { mutableStateOf(llmConfig.emergencyContactPhone) }
+        var emergencyPhone2 by remember { mutableStateOf(llmConfig.emergencyContactPhone2) }
+        var emergencyPhone3 by remember { mutableStateOf(llmConfig.emergencyContactPhone3) }
         var quickName by remember { mutableStateOf(llmConfig.quickCallName) }
         var quickPhone by remember { mutableStateOf(llmConfig.quickCallPhone) }
 
@@ -260,16 +262,22 @@ fun ChatScreen(
             text = {
                 Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
                     Text(
-                        text = "🚨 EMERGENCY SOS RECIPIENT",
+                        text = "🚨 EMERGENCY SOS RECIPIENTS (Up to 3 numbers)",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = AccentRed
                     )
                     Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "All saved numbers receive bilingual SMS with live GPS location & battery status during emergency.",
+                        fontSize = 11.sp,
+                        color = TextSecondary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = emergencyPhone,
                         onValueChange = { emergencyPhone = it },
-                        label = { Text("Emergency Phone (e.g. +91...)") },
+                        label = { Text("Emergency Number 1 (Primary - Calls & SMS)") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -277,7 +285,23 @@ fun ChatScreen(
                     OutlinedTextField(
                         value = emergencyName,
                         onValueChange = { emergencyName = it },
-                        label = { Text("Emergency Contact Name (Optional)") },
+                        label = { Text("Primary Contact Name (Optional)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = emergencyPhone2,
+                        onValueChange = { emergencyPhone2 = it },
+                        label = { Text("Emergency Number 2 (Optional - SMS alert)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    OutlinedTextField(
+                        value = emergencyPhone3,
+                        onValueChange = { emergencyPhone3 = it },
+                        label = { Text("Emergency Number 3 (Optional - SMS alert)") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -315,7 +339,9 @@ fun ChatScreen(
                             emergencyName = emergencyName.trim(),
                             emergencyPhone = emergencyPhone.trim(),
                             quickCallName = quickName.trim().ifBlank { "Beta" },
-                            quickCallPhone = quickPhone.trim()
+                            quickCallPhone = quickPhone.trim(),
+                            emergencyPhone2 = emergencyPhone2.trim(),
+                            emergencyPhone3 = emergencyPhone3.trim()
                         )
                         showContactConfigDialog = false
                     },

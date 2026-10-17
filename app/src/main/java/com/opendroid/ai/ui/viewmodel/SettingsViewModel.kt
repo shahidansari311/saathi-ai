@@ -721,11 +721,15 @@ class SettingsViewModel @Inject constructor(
         emergencyName: String,
         emergencyPhone: String,
         quickCallName: String,
-        quickCallPhone: String
+        quickCallPhone: String,
+        emergencyPhone2: String = "",
+        emergencyPhone3: String = ""
     ) {
         _llmConfig.value = _llmConfig.value.copy(
             emergencyContactName = emergencyName,
             emergencyContactPhone = emergencyPhone,
+            emergencyContactPhone2 = emergencyPhone2,
+            emergencyContactPhone3 = emergencyPhone3,
             quickCallName = quickCallName,
             quickCallPhone = quickCallPhone
         )
@@ -734,6 +738,8 @@ class SettingsViewModel @Inject constructor(
                 current.copy(
                     emergencyContactName = emergencyName,
                     emergencyContactPhone = emergencyPhone,
+                    emergencyContactPhone2 = emergencyPhone2,
+                    emergencyContactPhone3 = emergencyPhone3,
                     quickCallName = quickCallName,
                     quickCallPhone = quickCallPhone
                 )
