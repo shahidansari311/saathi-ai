@@ -108,7 +108,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.bot),
-                    contentDescription = "OpenDroid Logo",
+                    contentDescription = "Saathi AI Logo",
                     modifier = Modifier.size(128.dp)
                 )
             }
@@ -116,7 +116,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
             Spacer(modifier = Modifier.height(28.dp))
 
             Text(
-                text = "OPENDROID",
+                text = "SAATHI AI",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.SansSerif,
@@ -127,7 +127,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Autonomous On-Device Intelligence",
+                text = "Voice-First Autonomous Mobile Companion",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = FontFamily.SansSerif,

@@ -137,7 +137,7 @@ private fun IntroductionPanel(
         ) {
             Image(
                 painter = painterResource(id = com.opendroid.ai.R.drawable.bot),
-                contentDescription = "OpenDroid Bot Avatar",
+                contentDescription = "Saathi AI Avatar",
                 modifier = Modifier.size(120.dp)
             )
         }
@@ -145,7 +145,7 @@ private fun IntroductionPanel(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Hello! I am OpenDroid",
+            text = "Hello! I am Saathi AI",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = TextPrimary
@@ -154,7 +154,7 @@ private fun IntroductionPanel(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Your open autonomous device assistant. Please introduce yourself so I can serve you personally.",
+            text = "Your personal mobile companion. Please introduce yourself so I can assist you on your phone.",
             fontSize = 14.sp,
             color = TextSecondary,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -327,7 +327,7 @@ fun PermissionPromptPanel(
         ) {
             Image(
                 painter = painterResource(id = com.opendroid.ai.R.drawable.bot),
-                contentDescription = "OpenDroid Bot Avatar",
+                contentDescription = "Saathi AI Avatar",
                 modifier = Modifier.size(120.dp)
             )
         }

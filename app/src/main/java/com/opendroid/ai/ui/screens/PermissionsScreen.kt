@@ -67,7 +67,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.opendroid.ai.accessibility.OpenDroidAccessibilityService
+import com.opendroid.ai.accessibility.Saathi AIAccessibilityService
 import com.opendroid.ai.core.permissions.CardStatus
 import com.opendroid.ai.core.permissions.GrantAllState
 import com.opendroid.ai.core.permissions.PermissionAskedStore
@@ -434,7 +434,7 @@ private fun PermissionsPanelContent(
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Proceed to OpenDroid Agent",
+                    text = "Proceed to Saathi AI Agent",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                 )
@@ -708,11 +708,11 @@ fun Context.findActivity(): ComponentActivity? {
 }
 
 private fun isAccessibilityServiceEnabled(context: Context): Boolean {
-    if (OpenDroidAccessibilityService.getInstance() != null) {
+    if (Saathi AIAccessibilityService.getInstance() != null) {
         return true
     }
     val expectedComponentName =
-        ComponentName(context, OpenDroidAccessibilityService::class.java).flattenToString()
+        ComponentName(context, Saathi AIAccessibilityService::class.java).flattenToString()
     val enabledServices = Settings.Secure.getString(
         context.contentResolver,
         Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,

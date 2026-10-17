@@ -279,9 +279,9 @@ fun OpenDroidNavigation(
 }
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Chat : Screen("chat", "Chat", Icons.Default.Chat)
-    object Plan : Screen("plan", "Plan", Icons.Default.List)
-    object Memory : Screen("memory", "Memory", Icons.Default.Star)
+    object Chat : Screen("chat", "Saathi", Icons.Default.Chat)
+    object Plan : Screen("plan", "Actions", Icons.Default.List)
+    object Memory : Screen("memory", "Memory", Icons.Default.Favorite)
     object Social : Screen("social", "Social", Icons.Default.Share)
     object Macros : Screen("macros", "Macros", Icons.Default.Build)
     object History : Screen("history", "Logs", Icons.Default.History)
@@ -340,9 +340,6 @@ fun MainDashboard(
         Screen.Chat,
         Screen.Plan,
         Screen.Memory,
-        Screen.Social,
-        Screen.Macros,
-        Screen.History,
         Screen.Settings
     )
 
