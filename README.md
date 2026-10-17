@@ -5,141 +5,154 @@
 <h1 align="center">Saathi AI (साथी AI)</h1>
 
 <p align="center">
-  <strong>🤖 Autonomous Voice-First Mobile AI Companion for Android</strong>
+  <strong>🌉 Bridging the Generational & Accessibility Divide Through Autonomous Voice-First Mobile AI</strong>
 </p>
 
 <p align="center">
-  <em>Your Personal Mobile Companion. Empowering Everyone to Navigate and Automate Their Phone Effortlessly.</em>
+  <em>Empowering elderly and non-tech-savvy individuals to navigate smartphones effortlessly using natural voice commands and autonomous on-screen actions.</em>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android%2014%2B-blue?style=for-the-badge&logo=android&logoColor=white" alt="Platform">
-  <img src="https://img.shields.io/badge/Kotlin-Jetpack%20Compose-purple?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin">
-  <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge" alt="License">
-</p>
-
-<p align="center">
-  <a href="#-what-is-saathi-ai">About</a> •
-  <a href="#-features">Features</a> •
-  <a href="#-architecture">Architecture</a> •
-  <a href="#%EF%B8%8F-getting-started">Get Started</a> •
-  <a href="#-supported-llm-providers">Providers</a> •
-  <a href="#-license">License</a>
+  <img src="https://img.shields.io/badge/Devlympics-Bridge%20The%20Gap-0052FF?style=for-the-badge&logo=google&logoColor=white" alt="Devlympics">
+  <img src="https://img.shields.io/badge/Platform-Android%208.0%2B-blue?style=for-the-badge&logo=android&logoColor=white" alt="Android">
+  <img src="https://img.shields.io/badge/UI-Jetpack%20Compose-purple?style=for-the-badge&logo=jetpackcompose&logoColor=white" alt="Compose">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-green?style=for-the-badge" alt="License">
 </p>
 
 ---
 
-## 🎯 What is Saathi AI?
+## 🎯 The "Bridge the Gap" Problem Statement
 
-**Saathi AI** (*साथी* meaning companion/friend) is an autonomous, voice-driven AI companion designed to break digital barriers and assist individuals who struggle with smartphone navigation. Whether it's the elderly, visually impaired, or everyday users who need hands-free assistance, Saathi AI turns spoken intent into autonomous on-screen actions.
+Modern smartphones are powerful, but for **millions of elderly citizens, individuals with visual or motor impairments, and non-tech-savvy users**, daily digital tasks are an intimidating maze of menus, icons, and multi-step app flows.
 
-Instead of navigating complex menus and multi-step app flows, simply speak:
-
-> *"Saathi, send a WhatsApp message to my daughter asking if she reached safely, and set an alarm for my 6 PM medicine."*
-
-Saathi AI **understands the request**, constructs a sequential **action plan**, interacts with the phone's native services and applications via **Accessibility Automation**, and verifies completion—all autonomously.
-
----
-
-## ✨ Key Features
-
-### 🎙️ Voice-First Interaction
-- **Hands-Free Operation**: Speak naturally without needing to remember exact command syntax.
-- **Speech-to-Text & Text-to-Speech**: Conversational voice feedback ensuring the user always knows what action is happening.
-- **Offline & Low-Bandwidth Resilience**: Fallback to local and on-device models.
-
-### 🧠 Autonomous Action Engine
-- **Sequential Task Planning**: Deconstructs multi-step goals with dependency tracking and safe validation.
-- **Safety & Privacy Critic**: Evaluates action risk levels before executing sensitive operations (e.g. transfers, deletions).
-- **Silent Self-Correction**: If an app UI shifts or fails, the Re-Evaluation engine inspects the screen and dynamically adapts.
-
-### 📱 Full Device & App Control
-| Domain | Capabilities |
-|--------|--------------|
-| **Communication** | WhatsApp messaging, SMS, phone calls, contact lookup & alias resolution ("call Beta") |
-| **System Settings** | WiFi, Bluetooth, Flashlight, Volume, Brightness, DND toggles |
-| **Productivity & Health** | Medicine alarms, reminders, calendar events, timer setup |
-| **Accessibility & Assistance** | Screen reading, button clicking, automated app navigation |
-
-### 🗄️ 4-Tier Memory & Knowledge Graph
-- **Working Memory**: Current task context.
-- **Episodic Memory**: Conversation history.
-- **Semantic Memory**: User facts, family relationships ("Beta", "Doctor"), and app preferences.
-- **Hardware-Encrypted Storage**: Sensitive credentials and tokens stored in Android Keystore with AES-GCM encryption.
+| The Divide | The Challenge | How Saathi AI Bridges It |
+|---|---|---|
+| **Digital Literacy Gap** | Sending a WhatsApp message requires 6+ taps, searching contacts, and typing on a small keyboard. | Speak naturally: *"Beti ko WhatsApp bhejo ki main theek hoon"* $\to$ Saathi executes it autonomously. |
+| **Language & Dialect Barrier** | Most phone interfaces default to English UI terminology. | Understood via natural Hinglish & Indian vernacular voice processing. |
+| **Emergency & Care Barrier** | Panic situations make unlocking and navigating phones nearly impossible. | One-word voice panic trigger (*"Bachao"* / *"Emergency"*) broadcasts location, battery & distress alerts. |
+| **Cognitive Memory Load** | Remembering app layouts, settings toggles, and daily pill routines. | In-app 4-tier Knowledge Graph remembers daily routines and family relationships. |
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Technical Architecture & End-to-End Flow
+
+Saathi AI operates as an **Autonomous On-Device Agent** bridging user voice intent directly to Android operating system actions:
 
 ```
-com.opendroid.ai (Saathi AI Core)
-│
-├── 🤖 accessibility/      Accessibility Service (UI tree traversal, taps, automated text entry)
-├── ⚡ actions/             60+ action handlers (Communication, System, Media, Calendar, Reminders)
-├── 🧠 core/
-│   ├── agent/              AgentLoop, PlanManager, ReEvaluationEngine, Safety Critic
-│   ├── llm/                12 LLM providers, prompt engine, smart fallback chain
-│   ├── memory/             4-tier Room database + Keystore encryption
-│   └── voice/              Wake word, STT, and TTS engines
-│
-├── 💾 data/                Room DB entities, DAOs, and repository layer
-├── 💉 di/                  Dagger-Hilt dependency injection modules
-└── 🎨 ui/
-    ├── theme/              Glassmorphic modern UI theme
-    ├── screens/            Chat, Plan Viewer, Memory Manager, Settings, About
-    └── components/         Compose UI components
+┌────────────────────────────────────────────────────────────────────────┐
+│                        1. USER VOICE / SPEECH                          │
+│               "Torch jala do aur Beta ko phone lagao"                  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│               2. ZERO-LATENCY ALIAS RESOLVER (On-Device)               │
+│         Checks local vocabulary cache for instant 0ms triggers         │
+└───────────────────┬────────────────────────────────┬───────────────────┘
+                    │ [Bypass if direct alias]       │ [Complex intent]
+                    │                                ▼
+                    │               ┌────────────────────────────────────┐
+                    │               │    3. INTENT CLASSIFIER & AGENT    │
+                    │               │       Context: Battery, Time,      │
+                    │               │        Foreground App, Memory      │
+                    │               └────────────────┬───────────────────┘
+                    │                                │
+                    │                                ▼
+                    │               ┌────────────────────────────────────┐
+                    │               │     4. MULTI-LLM REASONING         │
+                    │               │  (Gemini 2.0 / Groq / Local Model) │
+                    │               │    Outputs Structured JSON Plan    │
+                    │               └────────────────┬───────────────────┘
+                    │                                │
+                    │                                ▼
+                    │               ┌────────────────────────────────────┐
+                    │               │   5. SAFETY CRITIC & VALIDATOR     │
+                    │               │     Evaluates Risk & Guardrails    │
+                    │               └────────────────┬───────────────────┘
+                    │                                │
+                    ▼                                ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                      6. ACTION DISPATCHER & CORE                       │
+├───────────────────────────────────┬────────────────────────────────────┤
+│     NATIVE SYSTEM ACTIONS         │   ACCESSIBILITY SERVICE ENGINE     │
+│  - Calls & SMS                    │  - Android Accessibility Node Tree │
+│  - Flashlight, WiFi, Volume       │  - Traverses UI Hierarchy          │
+│  - Medicine Alarms & Reminders    │  - Simulates Touch, Click & Typing │
+│  - Live GPS SOS Emergency Broadcast│ - Autonomous WhatsApp Navigation  │
+└───────────────────────────────────┴────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                      7. RE-EVALUATION & VISION                         │
+│    Inspects screen state post-action; auto-repairs plan if app fails   │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔌 Supported LLM Providers
+## 📱 The 4 Core Accessible Modules
 
-Saathi AI supports cloud and on-device models with automatic failover:
+1. **🎙️ Saathi Assistant (Voice & Chat)**:
+   - Voice-first conversational companion.
+   - Speak in natural English or Hinglish without memorizing commands.
+   - Text-to-Speech audio feedback confirms each executed step aloud.
 
-| Provider | Type | Recommended For |
-|----------|------|-----------------|
-| 🟢 **Google Gemini** | Cloud / On-Device | High accuracy, multi-modal vision |
-| ⚡ **Groq** | Cloud | Ultra-low latency voice responses |
-| 🔵 **OpenAI (GPT-4o)** | Cloud | Complex multi-step reasoning |
-| 🟣 **Anthropic Claude** | Cloud | Careful safety adherence |
-| 🏠 **Ollama / LiteRT** | On-Device / Local | Complete offline privacy |
+2. **⚡ Action Engine & Plan Viewer**:
+   - Transparent step-by-step display of what the assistant is performing.
+   - Full pause, cancel, and review controls for total user safety.
+
+3. **🧠 Care Memory (4-Tier Knowledge Graph)**:
+   - **Tier 1 (Working)**: Current conversational goal.
+   - **Tier 2 (Episodic)**: Prior instructions and routine history.
+   - **Tier 3 (Semantic)**: Known family aliases (*"Beta" = Rahul*, *"Doctor" = Dr. Sharma*).
+   - **Tier 4 (Hardware-Encrypted)**: Android Keystore AES-GCM protected credentials.
+
+4. **⚙️ Simplified Caregiver Settings**:
+   - Quick setup of Emergency SOS family contacts.
+   - One-tap selection of AI provider (Google Gemini, Groq, Claude, OpenAI, or local Ollama).
 
 ---
 
-## ⚡️ Getting Started
+## 🛠️ Tech Stack & Implementation Details
+
+- **Language**: Kotlin 2.0 (JVM 21)
+- **UI Framework**: Android Jetpack Compose with custom glassmorphic theme
+- **Dependency Injection**: Dagger-Hilt
+- **Local Persistence**: Android Room Database (SQLCipher / Android Keystore encrypted)
+- **Automation Pipeline**: Android Accessibility Framework (`AccessibilityNodeInfo`, `performAction(ACTION_CLICK)`)
+- **Speech Stack**: Android `SpeechRecognizer` + Android Native TTS / ElevenLabs
+- **LLM Engine**: Multi-provider client with automatic smart-fallback (Gemini Flash, Groq LLaMA-3, Claude, OpenAI, Ollama)
+
+---
+
+## 🚀 Quick Start Guide
 
 ### Prerequisites
-- **JDK 21**
-- **Android SDK 35+** (Android 14 / 15)
-- Android Studio Ladybug / Meerkat or newer
+- JDK 21
+- Android Studio Ladybug / Meerkat or Android SDK 35+
 
 ### Build & Run
 ```bash
 # Clone the repository
-git clone <your-repo-url>
-cd opendroid
+git clone https://github.com/shashank-tomar0/saathi-ai.git
+cd saathi-ai
 
-# Build debug APK
+# Compile and build debug APK
 ./gradlew assembleDebug
 
 # Output APK path:
 # app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Essential Permissions
-To allow Saathi AI to perform actions on your behalf, enable the following on first setup:
-1. **Accessibility Service**: Allows Saathi AI to navigate and click buttons in apps like WhatsApp.
-2. **Microphone**: For voice listening and speech recognition.
-3. **Contacts & Phone**: For dialing and contact identification.
+### Direct Download
+Grab the latest pre-compiled APK directly from the [GitHub Releases](https://github.com/shashank-tomar0/saathi-ai/releases) page.
 
 ---
 
-## 🔒 Security & Privacy
+## 👥 Hackathon Team & Project Role Division
 
-Saathi AI adheres to strict on-device privacy principles:
-- Sensitive credentials are encrypted using **Android Keystore (AES-GCM)**.
-- Destructive actions (data wipes, contact deletions) are blocked by the built-in **Safety Critic**.
-- Voice audio is processed transiently and not stored on remote servers without permission.
+- **AI Agent, Voice Intent & Actions Engine**: Backend reasoning, Hinglish/Hindi prompt engineering, Emergency SOS handler, and Accessibility Automation dispatcher.
+- **Frontend, Voice UI & Accessibility Experience**: Jetpack Compose senior-friendly UI, high-contrast dashboard, voice feedback visualization, and settings integration.
 
 ---
 
