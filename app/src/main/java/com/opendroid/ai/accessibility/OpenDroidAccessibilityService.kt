@@ -383,10 +383,12 @@ class OpenDroidAccessibilityService : AccessibilityService() {
             }
         }
 
+        private val clipPath = Path()
+
         init {
             setImageResource(R.drawable.bot)
-            scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
-            val padding = dpToPx(12)
+            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            val padding = dpToPx(8)
             setPadding(padding, padding, padding, padding)
         }
 
@@ -432,38 +434,43 @@ class OpenDroidAccessibilityService : AccessibilityService() {
         override fun onDraw(canvas: Canvas) {
             val cx = width / 2f
             val cy = height / 2f
-            val radius = (width / 2f) - dpToPx(8f)
+            val radius = (width / 2f) - dpToPx(6f)
 
-            // Draw cyber grey background circle
-            paint.color = "#121216".toColorInt()
+            // 1. Clip canvas to circular bounds so image corners never spill out
+            clipPath.reset()
+            clipPath.addCircle(cx, cy, radius, Path.Direction.CW)
+            canvas.save()
+            canvas.clipPath(clipPath)
+
+            // 2. Draw dark circular base background
+            paint.color = "#0A0A0E".toColorInt()
             paint.style = Paint.Style.FILL
             canvas.drawCircle(cx, cy, radius, paint)
 
-            // Draw center logo
+            // 3. Draw center logo properly fitted
             super.onDraw(canvas)
+            canvas.restore()
 
-            // Draw glow border
+            // 4. Draw outer border ring
             val color = when (state) {
-                is AgentState.Idle -> "#FFFFFF".toColorInt() // Platinum pure white
-                is AgentState.Listening -> "#FF3B30".toColorInt() // Pulsing red
+                is AgentState.Idle -> "#38BDF8".toColorInt() // Sky cyan
+                is AgentState.Listening -> "#EF4444".toColorInt() // Alert red
                 is AgentState.Thinking -> "#00F0FF".toColorInt() // Cyan
-                is AgentState.Speaking -> "#007AFF".toColorInt() // Neon blue
-                is AgentState.ExecutingPlan -> "#38BDF8".toColorInt() // Sky sapphire
-                else -> "#FFFFFF".toColorInt()
+                is AgentState.Speaking -> "#3B82F6".toColorInt() // Neon blue
+                is AgentState.ExecutingPlan -> "#10B981".toColorInt() // Green
+                else -> "#38BDF8".toColorInt()
             }
 
             paint.color = color
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = dpToPx(3f)
-
-            // Draw main border ring
+            paint.strokeWidth = dpToPx(2.5f)
             canvas.drawCircle(cx, cy, radius, paint)
 
-            // Draw glowing pulse ring
+            // 5. Draw glowing pulse ring
             glowPaint.color = color
             glowPaint.style = Paint.Style.STROKE
 
-            if (state is AgentState.Listening || state is AgentState.Thinking || state is AgentState.Speaking) {
+            if (state is AgentState.Listening || state is AgentState.Thinking || state is AgentState.Speaking || state is AgentState.ExecutingPlan) {
                 glowPaint.strokeWidth = dpToPx(1.5f)
                 glowPaint.alpha = pulseAlpha
                 canvas.drawCircle(cx, cy, radius + pulseRadius, glowPaint)

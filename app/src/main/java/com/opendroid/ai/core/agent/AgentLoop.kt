@@ -364,7 +364,26 @@ class AgentLoop @Inject constructor(
                 _chatError.value = null
                 _agentState.value = AgentState.Thinking
 
-                // 0. Check if this is a complex, multi-step query
+                // 0a. Instant Voice Stop / Cancel Intercept
+                val lowerClean = query.lowercase().trim().replace(Regex("""[.,\/#!$%\^&\*;:{}=\-_`~()?+!]"""), "")
+                val stopPhrases = setOf("stop", "ruko", "cancel", "stop it", "abort", "band karo", "ruk jao", "chup", "chup raho")
+                if (stopPhrases.contains(lowerClean)) {
+                    planManager.updatePlanStatus(PlanStatus.FAILED)
+                    _agentState.value = AgentState.Idle
+                    val stopReply = "Stopped."
+                    val replyMsg = ChatMessage(
+                        id = UUID.randomUUID().toString(),
+                        text = stopReply,
+                        sender = ChatMessage.Sender.AGENT,
+                        modelBadge = "System"
+                    )
+                    conversationRepository.insertMessage(sessionId, replyMsg)
+                    memoryManager.storeMessage(replyMsg, sessionId)
+                    onSpeakCallback?.invoke(stopReply)
+                    return
+                }
+
+                // 0b. Check if this is a complex, multi-step query
                 //    If so, skip ALL shortcuts and let the LLM planner handle it properly
                 val complexity = intentClassifier.classifyComplexity(query)
                 val isMultiStep = complexity != QueryComplexity.SIMPLE
@@ -502,7 +521,7 @@ class AgentLoop @Inject constructor(
             val autoModeLabel = settingsRepository.llmConfig.first().approvalSettings().mode.name
 
             val systemPrompt = """
-                You are OpenDroid, a friendly and helpful Android AI assistant.
+                You are Saathi AI, a friendly and helpful Android AI assistant.
                 Talk like a real person — warm, casual, and natural. Avoid sounding robotic.
                 Keep your answers short and to the point, but feel free to be friendly.
                 

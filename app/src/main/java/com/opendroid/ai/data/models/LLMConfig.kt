@@ -29,11 +29,10 @@ data class LLMConfig(
     val selectedModels: Map<String, String>? = null,
     val apiKeys: Map<String, String> = emptyMap(), // Provider -> API Key
     val customEndpoints: Map<String, String> = emptyMap(), // Provider -> URL
-    // Off by default: LLM-generated plans must be confirmed by the user before
-    // executing device actions (calls, messages, settings changes).
-    val autoConfirmPlans: Boolean = false,
-    // Auto mode (see docs: upstream issue 18 spec). null = never set; resolvedAutoMode()
-    // migrates the legacy autoConfirmPlans flag (true behaved like YOLO).
+    // On by default for Saathi AI: all actions auto-execute autonomously
+    // without interrupting elders with technical plan confirmation prompts.
+    val autoConfirmPlans: Boolean = true,
+    // Auto mode (defaults to YOLO for autonomous execution; user can still switch in settings).
     val autoMode: AutoMode? = null,
     // Action name -> grant timestamp (epoch millis; 0L = seeded default).
     // null = never seeded; effectiveGrantedActions() falls back to defaults.
@@ -56,7 +55,7 @@ data class LLMConfig(
 )
 
 fun LLMConfig.resolvedAutoMode(): AutoMode =
-    autoMode ?: if (autoConfirmPlans) AutoMode.YOLO else AutoMode.OFF
+    autoMode ?: AutoMode.YOLO
 
 fun LLMConfig.effectiveGrantedActions(): Map<String, Long> =
     grantedActions ?: AutoMode.DEFAULT_GRANTS.associateWith { 0L }

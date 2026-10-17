@@ -243,7 +243,7 @@ fun ChatScreen(
                 title = {
                     Column {
                         Text(
-                            text = "OPENDROID",
+                            text = "SAATHI AI",
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             color = TextPrimary,
@@ -942,7 +942,8 @@ fun ProposedPlanPrompt(
     blockedActions: List<String> = emptyList(),
     grantableActions: Set<String> = emptySet(),
     onApprove: (Set<String>) -> Unit,
-    onReject: () -> Unit
+    onReject: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     // Keyed on both: `planId` because a new plan must not inherit the previous
     // plan's ticked grants even when the two happen to block the same actions,
@@ -950,10 +951,11 @@ fun ProposedPlanPrompt(
     // change to it would otherwise leave ticks referring to rows that are gone.
     var checkedGrants by remember(planId, blockedActions) { mutableStateOf(setOf<String>()) }
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .border(1.dp, AccentCyan, RoundedCornerShape(16.dp)),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(bottom = 110.dp)
+            .border(1.5.dp, AccentCyan, RoundedCornerShape(16.dp)),
         colors = CardDefaults.cardColors(containerColor = DarkSurface),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -1030,18 +1032,20 @@ fun ProposedPlanPrompt(
                 OutlinedButton(
                     onClick = onReject,
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = AccentRed),
-                    border = BorderStroke(1.dp, AccentRed.copy(alpha = 0.5f)),
-                    shape = RoundedCornerShape(8.dp)
+                    border = BorderStroke(1.5.dp, AccentRed),
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.height(48.dp)
                 ) {
-                    Text("Reject", fontWeight = FontWeight.Bold)
+                    Text("Reject", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Button(
                     onClick = { onApprove(checkedGrants) },
                     colors = ButtonDefaults.buttonColors(containerColor = TextPrimary, contentColor = DarkBackground),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.height(48.dp)
                 ) {
-                    Text("Approve & Run", fontWeight = FontWeight.Bold)
+                    Text("Approve & Run", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }

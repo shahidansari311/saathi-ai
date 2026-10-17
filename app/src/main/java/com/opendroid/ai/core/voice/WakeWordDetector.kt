@@ -34,6 +34,17 @@ class WakeWordDetector(private val context: Context) {
         }
     }
 
+    private fun isWakeWord(text: String): Boolean {
+        val lower = text.lowercase()
+        return lower.contains("saathi") ||
+               lower.contains("sathi") ||
+               lower.contains("saathi ai") ||
+               lower.contains("hey saathi") ||
+               lower.contains("saathiai") ||
+               lower.contains("opendroid") ||
+               lower.contains("open droid")
+    }
+
     fun startListening(onWakeWordDetected: () -> Unit) {
         if (isListening) return
         this.onWakeWordDetectedCallback = onWakeWordDetected
@@ -75,7 +86,7 @@ class WakeWordDetector(private val context: Context) {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (matches != null) {
                     for (match in matches) {
-                        if (match.contains("opendroid", ignoreCase = true) || match.contains("open droid", ignoreCase = true)) {
+                        if (isWakeWord(match)) {
                             triggerWakeWord()
                             break
                         }
@@ -88,7 +99,7 @@ class WakeWordDetector(private val context: Context) {
                 val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (matches != null) {
                     for (match in matches) {
-                        if (match.contains("opendroid", ignoreCase = true) || match.contains("open droid", ignoreCase = true)) {
+                        if (isWakeWord(match)) {
                             triggerWakeWord()
                             break
                         }
