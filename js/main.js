@@ -138,7 +138,7 @@ syncState();
 }
 const ghStats = document.getElementById('gh-stats');
 if (ghStats) {
-fetch('https://api.github.com/repos/yashab-cyber/saathi-ai')
+fetch('https://api.github.com/repos/yashab-cyber/opendroid')
 .then(res => (res.ok ? res.json() : Promise.reject(res.status)))
 .then(data => {
 const stars = ghStats.querySelector('[data-stat="stars"]');
